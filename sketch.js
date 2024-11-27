@@ -1,18 +1,14 @@
-let ball;
+let titleScreen;
+
+function preload(){
+	titleScreen = loadImage("favicon.png");
+}
 
 function setup() {
-	new Canvas(500, 500);
-	displayMode('centered');
-
-	ball = new Sprite();
-	ball.diameter = 50;
+	new Canvas(640, 360);
+	displayMode("centered", "pixelated");
 }
 
 function draw() {
-	background('skyblue');
-
-	if (mouse.presses()) {
-		ball.speed = 10;
-		ball.moveTo(mouse);
-	}
+	background(titleScreen);
 }
