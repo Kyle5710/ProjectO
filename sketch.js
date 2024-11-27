@@ -1,5 +1,5 @@
 //title variables
-let titleScreen, titleButton;
+let titleScreen, titleButton, titleMusic;
 
 //state variables
 let currentBackground, currentScene;
@@ -11,6 +11,9 @@ function preload() {
 	//load necessary title assets
 	titleScreen = loadImage("assets/title/titleBack.png");
 	titleButton = loadImage("assets/title/titleButton.png");
+	titleMusic = loadSound("assets/audio/titleMusic.wav");
+	//set music properties
+	titleMusic.setVolume(1); titleMusic.setLoop(true);
 }
 
 function setup() {
@@ -22,21 +25,31 @@ function setup() {
 
 	//update current scene
 	currentScene = "Title";
-	determineBackground();
+	determineEvents();
 }
 
 function draw() {
 	//set background
 	background(currentBackground);
-	determineBackground();
+	determineEvents();
 }
 
-function determineBackground() {
+function determineEvents() {
 	//have a state var that tells us what scene we are in
-	//and use it to determine what background should be
-	//displayed on screen
+	//and use it to determine events on screen
 
 	if (currentScene === "Title") {
+		//display title background
 		currentBackground = titleScreen;
+
+		//play title music
+		titleMusic.play();
+
+		//display the play button
+		imageMode(CENTER);
+		image(titleButton, width/2, 300);
+		imageMode(NORMAL);
+	
 	}
 }
+
