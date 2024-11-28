@@ -2,6 +2,7 @@
 let titleScreen, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
+let titleHover;
 
 //state variables
 let currentBackground, currentScene;
@@ -13,6 +14,7 @@ function preload() {
 	//load necessary title assets
 	titleScreen = loadImage("assets/title/titleBack.png");
 	titleButton = loadImage("assets/title/titleButton.png");
+	titleButtonHover = loadImage("assets/title/titleButtonHover.png");
 	titleLogo = loadImage("assets/title/titleLogo.png");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
@@ -27,6 +29,9 @@ function setup() {
 	//set font
 	textFont(font);
 
+	//set original titleButton sprite
+	titleButtonMode = titleButton;
+
 	//update current scene
 	currentScene = "Title";
 	determineEvents();
@@ -36,6 +41,18 @@ function draw() {
 	//set background
 	background(currentBackground);
 	determineEvents();
+}
+
+function titleHover(){
+	hover = collidePointRect(width/2, 300, 254, 82);
+
+	if(hover){
+		titleButtonMode = titleButtonHover;
+	}
+	
+	else{
+		titleButtonMode = titleButton;
+	}
 }
 
 function determineEvents() {
@@ -54,7 +71,7 @@ function determineEvents() {
 
 		//display images
 		imageMode(CENTER);
-		image(titleButton, width / 2, 300);
+		image(titleButtonMode, width / 2, 300); // x = width/2, y = 300, width = 254, height = 82
 		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
 	}
