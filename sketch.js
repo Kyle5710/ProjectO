@@ -2,7 +2,6 @@
 let titleScreen, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
-let titleHover;
 
 //state variables
 let currentBackground, currentScene;
@@ -40,19 +39,9 @@ function setup() {
 function draw() {
 	//set background
 	background(currentBackground);
+
+	//main func
 	determineEvents();
-}
-
-function titleHover(){
-	hover = collidePointRect(width/2, 300, 254, 82);
-
-	if(hover){
-		titleButtonMode = titleButtonHover;
-	}
-	
-	else{
-		titleButtonMode = titleButton;
-	}
 }
 
 function determineEvents() {
@@ -69,11 +58,26 @@ function determineEvents() {
 		//move logo position
 		logoPos = moveLogo(logoPos);
 
+		//check if mouse hovering over play button
+		titleHover();
+
 		//display images
 		imageMode(CENTER);
 		image(titleButtonMode, width / 2, 300); // x = width/2, y = 300, width = 254, height = 82
 		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
+	}
+}
+
+function titleHover(){
+	hover = collidePointRect(width/2, 300, 254, 82);
+
+	if(hover){
+		titleButtonMode = titleButtonHover; //red/blue button
+	}
+
+	else{
+		titleButtonMode = titleButton; //normal button
 	}
 }
 
