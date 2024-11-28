@@ -1,5 +1,7 @@
 //title variables
 let titleScreen, titleButton, titleMusic;
+let logoPos = 100; //initial y pos of logo
+let logoDir = true; //direction of logo
 
 //state variables
 let currentBackground, currentScene;
@@ -11,7 +13,9 @@ function preload() {
 	//load necessary title assets
 	titleScreen = loadImage("assets/title/titleBack.png");
 	titleButton = loadImage("assets/title/titleButton.png");
+	titleLogo = loadImage("assets/title/titleLogo.png");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
+
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
 }
@@ -45,11 +49,32 @@ function determineEvents() {
 		//play title music
 		titleMusic.play();
 
-		//display the play button
+		//move logo position
+		logoPos = moveLogo(logoPos);
+
+		//display images
 		imageMode(CENTER);
-		image(titleButton, width/2, 300);
+		image(titleButton, width / 2, 300);
+		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
-	
 	}
 }
 
+//MAKE THIS BETTER IN LIKE JANUARY LAST MIN BEFORE THE DEADLINE
+function moveLogo(logoPos) {
+	if (logoPos === 80) {
+		logoDir = false;
+	}
+
+	else if (logoPos === 120) {
+		logoDir = true;
+	}
+
+	if (logoDir) {
+		return logoPos - .5;
+	}
+
+	else if (!logoDir) {
+		return logoPos + .5;
+	}
+}
