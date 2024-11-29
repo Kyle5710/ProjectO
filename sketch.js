@@ -1,8 +1,11 @@
 //title variables
-let titleScreen, titleButton, titleMusic;
+let titleBackground, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
+
+//tutorial variables
+let tutorialBackground;
 
 //state variables
 let currentBackground, currentScene, currentMusic;
@@ -11,12 +14,16 @@ function preload() {
 	//load font file
 	font = loadFont("assets/font/font.ttf");
 
-	//load necessary title assets
-	titleScreen = loadImage("assets/sprites/titleBack.png");
+	//LOAD TITLE SCREEN ASSETS
+	userCursor = loadImage("assets/sprites/cursor.png");
+	titleBackground = loadImage("assets/sprites/titleBack.png");
 	titleButton = loadImage("assets/sprites/titleButton.png");
 	titleButtonHover = loadImage("assets/sprites/titleButtonHover.png");
 	titleLogo = loadImage("assets/sprites/titleLogo.png");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
+
+	//LOAD TUTORIAL ROOM ASSETS
+	tutorialBackground = loadImage("assets/sprites/tutorialBack.png");
 
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
@@ -25,6 +32,7 @@ function preload() {
 function setup() {
 	createCanvas(640, 360, WEBGL);
 	noStroke();
+	noCursor();
 	displayMode("centered", "pixelated");
 	
 	//set font
@@ -64,7 +72,7 @@ function determineEvents() {
 	//TITLE SCREEN EVENTS
 	if (currentScene === "Title") {
 		//display title background
-		currentBackground = titleScreen;
+		currentBackground = titleBackground;
 
 		//move logo position
 		logoPos = moveLogo(logoPos);
@@ -77,10 +85,14 @@ function determineEvents() {
 		image(titleButtonMode, width / 2, 300); // x = width/2, y = 300, width = 254, height = 82
 		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
+
+		//display cursor
+		image(userCursor, mouseX, mouseY, 33, 33);
 	}
 
-	if(currentScene === "Room1"){
-		print("ROOM 1");
+	//TUTORIAL ROOM EVENTS
+	if(currentScene === "Tutorial"){
+		currentBackground = tutorialBackground;
 	}
 }
 
@@ -99,7 +111,7 @@ function titleHover() {
 		titleButtonMode = titleButtonHover; //red/blue button
 
 		if(mouseIsPressed){
-			currentScene = "Room1";
+			currentScene = "Tutorial";
 		}
 	}
 
