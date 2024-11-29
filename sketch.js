@@ -2,19 +2,20 @@
 let titleScreen, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
+let buttonHover = false; //mouse over button
 
 //state variables
-let currentBackground, currentScene;
+let currentBackground, currentScene, currentMusic;
 
 function preload() {
 	//load font file
 	font = loadFont("assets/font/font.ttf");
 
 	//load necessary title assets
-	titleScreen = loadImage("assets/title/titleBack.png");
-	titleButton = loadImage("assets/title/titleButton.png");
-	titleButtonHover = loadImage("assets/title/titleButtonHover.png");
-	titleLogo = loadImage("assets/title/titleLogo.png");
+	titleScreen = loadImage("assets/sprites/titleBack.png");
+	titleButton = loadImage("assets/sprites/titleButton.png");
+	titleButtonHover = loadImage("assets/sprites/titleButtonHover.png");
+	titleLogo = loadImage("assets/sprites/titleLogo.png");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
 	//set music properties
@@ -22,24 +23,24 @@ function preload() {
 }
 
 function setup() {
-	new Canvas(640, 360);
+	createCanvas(640, 360, WEBGL);
+	noStroke();
 	displayMode("centered", "pixelated");
-
+	
 	//set font
 	textFont(font);
 
 	//set original titleButton sprite
 	titleButtonMode = titleButton;
 
-	//update current scene
+	//set initial scene
 	currentScene = "Title";
-	determineEvents();
+
+	//set initial music
+	currentMusic = titleMusic;
 }
 
 function draw() {
-	//set background
-	background(currentBackground);
-
 	//main func
 	determineEvents();
 }
@@ -48,12 +49,22 @@ function determineEvents() {
 	//have a state var that tells us what scene we are in
 	//and use it to determine events on screen
 
+	//ALWAYS RUNNING EVENTS
+
+	//music
+	/* if (currentMusic) {
+		currentMusic.play();
+	} */
+
+	//background
+	if (currentBackground) {
+		background(currentBackground);
+	}
+
+	//TITLE SCREEN EVENTS
 	if (currentScene === "Title") {
 		//display title background
 		currentBackground = titleScreen;
-
-		//play title music
-		titleMusic.play();
 
 		//move logo position
 		logoPos = moveLogo(logoPos);
@@ -67,35 +78,49 @@ function determineEvents() {
 		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
 	}
+
+	if(currentScene === "Room1"){
+		print("ROOM 1");
+	}
 }
 
-function titleHover(){
-	hover = collidePointRect(width/2, 300, 254, 82);
+function titleHover() {
+	//calc button properties to account for imageMode(CENTER)
+	let yPos = width / 2 - 254 / 4;
+	let xPos = 300 - 82 / 4;
+	let bWidth = 254 / 2;
+	let bHeight = 82 / 2;
 
-	if(hover){
+	//check for mouse collision
+	buttonHover = collidePointRect(mouseX, mouseY, yPos, xPos, bWidth, bHeight);
+
+	if (buttonHover) {
+		//collision
 		titleButtonMode = titleButtonHover; //red/blue button
+
+		if(mouseIsPressed){
+			currentScene = "Room1";
+		}
 	}
 
-	else{
+	else {
+		//no collision
 		titleButtonMode = titleButton; //normal button
 	}
 }
 
-//MAKE THIS BETTER IN LIKE JANUARY LAST MIN BEFORE THE DEADLINE
 function moveLogo(logoPos) {
-	if (logoPos === 80) {
-		logoDir = false;
+	//check logo pos
+	if (logoPos <= 80 || logoPos >= 120) {
+		logoDir = !logoDir;
 	}
 
-	else if (logoPos === 120) {
-		logoDir = true;
-	}
-
+	//move logo
 	if (logoDir) {
-		return logoPos - .5;
+		return logoPos - 0.5;
 	}
 
-	else if (!logoDir) {
-		return logoPos + .5;
+	else {
+		return logoPos + 0.5;
 	}
 }
