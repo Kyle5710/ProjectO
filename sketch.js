@@ -4,11 +4,17 @@ let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
 
+//yapping variables
+let yapDialogue = ["the the the the hteh ethe e hte hte htehteh yes"];
+let currentLine = 0;
+let delay = 3000; //3 seconds in miliseconds between lines
+let lastChangeTime = 0;
+
 //tutorial variables
 let tutorialBackground;
 
 //state variables
-let currentBackground, currentScene, currentMusic;
+let currentBackground, currentScene, currentMusic, currentDialogue;
 
 function preload() {
 	//load font file
@@ -22,6 +28,9 @@ function preload() {
 	titleLogo = loadImage("assets/sprites/titleLogo.png");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
+	//LOAD YAPPING ASSETS
+	yappingBack = loadImage("assets/sprites/blackscreen.png");
+
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialBack.png");
 
@@ -33,10 +42,14 @@ function setup() {
 	createCanvas(640, 360, WEBGL);
 	noStroke();
 	noCursor();
+
+	//text properties
+	textSize(40);
+
+	fill("white");
+	textAlign(CENTER);
+
 	displayMode("centered", "pixelated");
-	
-	//set font
-	textFont(font);
 
 	//set original titleButton sprite
 	titleButtonMode = titleButton;
@@ -59,8 +72,11 @@ function determineEvents() {
 
 	//ALWAYS RUNNING EVENTS
 
+	//set font
+	textFont(font);
+/* 
 	//music
-	/* if (currentMusic) {
+	if (currentMusic) {
 		currentMusic.play();
 	} */
 
@@ -90,8 +106,25 @@ function determineEvents() {
 		image(userCursor, mouseX, mouseY, 33, 33);
 	}
 
+	//YAP SESSION EVENTS
+	if (currentScene === "Yapping") {
+		currentBackground = yappingBack;
+
+		//display text
+		text(yapDialogue[currentLine], width / 2, height / 2);
+
+		//change the lines in the dialogue based of delay var
+		if (millis() - lastChangeTime > delay) {
+			currentLine = (currentLine + 1) % yapDialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+
+		//display cursor
+		image(userCursor, mouseX, mouseY, 33, 33);
+	}
+
 	//TUTORIAL ROOM EVENTS
-	if(currentScene === "Tutorial"){
+	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
 	}
 }
@@ -110,8 +143,8 @@ function titleHover() {
 		//collision
 		titleButtonMode = titleButtonHover; //red/blue button
 
-		if(mouseIsPressed){
-			currentScene = "Tutorial";
+		if (mouseIsPressed) {
+			currentScene = "Yapping";
 		}
 	}
 
