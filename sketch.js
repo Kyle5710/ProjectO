@@ -5,7 +5,9 @@ let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
 
 //yapping variables
-let yapDialogue = ["the the the the hteh ethe e hte hte htehteh yes"];
+let yapDialogue = ["Once upon a time,", "a journalist named Armando",
+	"was assigned an important mission.", "To find out Obama's last name,",
+	"once and for all."];
 let currentLine = 0;
 let delay = 3000; //3 seconds in miliseconds between lines
 let lastChangeTime = 0;
@@ -19,6 +21,7 @@ let currentBackground, currentScene, currentMusic, currentDialogue;
 function preload() {
 	//load font file
 	font = loadFont("assets/font/font.ttf");
+	playerImage = loadImage("assets/sprites/playerPlaceHolder.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -26,6 +29,7 @@ function preload() {
 	titleButton = loadImage("assets/sprites/titleButton.png");
 	titleButtonHover = loadImage("assets/sprites/titleButtonHover.png");
 	titleLogo = loadImage("assets/sprites/titleLogo.png");
+	buttonSound = loadSound("assets/audio/startButton.wav");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
 	//LOAD YAPPING ASSETS
@@ -45,11 +49,12 @@ function setup() {
 
 	//text properties
 	textSize(40);
-
 	fill("white");
-	textAlign(CENTER);
 
 	displayMode("centered", "pixelated");
+
+	//create player but dont display him yet
+	playerClass = new Player(width / 2, height / 2);
 
 	//set original titleButton sprite
 	titleButtonMode = titleButton;
@@ -74,9 +79,9 @@ function determineEvents() {
 
 	//set font
 	textFont(font);
-/* 
+
 	//music
-	if (currentMusic) {
+	/* if (currentMusic) {
 		currentMusic.play();
 	} */
 
@@ -111,10 +116,20 @@ function determineEvents() {
 		currentBackground = yappingBack;
 
 		//display text
-		text(yapDialogue[currentLine], width / 2, height / 2);
+		textAlign(CENTER, BOTTOM);
+		text(yapDialogue[currentLine], width / 2, 300);
 
 		//change the lines in the dialogue based of delay var
 		if (millis() - lastChangeTime > delay) {
+			if (currentLine === 3) {
+				fill("red");
+			}
+
+			if (currentLine === 4) {
+				currentScene = "Tutorial";
+			}
+
+			buttonSound.play();
 			currentLine = (currentLine + 1) % yapDialogue.length; //loops through array infinitely
 			lastChangeTime = millis();
 		}
@@ -126,6 +141,9 @@ function determineEvents() {
 	//TUTORIAL ROOM EVENTS
 	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
+
+		playerClass.display();
+		playerClass.move();
 	}
 }
 
@@ -144,6 +162,7 @@ function titleHover() {
 		titleButtonMode = titleButtonHover; //red/blue button
 
 		if (mouseIsPressed) {
+			buttonSound.play();
 			currentScene = "Yapping";
 		}
 	}
@@ -169,3 +188,46 @@ function moveLogo(logoPos) {
 		return logoPos + 0.5;
 	}
 }
+
+//Classes
+class Player {
+	constructor(xPos, yPos) {
+		this.x = xPos;
+		this.y = yPos;
+		this.speed = 3;
+		this.velocity = createVector(0, 0);
+	}
+
+	move() {
+		if (currentScene === "Tutorial") { //scenes that player can move in
+			this.velocity.set(0, 0); //so he doesnt move by himself
+
+			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+				this.velocity.y -= 1;
+			}
+			if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+				this.velocity.y += 1;
+			}
+			if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+				this.velocity.x -= 1;
+			}
+			if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+				this.velocity.x += 1;
+			}
+
+			//normalize velocity so diagonal isnt faster
+			this.velocity.normalize();
+			this.velocity.mult(this.speed);
+
+			//apply movement
+			this.x += this.velocity.x;
+			this.y += this.velocity.y;
+		}
+	}
+
+	display() {
+		//display armando
+		image(playerImage, this.x, this.y);
+	}
+}
+
