@@ -19,9 +19,11 @@ let tutorialBackground;
 let currentBackground, currentScene, currentMusic, currentDialogue;
 
 function preload() {
-	//load font file
+	//LOAD GLOBAL FILES
 	font = loadFont("assets/font/font.ttf");
 	playerImage = loadImage("assets/sprites/playerPlaceHolder.png");
+
+	//LOAD PLAYER ANIMATIONS
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -33,10 +35,14 @@ function preload() {
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
 	//LOAD YAPPING ASSETS
-	yappingBack = loadImage("assets/sprites/blackscreen.png");
+	yappingBack = loadImage("assets/sprites/temporaryArt.jpeg");
 
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialBack.png");
+
+	//LOAD ATTACK ROOM ASSETS
+
+	//LOAD BOSS ROOM ASSETS
 
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
@@ -69,6 +75,9 @@ function setup() {
 function draw() {
 	//main func
 	determineEvents();
+
+	//player events
+	playerClass.update();
 }
 
 function determineEvents() {
@@ -141,9 +150,6 @@ function determineEvents() {
 	//TUTORIAL ROOM EVENTS
 	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
-
-		playerClass.display();
-		playerClass.move();
 	}
 }
 
@@ -199,35 +205,47 @@ class Player {
 	}
 
 	move() {
-		if (currentScene === "Tutorial") { //scenes that player can move in
-			this.velocity.set(0, 0); //so he doesnt move by himself
+		this.velocity.set(0, 0); //so he doesnt move by himself
 
-			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
-				this.velocity.y -= 1;
-			}
-			if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
-				this.velocity.y += 1;
-			}
-			if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
-				this.velocity.x -= 1;
-			}
-			if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
-				this.velocity.x += 1;
-			}
-
-			//normalize velocity so diagonal isnt faster
-			this.velocity.normalize();
-			this.velocity.mult(this.speed);
-
-			//apply movement
-			this.x += this.velocity.x;
-			this.y += this.velocity.y;
+		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+			this.velocity.y -= 1;
 		}
+		if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+			this.velocity.y += 1;
+		}
+		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+			this.velocity.x -= 1;
+		}
+		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+			this.velocity.x += 1;
+		}
+
+		//normalize velocity so diagonal isnt faster
+		this.velocity.normalize();
+		this.velocity.mult(this.speed);
+
+		//apply movement
+		this.x += this.velocity.x;
+		this.y += this.velocity.y;
 	}
+
 
 	display() {
 		//display armando
 		image(playerImage, this.x, this.y);
 	}
+
+	update() {
+		//scenes where the player is displayed and can move
+		if (currentScene === "Tutorial") { 
+			this.move();
+			this.display();
+		}
+	}
 }
 
+class Barrier {
+	constructor(){
+
+	}
+}
