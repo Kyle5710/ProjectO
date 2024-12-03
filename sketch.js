@@ -1,3 +1,6 @@
+//player var
+let playerAnimations;
+
 //title variables
 let titleBackground, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
@@ -16,14 +19,14 @@ let lastChangeTime = 0;
 let tutorialBackground;
 
 //state variables
-let currentBackground, currentScene, currentMusic, currentDialogue;
+let currentBackground, currentScene, currentMusic, currentDialogue, playerDir;
 
 function preload() {
 	//LOAD GLOBAL FILES
 	font = loadFont("assets/font/font.ttf");
-	playerImage = loadImage("assets/sprites/playerPlaceHolder.png");
 
 	//LOAD PLAYER ANIMATIONS
+	tempTilemap = loadImage("assets/sprites/playerUp.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -51,11 +54,28 @@ function preload() {
 function setup() {
 	createCanvas(640, 360, WEBGL);
 	noStroke();
+	noSmooth();
 	noCursor();
 
 	//text properties
 	textSize(40);
 	fill("white");
+
+	//player animations
+	playerAnim =
+    new PlayerAnim(
+      tempTilemap,
+      // These are normalized coordinates within the atlas specifying each frame of the animation
+      [ // <LEFT> <TOP> <WIDTH> <HEIGHT>
+        [0, 60, 40, 60],
+        [40, 60, 40, 60],
+        [80, 60, 40, 60],
+        [120, 60, 40, 60]
+      ],
+      [0, 0], // The position of the top left of the sprite
+      [40, 60], // The width and height of the sprite
+      2 // The speed in fps (frames per second)
+    );
 
 	displayMode("centered", "pixelated");
 
@@ -78,6 +98,8 @@ function draw() {
 
 	//player events
 	playerClass.update();
+
+	
 }
 
 function determineEvents() {
@@ -195,7 +217,7 @@ function moveLogo(logoPos) {
 	}
 }
 
-//Classes
+//ClASSES
 class Player {
 	constructor(xPos, yPos) {
 		this.x = xPos;
@@ -208,15 +230,22 @@ class Player {
 		this.velocity.set(0, 0); //so he doesnt move by himself
 
 		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+			playerDir = "UP";
 			this.velocity.y -= 1;
 		}
-		if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+
+		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+			playerDir = "DOWN";
 			this.velocity.y += 1;
 		}
-		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+
+		else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+			playerDir = "LEFT";
 			this.velocity.x -= 1;
 		}
-		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+
+		else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+			playerDir = "RIGHT";
 			this.velocity.x += 1;
 		}
 
@@ -235,17 +264,22 @@ class Player {
 		image(playerImage, this.x, this.y);
 	}
 
+	animations() {
+		playerAnimations.tick(false);
+	}
+
 	update() {
 		//scenes where the player is displayed and can move
-		if (currentScene === "Tutorial") { 
+		if (currentScene === "Tutorial") {
 			this.move();
+			this.animations();
 			this.display();
 		}
 	}
 }
 
 class Barrier {
-	constructor(){
+	constructor() {
 
 	}
 }
