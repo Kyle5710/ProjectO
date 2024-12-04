@@ -1,6 +1,10 @@
 // stores player sprite
 let player;
 
+//for the fade transition
+let opacityIn = 255;
+let opacityOut = 0;
+
 //title variables
 let titleBackground, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
@@ -32,10 +36,10 @@ function preload() {
 	//frame rate for specific animation
 	playerUpAnim.frameDelay = 5;
 
-	playerDownAnim = loadAnimation("assets/sprites/playerDown/tile000.png", "assets/sprites/playerDown/tile001.png",
-		"assets/sprites/playerDown/tile002.png", "assets/sprites/playerDown/tile003.png");
+	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
+		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
 
-	playerDownAnim.frameDelay = 5;
+	playerDownAnim.frameDelay = 12;
 	
 		//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -61,7 +65,6 @@ function setup() {
 	createCanvas(640, 360, WEBGL);
 	displayMode("centered", "pixelated");
 	noStroke();
-	noSmooth();
 	noCursor();
 
 	//text properties
@@ -89,11 +92,26 @@ function draw() {
 	determineEvents();
 
 	//player events
-	if (currentScene === "Tutorial") {
+	if (currentScene === "Tutorial" || opacityOut !== 0) {
 		//scenes where the player is displayed and can move
 		playerClass.update();
 	}
+}
 
+function fadeOut(){
+	if(opacityOut < 255){
+		opacityOut += 5;
+	}
+	this.sprite
+	tint(opacityOut, opacityOut, opacityOut);
+}
+
+function fadeIn(){
+	if(opacityIn > 0){
+		opacityIn -= 5;
+	}
+
+	tint(opacityIn, opacityIn, opacityIn);
 }
 
 function determineEvents() {
@@ -152,6 +170,7 @@ function determineEvents() {
 			}
 
 			if (currentLine === 4) {
+				fadeIn();
 				currentScene = "Tutorial";
 			}
 
@@ -167,6 +186,9 @@ function determineEvents() {
 	//TUTORIAL ROOM EVENTS
 	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
+
+		//fade out transition
+		fadeOut();
 	}
 }
 
@@ -232,18 +254,18 @@ class Player {
 			this.velocity.y -= 1;
 		}
 
-		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+		if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 			this.player.changeAnimation("playerDown");
 			playerDir = "DOWN";
 			this.velocity.y += 1;
 		}
 
-		else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
 			playerDir = "LEFT";
 			this.velocity.x -= 1;
 		}
 
-		else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
 			playerDir = "RIGHT";
 			this.velocity.x += 1;
 		}
