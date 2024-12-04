@@ -28,11 +28,16 @@ function preload() {
 	//LOAD PLAYER ANIMATIONS
 	playerUpAnim = loadAnimation("assets/sprites/playerUp/tile000.png", "assets/sprites/playerUp/tile001.png",
 		"assets/sprites/playerUp/tile002.png", "assets/sprites/playerUp/tile003.png");
+	
+	//frame rate for specific animation
+	playerUpAnim.frameDelay = 5;
 
 	playerDownAnim = loadAnimation("assets/sprites/playerDown/tile000.png", "assets/sprites/playerDown/tile001.png",
 		"assets/sprites/playerDown/tile002.png", "assets/sprites/playerDown/tile003.png");
 
-	//LOAD TITLE SCREEN ASSETS
+	playerDownAnim.frameDelay = 5;
+	
+		//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
 	titleBackground = loadImage("assets/sprites/titleBack.png");
 	titleButton = loadImage("assets/sprites/titleButton.png");
