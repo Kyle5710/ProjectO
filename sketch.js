@@ -1,5 +1,5 @@
-//player var
-let playerAnimations;
+// stores player sprite
+let player;
 
 //title variables
 let titleBackground, titleButton, titleMusic;
@@ -22,11 +22,15 @@ let tutorialBackground;
 let currentBackground, currentScene, currentMusic, currentDialogue, playerDir;
 
 function preload() {
-	//LOAD GLOBAL FILES
+	//LOAD FONT
 	font = loadFont("assets/font/font.ttf");
 
 	//LOAD PLAYER ANIMATIONS
-	tempTilemap = loadImage("assets/sprites/playerUp.png");
+	playerUpAnim = loadAnimation("assets/sprites/playerUp/tile000.png", "assets/sprites/playerUp/tile001.png",
+		"assets/sprites/playerUp/tile002.png", "assets/sprites/playerUp/tile003.png");
+
+	playerDownAnim = loadAnimation("assets/sprites/playerDown/tile000.png", "assets/sprites/playerDown/tile001.png",
+		"assets/sprites/playerDown/tile002.png", "assets/sprites/playerDown/tile003.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -43,16 +47,14 @@ function preload() {
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialBack.png");
 
-	//LOAD ATTACK ROOM ASSETS
-
-	//LOAD BOSS ROOM ASSETS
-
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
 }
 
 function setup() {
+	//setup stuffs
 	createCanvas(640, 360, WEBGL);
+	displayMode("centered", "pixelated");
 	noStroke();
 	noSmooth();
 	noCursor();
@@ -61,34 +63,19 @@ function setup() {
 	textSize(40);
 	fill("white");
 
-	//player animations
-	playerAnim =
-    new PlayerAnim(
-      tempTilemap,
-      // These are normalized coordinates within the atlas specifying each frame of the animation
-      [ // <LEFT> <TOP> <WIDTH> <HEIGHT>
-        [0, 60, 40, 60],
-        [40, 60, 40, 60],
-        [80, 60, 40, 60],
-        [120, 60, 40, 60]
-      ],
-      [0, 0], // The position of the top left of the sprite
-      [40, 60], // The width and height of the sprite
-      2 // The speed in fps (frames per second)
-    );
+	//put player off-screen so not shown during title/intro
+	player = createSprite(1000, 1000, 60, 40);
 
-	displayMode("centered", "pixelated");
+	//add animations to player sprite
+	player.addAnimation("playerUp", playerUpAnim);
+	player.addAnimation("playerDown", playerDownAnim);
 
-	//create player but dont display him yet
-	playerClass = new Player(width / 2, height / 2);
+	//create player class
+	playerClass = new Player(width / 2, height / 2, player);
 
-	//set original titleButton sprite
+	//set initial vars
 	titleButtonMode = titleButton;
-
-	//set initial scene
 	currentScene = "Title";
-
-	//set initial music
 	currentMusic = titleMusic;
 }
 
@@ -97,9 +84,11 @@ function draw() {
 	determineEvents();
 
 	//player events
-	playerClass.update();
+	if (currentScene === "Tutorial") {
+		//scenes where the player is displayed and can move
+		playerClass.update();
+	}
 
-	
 }
 
 function determineEvents() {
@@ -152,6 +141,7 @@ function determineEvents() {
 
 		//change the lines in the dialogue based of delay var
 		if (millis() - lastChangeTime > delay) {
+			//events based on line #
 			if (currentLine === 3) {
 				fill("red");
 			}
@@ -191,7 +181,8 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			buttonSound.play();
-			currentScene = "Yapping";
+			lastChangeTime = millis();
+			currentScene = "Tutorial";
 		}
 	}
 
@@ -219,10 +210,11 @@ function moveLogo(logoPos) {
 
 //ClASSES
 class Player {
-	constructor(xPos, yPos) {
+	constructor(xPos, yPos, player) {
 		this.x = xPos;
 		this.y = yPos;
 		this.speed = 3;
+		this.player = player;
 		this.velocity = createVector(0, 0);
 	}
 
@@ -230,11 +222,13 @@ class Player {
 		this.velocity.set(0, 0); //so he doesnt move by himself
 
 		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+			this.player.changeAnimation("playerUp");
 			playerDir = "UP";
 			this.velocity.y -= 1;
 		}
 
 		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+			this.player.changeAnimation("playerDown");
 			playerDir = "DOWN";
 			this.velocity.y += 1;
 		}
@@ -256,30 +250,31 @@ class Player {
 		//apply movement
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
-	}
 
+		//border checking
+		if (this.x < 10) {
+			this.x = 10;
+		}
+
+		if (this.x > 630) {
+			this.x = 630;
+		}
+		if (this.y < 50) {
+			this.y = 50;
+		}
+
+		if (this.y > 303) {
+			this.y = 303;
+		}
+	}
 
 	display() {
 		//display armando
-		image(playerImage, this.x, this.y);
-	}
-
-	animations() {
-		playerAnimations.tick(false);
+		this.player.position.set(this.x, this.y);
 	}
 
 	update() {
-		//scenes where the player is displayed and can move
-		if (currentScene === "Tutorial") {
-			this.move();
-			this.animations();
-			this.display();
-		}
-	}
-}
-
-class Barrier {
-	constructor() {
-
+		this.move();
+		this.display();
 	}
 }
