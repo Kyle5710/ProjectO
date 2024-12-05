@@ -4,7 +4,7 @@ let player;
 //fade transition
 let tranAlpha = 0;
 let tran = false;
-let fadeDur = 1000;
+let fadeDur = 10000;
 let nextScene = "";
 
 //title variables
@@ -25,25 +25,27 @@ let lastChangeTime = 0;
 let tutorialBackground;
 
 //state variables
-let currentBackground, currentScene, currentMusic, currentDialogue, playerDir;
+let currentBackground, currentScene, currentMusic, currentDialogue;
 
 function preload() {
 	//LOAD FONT
 	font = loadFont("assets/font/font.ttf");
 
 	//LOAD PLAYER ANIMATIONS
-	playerUpAnim = loadAnimation("assets/sprites/playerUp/tile000.png", "assets/sprites/playerUp/tile001.png",
-		"assets/sprites/playerUp/tile002.png", "assets/sprites/playerUp/tile003.png");
+	playerUpAnim = loadAnimation("assets/sprites/playerUp/playerUp1.png", "assets/sprites/playerUp/playerUp2.png",
+		"assets/sprites/playerUp/playerUp3.png", "assets/sprites/playerUp/playerUp4.png");
 
 	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
 		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
 
+	playerIdleAnim = loadAnimation("assets/sprites/playerIdle/playerIdle.png");
+
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
-	titleBackground = loadImage("assets/sprites/titleBack.png");
-	titleButton = loadImage("assets/sprites/titleButton.png");
-	titleButtonHover = loadImage("assets/sprites/titleButtonHover.png");
-	titleLogo = loadImage("assets/sprites/titleLogo.png");
+	titleBackground = loadImage("assets/sprites/titleScreen/titleBack.png");
+	titleButton = loadImage("assets/sprites/titleScreen/titleButton.png");
+	titleButtonHover = loadImage("assets/sprites/titleScreen/titleButtonHover.png");
+	titleLogo = loadImage("assets/sprites/titleScreen/titleLogo.png");
 	buttonSound = loadSound("assets/audio/startButton.wav");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
@@ -51,7 +53,7 @@ function preload() {
 	yappingBack = loadImage("assets/sprites/temporaryArt.jpeg");
 
 	//LOAD TUTORIAL ROOM ASSETS
-	tutorialBackground = loadImage("assets/sprites/tutorialBack.png");
+	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");
 
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
@@ -70,7 +72,6 @@ function setup() {
 
 	//put player off-screen so not shown during title/intro
 	player = createSprite(1000, 1000, 60, 40);
-	player.scale = 0.8;
 
 	//create player class
 	playerClass = new Player(width / 2, height / 2, player);
@@ -252,10 +253,12 @@ class Player {
 		//add animations to player sprite
 		player.addAnimation("playerUp", playerUpAnim);
 		player.addAnimation("playerDown", playerDownAnim);
+		player.addAnimation("playerIdle", playerIdleAnim);
 
 		//frame rate for specific animation
 		playerUpAnim.frameDelay = 12;
 		playerDownAnim.frameDelay = 12;
+		playerIdleAnim.frameDelay = 1;
 	}
 
 	move() {
@@ -263,24 +266,24 @@ class Player {
 
 		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
 			this.player.changeAnimation("playerUp");
-			playerDir = "UP";
 			this.velocity.y -= 1;
 		}
 
 		if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 			this.player.changeAnimation("playerDown");
-			playerDir = "DOWN";
 			this.velocity.y += 1;
 		}
 
 		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
-			playerDir = "LEFT";
 			this.velocity.x -= 1;
 		}
 
 		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
-			playerDir = "RIGHT";
 			this.velocity.x += 1;
+		}
+
+		else if (!keyIsPressed) { //IDLE animation
+			this.player.changeAnimation("playerIdle");
 		}
 
 		//normalize velocity so diagonal isnt faster
@@ -310,10 +313,10 @@ class Player {
 
 	display() {
 		//display armando
-		if(tranAlpha <= 0){
+		if (tranAlpha <= 0) {
 			this.player.position.set(this.x, this.y);
 		}
-		
+
 	}
 
 	update() {
