@@ -1,9 +1,11 @@
 // stores player sprite
 let player;
 
-//for the fade transition
-let opacityIn = 255;
-let opacityOut = 0;
+//fade transition
+let tranAlpha = 0;
+let tran = false;
+let fadeDur = 1000;
+let nextScene = "";
 
 //title variables
 let titleBackground, titleButton, titleMusic;
@@ -12,11 +14,11 @@ let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
 
 //yapping variables
-let yapDialogue = ["Once upon a time,", "a journalist named Armando",
+let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 3000; //3 seconds in miliseconds between lines
+let delay = 2000; //1 second in miliseconds between lines
 let lastChangeTime = 0;
 
 //tutorial variables
@@ -32,16 +34,11 @@ function preload() {
 	//LOAD PLAYER ANIMATIONS
 	playerUpAnim = loadAnimation("assets/sprites/playerUp/tile000.png", "assets/sprites/playerUp/tile001.png",
 		"assets/sprites/playerUp/tile002.png", "assets/sprites/playerUp/tile003.png");
-	
-	//frame rate for specific animation
-	playerUpAnim.frameDelay = 5;
 
 	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
 		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
 
-	playerDownAnim.frameDelay = 12;
-	
-		//LOAD TITLE SCREEN ASSETS
+	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
 	titleBackground = loadImage("assets/sprites/titleBack.png");
 	titleButton = loadImage("assets/sprites/titleButton.png");
@@ -66,17 +63,14 @@ function setup() {
 	displayMode("centered", "pixelated");
 	noStroke();
 	noCursor();
+	pixelDensity(1);
 
 	//text properties
 	textSize(40);
-	fill("white");
 
 	//put player off-screen so not shown during title/intro
 	player = createSprite(1000, 1000, 60, 40);
-
-	//add animations to player sprite
-	player.addAnimation("playerUp", playerUpAnim);
-	player.addAnimation("playerDown", playerDownAnim);
+	player.scale = 0.8;
 
 	//create player class
 	playerClass = new Player(width / 2, height / 2, player);
@@ -92,26 +86,10 @@ function draw() {
 	determineEvents();
 
 	//player events
-	if (currentScene === "Tutorial" || opacityOut !== 0) {
+	if (currentScene === "Tutorial") {
 		//scenes where the player is displayed and can move
 		playerClass.update();
 	}
-}
-
-function fadeOut(){
-	if(opacityOut < 255){
-		opacityOut += 5;
-	}
-	this.sprite
-	tint(opacityOut, opacityOut, opacityOut);
-}
-
-function fadeIn(){
-	if(opacityIn > 0){
-		opacityIn -= 5;
-	}
-
-	tint(opacityIn, opacityIn, opacityIn);
 }
 
 function determineEvents() {
@@ -160,21 +138,25 @@ function determineEvents() {
 
 		//display text
 		textAlign(CENTER, BOTTOM);
-		text(yapDialogue[currentLine], width / 2, 300);
+		text(yapDialogue[currentLine], width / 2, 340);
 
 		//change the lines in the dialogue based of delay var
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 3) {
+			if (currentLine === 4) {
 				fill("red");
 			}
 
-			if (currentLine === 4) {
-				fadeIn();
-				currentScene = "Tutorial";
+			else if (currentLine === 5) {
+				nextScene = "Tutorial";
+				tran = true;
 			}
 
-			buttonSound.play();
+			else {
+				fill("white");
+			}
+
+			buttonSound.play(); //sfx
 			currentLine = (currentLine + 1) % yapDialogue.length; //loops through array infinitely
 			lastChangeTime = millis();
 		}
@@ -186,9 +168,31 @@ function determineEvents() {
 	//TUTORIAL ROOM EVENTS
 	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
+	}
 
-		//fade out transition
-		fadeOut();
+	//transition ready when tran = true
+	sceneTransition();
+}
+
+function sceneTransition() {
+	//transition
+	if (tranAlpha > 0) {
+		fill(0, 0, 0, tranAlpha);
+		rect(0, 0, width, height);
+	}
+
+	if (tran) {
+		tranAlpha += 255 / (fadeDur / deltaTime);
+		if (tranAlpha >= 255) {
+			tran = false;
+			tranAlpha = 255;
+			currentScene = nextScene;
+			nextScene = "";
+		}
+	}
+
+	else if (tranAlpha > 0) {
+		tranAlpha -= 255 / (fadeDur / deltaTime);
 	}
 }
 
@@ -207,9 +211,10 @@ function titleHover() {
 		titleButtonMode = titleButtonHover; //red/blue button
 
 		if (mouseIsPressed) {
+			nextScene = "Yapping";
+			tran = true;
 			buttonSound.play();
 			lastChangeTime = millis();
-			currentScene = "Tutorial";
 		}
 	}
 
@@ -243,6 +248,14 @@ class Player {
 		this.speed = 3;
 		this.player = player;
 		this.velocity = createVector(0, 0);
+
+		//add animations to player sprite
+		player.addAnimation("playerUp", playerUpAnim);
+		player.addAnimation("playerDown", playerDownAnim);
+
+		//frame rate for specific animation
+		playerUpAnim.frameDelay = 12;
+		playerDownAnim.frameDelay = 12;
 	}
 
 	move() {
@@ -297,7 +310,10 @@ class Player {
 
 	display() {
 		//display armando
-		this.player.position.set(this.x, this.y);
+		if(tranAlpha <= 0){
+			this.player.position.set(this.x, this.y);
+		}
+		
 	}
 
 	update() {
