@@ -4,7 +4,7 @@ let player;
 //fade transition
 let tranAlpha = 0;
 let tran = false;
-let fadeDur = 10000;
+let fadeDur = 1000;
 let nextScene = "";
 
 //title variables
@@ -38,7 +38,7 @@ function preload() {
 	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
 		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
 
-	playerIdleAnim = loadAnimation("assets/sprites/playerIdle/playerIdle.png");
+	playerIdleAnim = loadAnimation("assets/sprites/playerIdle/playerIdle1.png", "assets/sprites/playerIdle/playerIdle2.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -258,7 +258,7 @@ class Player {
 		//frame rate for specific animation
 		playerUpAnim.frameDelay = 12;
 		playerDownAnim.frameDelay = 12;
-		playerIdleAnim.frameDelay = 1;
+		playerIdleAnim.frameDelay = 22;
 	}
 
 	move() {
