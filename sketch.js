@@ -1,4 +1,4 @@
-// stores player sprite
+//stores player sprite
 let player;
 
 //fade transition
@@ -7,22 +7,25 @@ let tran = false;
 let fadeDur = 1000;
 let nextScene = "";
 
-//title variables
+//title room variables
 let titleBackground, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
 
-//yapping variables
+//yapping room variables
 let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 2000; //1 second in miliseconds between lines
+let delay = 2000; //2 second in miliseconds between lines
 let lastChangeTime = 0;
 
-//tutorial variables
+//tutorial room variables
 let tutorialBackground;
+
+//weapon room variables
+let weaponBackground;
 
 //state variables
 let currentBackground, currentScene, currentMusic, currentDialogue;
@@ -37,6 +40,9 @@ function preload() {
 
 	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
 		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
+
+	playerLeftAnim = loadAnimation("assets/sprites/playerLeft/playerLeft1.png", "assets/sprites/playerLeft/playerLeft2.png",
+		"assets/sprites/playerLeft/playerLeft3.png", "assets/sprites/playerLeft/playerLeft4.png");
 
 	playerIdleAnim = loadAnimation("assets/sprites/playerIdle/playerIdle1.png", "assets/sprites/playerIdle/playerIdle2.png");
 
@@ -54,6 +60,9 @@ function preload() {
 
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");
+
+	//LOAD WEAPON ROOM ASSETS
+	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
 
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
@@ -76,6 +85,9 @@ function setup() {
 	//create player class
 	playerClass = new Player(width / 2, height / 2, player);
 
+	//set initial player position
+	playerClass.spawnPos();
+
 	//set initial vars
 	titleButtonMode = titleButton;
 	currentScene = "Title";
@@ -94,9 +106,6 @@ function draw() {
 }
 
 function determineEvents() {
-	//have a state var that tells us what scene we are in
-	//and use it to determine events on screen
-
 	//ALWAYS RUNNING EVENTS
 
 	//set font
@@ -149,6 +158,7 @@ function determineEvents() {
 			}
 
 			else if (currentLine === 5) {
+				//transition to tutorial room here
 				nextScene = "Tutorial";
 				tran = true;
 			}
@@ -171,7 +181,12 @@ function determineEvents() {
 		currentBackground = tutorialBackground;
 	}
 
-	//transition ready when tran = true
+	//WEAPON ROOM EVENTS
+	if (currentScene === "Weapon") {
+		currentBackground = weaponBackground;
+	}
+
+	//transition ready for when tran = true
 	sceneTransition();
 }
 
@@ -188,7 +203,7 @@ function sceneTransition() {
 			tran = false;
 			tranAlpha = 255;
 			currentScene = nextScene;
-			nextScene = "";
+			nextScene = ""; //reset nextScene
 		}
 	}
 
@@ -212,6 +227,7 @@ function titleHover() {
 		titleButtonMode = titleButtonHover; //red/blue button
 
 		if (mouseIsPressed) {
+			//transition to yapping room here
 			nextScene = "Yapping";
 			tran = true;
 			buttonSound.play();
@@ -253,11 +269,13 @@ class Player {
 		//add animations to player sprite
 		player.addAnimation("playerUp", playerUpAnim);
 		player.addAnimation("playerDown", playerDownAnim);
+		player.addAnimation("playerLeft", playerLeftAnim);
 		player.addAnimation("playerIdle", playerIdleAnim);
 
 		//frame rate for specific animation
 		playerUpAnim.frameDelay = 12;
 		playerDownAnim.frameDelay = 12;
+		playerLeftAnim.frameDelay = 12;
 		playerIdleAnim.frameDelay = 22;
 	}
 
@@ -275,6 +293,7 @@ class Player {
 		}
 
 		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+			this.player.changeAnimation("playerLeft");
 			this.velocity.x -= 1;
 		}
 
@@ -302,13 +321,35 @@ class Player {
 		if (this.x > 630) {
 			this.x = 630;
 		}
-		if (this.y < 50) {
-			this.y = 50;
+		if (this.y < 30) {
+			this.y = 30;
 		}
 
-		if (this.y > 303) {
-			this.y = 303;
+		if (this.y > 281) {
+			this.y = 281;
 		}
+
+		//checking room transition
+		if (this.x > 303 && this.x < 342 && this.y < 31) { //xPos must be between 303 and 342
+			if (currentScene === "Tutorial") {
+				//transition to weapon room here
+				nextScene = "Weapon";
+				tran = true;
+				this.spawnPos();
+			}
+
+			if (currentScene = "Weapon") {
+				//transition to boss room here
+				nextScene = "Boss";
+				tran = true;
+				this.spawnPos();
+			}
+		}
+	}
+
+	spawnPos() {
+		this.y = 269;
+		this.x = width / 2;
 	}
 
 	display() {
@@ -316,7 +357,6 @@ class Player {
 		if (tranAlpha <= 0) {
 			this.player.position.set(this.x, this.y);
 		}
-
 	}
 
 	update() {
