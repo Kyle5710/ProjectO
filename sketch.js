@@ -1,6 +1,9 @@
 //stores player sprite
 let player;
 
+//if player can move
+let canMove = false;
+
 //fade transition
 let tranAlpha = 0;
 let tran = false;
@@ -44,7 +47,16 @@ function preload() {
 	playerLeftAnim = loadAnimation("assets/sprites/playerLeft/playerLeft1.png", "assets/sprites/playerLeft/playerLeft2.png",
 		"assets/sprites/playerLeft/playerLeft3.png", "assets/sprites/playerLeft/playerLeft4.png");
 
-	playerIdleAnim = loadAnimation("assets/sprites/playerIdle/playerIdle1.png", "assets/sprites/playerIdle/playerIdle2.png");
+	playerRightAnim = loadAnimation("assets/sprites/playerRight/playerRight1.png", "assets/sprites/playerRight/playerRight2.png",
+		"assets/sprites/playerRight/playerRight3.png", "assets/sprites/playerRight/playerRight4.png");
+
+	playerIdleDownAnim = loadAnimation("assets/sprites/playerIdle/playerIdleDown1.png", "assets/sprites/playerIdle/playerIdleDown2.png");
+
+	playerIdleUpAnim = loadAnimation("assets/sprites/playerIdle/playerIdleUp1.png", "assets/sprites/playerIdle/playerIdleUp2.png");
+
+	playerIdleLeftAnim = loadAnimation("assets/sprites/playerIdle/playerIdleLeft1.png", "assets/sprites/playerIdle/playerIdleLeft2.png");
+
+	playerIdleRightAnim = loadAnimation("assets/sprites/playerIdle/playerIdleRight1.png", "assets/sprites/playerIdle/playerIdleRight2.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -80,7 +92,7 @@ function setup() {
 	textSize(40);
 
 	//put player off-screen so not shown during title/intro
-	player = createSprite(1000, 1000, 60, 40);
+	player = createSprite(1000, 1000, 80, 151);
 
 	//create player class
 	playerClass = new Player(width / 2, height / 2, player);
@@ -99,7 +111,7 @@ function draw() {
 	determineEvents();
 
 	//player events
-	if (currentScene === "Tutorial") {
+	if (canMove) {
 		//scenes where the player is displayed and can move
 		playerClass.update();
 	}
@@ -178,6 +190,7 @@ function determineEvents() {
 
 	//TUTORIAL ROOM EVENTS
 	if (currentScene === "Tutorial") {
+		canMove = true; //player can move from here all the way to the boss room
 		currentBackground = tutorialBackground;
 	}
 
@@ -204,6 +217,7 @@ function sceneTransition() {
 			tranAlpha = 255;
 			currentScene = nextScene;
 			nextScene = ""; //reset nextScene
+			playerClass.spawnPos();
 		}
 	}
 
@@ -228,7 +242,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Tutorial"; 
 			tran = true;
 			buttonSound.play();
 			lastChangeTime = millis();
@@ -270,13 +284,21 @@ class Player {
 		player.addAnimation("playerUp", playerUpAnim);
 		player.addAnimation("playerDown", playerDownAnim);
 		player.addAnimation("playerLeft", playerLeftAnim);
-		player.addAnimation("playerIdle", playerIdleAnim);
+		player.addAnimation("playerRight", playerRightAnim);
+		player.addAnimation("playerIdleDown", playerIdleDownAnim);
+		player.addAnimation("playerIdleUp", playerIdleUpAnim);
+		player.addAnimation("playerIdleLeft", playerIdleLeftAnim);
+		player.addAnimation("playerIdleRight", playerIdleRightAnim);
 
 		//frame rate for specific animation
 		playerUpAnim.frameDelay = 12;
 		playerDownAnim.frameDelay = 12;
 		playerLeftAnim.frameDelay = 12;
-		playerIdleAnim.frameDelay = 22;
+		playerRightAnim.frameDelay = 12;
+		playerIdleDownAnim.frameDelay = 24;
+		playerIdleUpAnim.frameDelay = 24;
+		playerIdleLeftAnim.frameDelay = 24;
+		playerIdleRightAnim.frameDelay = 24;
 	}
 
 	move() {
@@ -298,11 +320,27 @@ class Player {
 		}
 
 		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+			this.player.changeAnimation("playerRight");
 			this.velocity.x += 1;
 		}
 
 		else if (!keyIsPressed) { //IDLE animation
-			this.player.changeAnimation("playerIdle");
+
+			if(keyCode === 83 || keyCode === DOWN_ARROW){
+				this.player.changeAnimation("playerIdleDown");
+			}
+			
+			if (keyCode === 87 || keyCode === UP_ARROW){
+				this.player.changeAnimation("playerIdleUp");
+			}
+
+			if (keyCode === 65 || keyCode === LEFT_ARROW){
+				this.player.changeAnimation("playerIdleLeft");
+			}
+
+			if (keyCode === 68 || keyCode === RIGHT_ARROW){
+				this.player.changeAnimation("playerIdleRight");
+			}
 		}
 
 		//normalize velocity so diagonal isnt faster
@@ -314,12 +352,12 @@ class Player {
 		this.y += this.velocity.y;
 
 		//border checking
-		if (this.x < 10) {
-			this.x = 10;
+		if (this.x < 20) {
+			this.x = 20;
 		}
 
-		if (this.x > 630) {
-			this.x = 630;
+		if (this.x > 620) {
+			this.x = 620;
 		}
 		if (this.y < 30) {
 			this.y = 30;
@@ -334,16 +372,17 @@ class Player {
 			if (currentScene === "Tutorial") {
 				//transition to weapon room here
 				nextScene = "Weapon";
-				tran = true;
-				this.spawnPos();
+				canMove = false; //player cannot move
+				this.x = 1000; this.y = 1000; //move player offscreen
+				tran = true; //fade transition
 			}
 
-			if (currentScene = "Weapon") {
+			/* if (currentScene = "Weapon") {
 				//transition to boss room here
 				nextScene = "Boss";
 				tran = true;
 				this.spawnPos();
-			}
+			} */
 		}
 	}
 
