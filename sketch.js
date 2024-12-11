@@ -100,6 +100,9 @@ function setup() {
 	//set initial player position
 	playerClass.spawnPos();
 
+	//set initial idle animation (goes off of last key pressed)
+	keyCode = UP_ARROW;
+
 	//set initial vars
 	titleButtonMode = titleButton;
 	currentScene = "Title";
@@ -324,7 +327,7 @@ class Player {
 			this.velocity.x += 1;
 		}
 
-		else if (!keyIsPressed) { //IDLE animation
+		else if (!keyIsPressed) { //IDLE animations
 
 			if(keyCode === 83 || keyCode === DOWN_ARROW){
 				this.player.changeAnimation("playerIdleDown");
