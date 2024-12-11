@@ -309,17 +309,17 @@ class Player {
 			this.velocity.y -= 1;
 		}
 
-		if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 			this.player.changeAnimation("playerDown");
 			this.velocity.y += 1;
 		}
 
-		if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+		else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
 			this.player.changeAnimation("playerLeft");
 			this.velocity.x -= 1;
 		}
 
-		if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+		else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
 			this.player.changeAnimation("playerRight");
 			this.velocity.x += 1;
 		}
@@ -368,7 +368,7 @@ class Player {
 		}
 
 		//checking room transition
-		if (this.x > 303 && this.x < 342 && this.y < 31) { //xPos must be between 303 and 342
+		if (this.x >= 296 && this.x <= 344 && this.y <= 31) { //xPos must be between 303 and 342
 			if (currentScene === "Tutorial") {
 				//transition to weapon room here
 				nextScene = "Weapon";
@@ -395,6 +395,7 @@ class Player {
 		//display armando
 		if (tranAlpha <= 0) {
 			this.player.position.set(this.x, this.y);
+			print(this.x);
 		}
 	}
 
