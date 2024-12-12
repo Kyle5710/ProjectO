@@ -1,6 +1,9 @@
 //stores player sprite
 let player;
 
+//stores dummy sprite
+let dummy;
+
 //if player can move
 let canMove = false;
 
@@ -58,6 +61,12 @@ function preload() {
 
 	playerIdleRightAnim = loadAnimation("assets/sprites/playerIdle/playerIdleRight1.png", "assets/sprites/playerIdle/playerIdleRight2.png");
 
+	//LOAD DUMMY ASSETS
+	dummyIdleAnim = loadAnimation("assets/sprites/dummyIdle/dummyIdle1.png", "assets/sprites/dummyIdle/dummyIdle2.png",
+		"assets/sprites/dummyIdle/dummyIdle3.png", "assets/sprites/dummyIdle/dummyIdle4.png");
+
+	dummyHitAnim = loadAnimation("assets/sprites/dummyHit/dummyHit.png");
+
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
 	titleBackground = loadImage("assets/sprites/titleScreen/titleBack.png");
@@ -72,12 +81,14 @@ function preload() {
 
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");
+	lobbyMusic = loadSound("assets/audio/lobbyMusic.mp3");
 
 	//LOAD WEAPON ROOM ASSETS
 	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
 
 	//set music properties
 	titleMusic.setVolume(1); titleMusic.setLoop(true);
+	lobbyMusic.setVolume(1); lobbyMusic.setLoop(true);
 }
 
 function setup() {
@@ -91,11 +102,13 @@ function setup() {
 	//text properties
 	textSize(40);
 
-	//put player off-screen so not shown during title/intro
+	//put sprites off-screen so not shown during title/intro
 	player = createSprite(1000, 1000, 80, 151);
+	dummy = createSprite(1000, 1000, 88, 140);
 
-	//create player class
+	//create classes
 	playerClass = new Player(width / 2, height / 2, player);
+	dummyClass = new Dummy(width / 2, height / 2, dummy);
 
 	//set initial player position
 	playerClass.spawnPos();
@@ -117,6 +130,7 @@ function draw() {
 	if (canMove) {
 		//scenes where the player is displayed and can move
 		playerClass.update();
+		dummyClass.update();
 	}
 }
 
@@ -125,11 +139,6 @@ function determineEvents() {
 
 	//set font
 	textFont(font);
-
-	//music
-	/* if (currentMusic) {
-		currentMusic.play();
-	} */
 
 	//background
 	if (currentBackground) {
@@ -140,6 +149,9 @@ function determineEvents() {
 	if (currentScene === "Title") {
 		//display title background
 		currentBackground = titleBackground;
+
+		//music
+		currentMusic.play();
 
 		//move logo position
 		logoPos = moveLogo(logoPos);
@@ -195,6 +207,9 @@ function determineEvents() {
 	if (currentScene === "Tutorial") {
 		canMove = true; //player can move from here all the way to the boss room
 		currentBackground = tutorialBackground;
+		currentMusic.pause();
+		currentMusic = lobbyMusic;
+		currentMusic.play();
 	}
 
 	//WEAPON ROOM EVENTS
@@ -245,7 +260,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Tutorial"; 
+			nextScene = "Tutorial";
 			tran = true;
 			buttonSound.play();
 			lastChangeTime = millis();
@@ -293,6 +308,11 @@ class Player {
 		player.addAnimation("playerIdleLeft", playerIdleLeftAnim);
 		player.addAnimation("playerIdleRight", playerIdleRightAnim);
 
+		//load dummy animations
+		dummy.addAnimation("dummyIdle", dummyIdleAnim);
+		dummy.addAnimation("dummyHit", dummyHitAnim);
+
+
 		//frame rate for specific animation
 		playerUpAnim.frameDelay = 12;
 		playerDownAnim.frameDelay = 12;
@@ -302,6 +322,8 @@ class Player {
 		playerIdleUpAnim.frameDelay = 24;
 		playerIdleLeftAnim.frameDelay = 24;
 		playerIdleRightAnim.frameDelay = 24;
+		dummyIdleAnim.frameDelay = 12;
+		dummyHitAnim.frameDelay = 1;
 	}
 
 	move() {
@@ -329,19 +351,19 @@ class Player {
 
 		else if (!keyIsPressed) { //IDLE animations
 
-			if(keyCode === 83 || keyCode === DOWN_ARROW){
+			if (keyCode === 83 || keyCode === DOWN_ARROW) {
 				this.player.changeAnimation("playerIdleDown");
 			}
-			
-			if (keyCode === 87 || keyCode === UP_ARROW){
+
+			if (keyCode === 87 || keyCode === UP_ARROW) {
 				this.player.changeAnimation("playerIdleUp");
 			}
 
-			if (keyCode === 65 || keyCode === LEFT_ARROW){
+			if (keyCode === 65 || keyCode === LEFT_ARROW) {
 				this.player.changeAnimation("playerIdleLeft");
 			}
 
-			if (keyCode === 68 || keyCode === RIGHT_ARROW){
+			if (keyCode === 68 || keyCode === RIGHT_ARROW) {
 				this.player.changeAnimation("playerIdleRight");
 			}
 		}
@@ -398,12 +420,39 @@ class Player {
 		//display armando
 		if (tranAlpha <= 0) {
 			this.player.position.set(this.x, this.y);
-			print(this.x);
 		}
 	}
 
 	update() {
 		this.move();
 		this.display();
+	}
+}
+
+class Dummy {
+	constructor(xPos, yPos, dummy) {
+		this.x = xPos;
+		this.y = yPos;
+		this.hit = false;
+		this.dummy = dummy;
+	}
+
+	animations(){
+		if(this.hit){
+			this.dummy.changeAnimation("dummyHit");
+		}
+
+		else{
+			this.dummy.changeAnimation("dummyIdle");
+		}
+	}
+
+	spawnPos(){
+		this.dummy.position.set(this.x, this.y);
+	}
+
+	update(){
+		this.animations();
+		this.spawnPos();
 	}
 }
