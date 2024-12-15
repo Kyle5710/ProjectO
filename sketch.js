@@ -1,94 +1,6 @@
-//stores player sprite
-let player;
-
-//stores dummy sprite
-let dummy;
-
-//if player can move
-let canMove = false;
-
-//fade transition
-let tranAlpha = 0;
-let tran = false;
-let fadeDur = 1000;
-let nextScene = "";
-
-//title room variables
-let titleBackground, titleButton, titleMusic;
-let logoPos = 100; //initial y pos of logo
-let logoDir = true; //direction of logo
-let buttonHover = false; //mouse over button
-
-//yapping room variables
-let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
-	"was assigned an important mission.", "To find out Obama's last name,",
-	"once and for all."];
-let currentLine = 0;
-let delay = 2000; //2 second in miliseconds between lines
-let lastChangeTime = 0;
-
-//tutorial room variables
-let tutorialBackground;
-
-//weapon room variables
-let weaponBackground;
-
-//state variables
-let currentBackground, currentScene, currentMusic, currentDialogue;
-
 function preload() {
-	//LOAD FONT
-	font = loadFont("assets/font/font.ttf");
-
-	//LOAD PLAYER ANIMATIONS
-	playerUpAnim = loadAnimation("assets/sprites/playerUp/playerUp1.png", "assets/sprites/playerUp/playerUp2.png",
-		"assets/sprites/playerUp/playerUp3.png", "assets/sprites/playerUp/playerUp4.png");
-
-	playerDownAnim = loadAnimation("assets/sprites/playerDown/playerDown1.png", "assets/sprites/playerDown/playerDown2.png",
-		"assets/sprites/playerDown/playerDown3.png", "assets/sprites/playerDown/playerDown4.png");
-
-	playerLeftAnim = loadAnimation("assets/sprites/playerLeft/playerLeft1.png", "assets/sprites/playerLeft/playerLeft2.png",
-		"assets/sprites/playerLeft/playerLeft3.png", "assets/sprites/playerLeft/playerLeft4.png");
-
-	playerRightAnim = loadAnimation("assets/sprites/playerRight/playerRight1.png", "assets/sprites/playerRight/playerRight2.png",
-		"assets/sprites/playerRight/playerRight3.png", "assets/sprites/playerRight/playerRight4.png");
-
-	playerIdleDownAnim = loadAnimation("assets/sprites/playerIdle/playerIdleDown1.png", "assets/sprites/playerIdle/playerIdleDown2.png");
-
-	playerIdleUpAnim = loadAnimation("assets/sprites/playerIdle/playerIdleUp1.png", "assets/sprites/playerIdle/playerIdleUp2.png");
-
-	playerIdleLeftAnim = loadAnimation("assets/sprites/playerIdle/playerIdleLeft1.png", "assets/sprites/playerIdle/playerIdleLeft2.png");
-
-	playerIdleRightAnim = loadAnimation("assets/sprites/playerIdle/playerIdleRight1.png", "assets/sprites/playerIdle/playerIdleRight2.png");
-
-	//LOAD DUMMY ASSETS
-	dummyIdleAnim = loadAnimation("assets/sprites/dummyIdle/dummyIdle1.png", "assets/sprites/dummyIdle/dummyIdle2.png",
-		"assets/sprites/dummyIdle/dummyIdle3.png", "assets/sprites/dummyIdle/dummyIdle4.png");
-
-	dummyHitAnim = loadAnimation("assets/sprites/dummyHit/dummyHit.png");
-
-	//LOAD TITLE SCREEN ASSETS
-	userCursor = loadImage("assets/sprites/cursor.png");
-	titleBackground = loadImage("assets/sprites/titleScreen/titleBack.png");
-	titleButton = loadImage("assets/sprites/titleScreen/titleButton.png");
-	titleButtonHover = loadImage("assets/sprites/titleScreen/titleButtonHover.png");
-	titleLogo = loadImage("assets/sprites/titleScreen/titleLogo.png");
-	buttonSound = loadSound("assets/audio/startButton.wav");
-	titleMusic = loadSound("assets/audio/titleMusic.wav");
-
-	//LOAD YAPPING ASSETS
-	yappingBack = loadImage("assets/sprites/temporaryArt.jpeg");
-
-	//LOAD TUTORIAL ROOM ASSETS
-	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");
-	lobbyMusic = loadSound("assets/audio/lobbyMusic.mp3");
-
-	//LOAD WEAPON ROOM ASSETS
-	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
-
-	//set music properties
-	titleMusic.setVolume(1); titleMusic.setLoop(true);
-	lobbyMusic.setVolume(1); lobbyMusic.setLoop(true);
+	//VARIABLES ARE ALL IN variables.js
+	preloadAssets(); //preloadScript.js
 }
 
 function setup() {
@@ -99,8 +11,10 @@ function setup() {
 	noCursor();
 	pixelDensity(1);
 
-	//text properties
+	//properties
 	textSize(40);
+	titleMusic.setVolume(1); titleMusic.setLoop(true);
+	lobbyMusic.setVolume(1); lobbyMusic.setLoop(true);
 
 	//put sprites off-screen so not shown during title/intro
 	player = createSprite(1000, 1000, 80, 151);
@@ -109,34 +23,49 @@ function setup() {
 	//create classes
 	playerClass = new Player(width / 2, height / 2, player);
 	dummyClass = new Dummy(width / 2, height / 2, dummy);
+	barrierManager = new BarrierManager();
 
-	//set initial player position
-	playerClass.spawnPos();
-
-	//set initial idle animation (goes off of last key pressed)
-	keyCode = UP_ARROW;
+	//dummy barrier
+	barrierManager.addBarrier(550, 280, -20, -50, "Weapon");
 
 	//set initial vars
+	playerClass.spawnPos();
 	titleButtonMode = titleButton;
 	currentScene = "Title";
 	currentMusic = titleMusic;
 }
 
 function draw() {
+	barrierManager.updateBarriersForState(currentScene, playerClass.player);
+
 	//main func
 	determineEvents();
 
 	//player events
-	if (canMove) {
-		//scenes where the player is displayed and can move
+	if (canMove) { //scenes where player can move
 		playerClass.update();
 		dummyClass.update();
 	}
+
+	//transition ready for when tran = true
+	sceneTransition();
+
+	//debug
+	drawDebug();
+}
+
+function drawDebug() {
+	//display current scene
+	fill("white");
+	textAlign(LEFT);
+	text("Scene: " + currentScene, 5, 25);
+
+	//hitboxes
+	playerClass.player.debug = true;
+	dummyClass.dummy.debug = true;
 }
 
 function determineEvents() {
-	//ALWAYS RUNNING EVENTS
-
 	//set font
 	textFont(font);
 
@@ -145,13 +74,13 @@ function determineEvents() {
 		background(currentBackground);
 	}
 
-	//TITLE SCREEN EVENTS
+	//TITLE ROOM
 	if (currentScene === "Title") {
 		//display title background
 		currentBackground = titleBackground;
 
 		//music
-		currentMusic.play();
+		//currentMusic.play();
 
 		//move logo position
 		logoPos = moveLogo(logoPos);
@@ -169,7 +98,7 @@ function determineEvents() {
 		image(userCursor, mouseX, mouseY, 33, 33);
 	}
 
-	//YAP SESSION EVENTS
+	//YAPPING ROOM
 	if (currentScene === "Yapping") {
 		currentBackground = yappingBack;
 
@@ -203,22 +132,19 @@ function determineEvents() {
 		image(userCursor, mouseX, mouseY, 33, 33);
 	}
 
-	//TUTORIAL ROOM EVENTS
+	//TUTORIAL ROOM
 	if (currentScene === "Tutorial") {
 		canMove = true; //player can move from here all the way to the boss room
 		currentBackground = tutorialBackground;
 		currentMusic.pause();
 		currentMusic = lobbyMusic;
-		currentMusic.play();
+		//currentMusic.play();
 	}
 
-	//WEAPON ROOM EVENTS
+	//WEAPON ROOM
 	if (currentScene === "Weapon") {
 		currentBackground = weaponBackground;
 	}
-
-	//transition ready for when tran = true
-	sceneTransition();
 }
 
 function sceneTransition() {
@@ -230,12 +156,15 @@ function sceneTransition() {
 
 	if (tran) {
 		tranAlpha += 255 / (fadeDur / deltaTime);
-		if (tranAlpha >= 255) {
+		if (tranAlpha >= 255) { //transition
 			tran = false;
 			tranAlpha = 255;
 			currentScene = nextScene;
 			nextScene = ""; //reset nextScene
+
+			//bring classes back on screen
 			playerClass.spawnPos();
+			dummyClass.spawnPos();
 		}
 	}
 
@@ -294,8 +223,8 @@ class Player {
 	constructor(xPos, yPos, player) {
 		this.x = xPos;
 		this.y = yPos;
-		this.speed = 3;
 		this.player = player;
+		this.speed = 3;
 		this.velocity = createVector(0, 0);
 
 		//add animations to player sprite
@@ -308,120 +237,113 @@ class Player {
 		player.addAnimation("playerIdleLeft", playerIdleLeftAnim);
 		player.addAnimation("playerIdleRight", playerIdleRightAnim);
 
-		//load dummy animations
-		dummy.addAnimation("dummyIdle", dummyIdleAnim);
-		dummy.addAnimation("dummyHit", dummyHitAnim);
-
-
-		//frame rate for specific animation
-		playerUpAnim.frameDelay = 12;
-		playerDownAnim.frameDelay = 12;
-		playerLeftAnim.frameDelay = 12;
-		playerRightAnim.frameDelay = 12;
-		playerIdleDownAnim.frameDelay = 24;
-		playerIdleUpAnim.frameDelay = 24;
-		playerIdleLeftAnim.frameDelay = 24;
-		playerIdleRightAnim.frameDelay = 24;
-		dummyIdleAnim.frameDelay = 12;
-		dummyHitAnim.frameDelay = 1;
+		//frame rate for animations
+		playerUpAnim.frameDelay = playerDownAnim.frameDelay = playerLeftAnim.frameDelay = playerRightAnim.frameDelay = 12;
+		playerIdleDownAnim.frameDelay = playerIdleUpAnim.frameDelay = playerIdleLeftAnim.frameDelay = playerIdleRightAnim.frameDelay = 24;
 	}
 
 	move() {
-		this.velocity.set(0, 0); //so he doesnt move by himself
+		this.velocity.set(0, 0); //reset velocity each frame
 
+		// temp movement dir
+		let moveX = 0;
+		let moveY = 0;
+
+		//set movement
 		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
 			this.player.changeAnimation("playerUp");
-			this.velocity.y -= 1;
+			moveY = -1;
+			lastDir = "Up";
 		}
-
+		
 		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 			this.player.changeAnimation("playerDown");
-			this.velocity.y += 1;
+			moveY = 1;
+			lastDir = "Down";
 		}
 
 		else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
 			this.player.changeAnimation("playerLeft");
-			this.velocity.x -= 1;
+			moveX = -1;
+			lastDir = "Left";
 		}
 
 		else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
 			this.player.changeAnimation("playerRight");
-			this.velocity.x += 1;
+			moveX = 1;
+			lastDir = "Right";
 		}
 
-		else if (!keyIsPressed) { //IDLE animations
-
-			if (keyCode === 83 || keyCode === DOWN_ARROW) {
-				this.player.changeAnimation("playerIdleDown");
-			}
-
-			if (keyCode === 87 || keyCode === UP_ARROW) {
-				this.player.changeAnimation("playerIdleUp");
-			}
-
-			if (keyCode === 65 || keyCode === LEFT_ARROW) {
-				this.player.changeAnimation("playerIdleLeft");
-			}
-
-			if (keyCode === 68 || keyCode === RIGHT_ARROW) {
-				this.player.changeAnimation("playerIdleRight");
-			}
+		else if (!keyIsPressed) { // IDLE
+			this.player.changeAnimation("playerIdle" + lastDir);
 		}
 
-		//normalize velocity so diagonal isnt faster
-		this.velocity.normalize();
-		this.velocity.mult(this.speed);
+		//normalize velocity
+		let tempVelocity = createVector(moveX, moveY);
+		tempVelocity.normalize();
+		tempVelocity.mult(this.speed);
+
+		//check for collision
+		let canMoveX = !this.checkCollision(tempVelocity.x, 0); //horizontal
+		let canMoveY = !this.checkCollision(0, tempVelocity.y); //vertical
+
+		//if no collision then move
+		if (canMoveX) {
+			this.velocity.x = tempVelocity.x;
+		}
+
+		if (canMoveY) {
+			this.velocity.y = tempVelocity.y;
+		}
 
 		//apply movement
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
-		//border checking
-		if (this.x < 20) {
-			this.x = 20;
-		}
+		//border check
+		this.x = constrain(this.x, 20, 620);
+		this.y = constrain(this.y, 30, 281);
 
-		if (this.x > 620) {
-			this.x = 620;
-		}
-		if (this.y < 30) {
-			this.y = 30;
-		}
-
-		if (this.y > 281) {
-			this.y = 281;
-		}
-
-		//checking room transition
-		if (this.x >= 296 && this.x <= 344 && this.y <= 31) { //xPos must be between 303 and 342
+		// Checking room transition
+		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 			if (currentScene === "Tutorial") {
-				//transition to weapon room here
 				nextScene = "Weapon";
-				canMove = false; //player cannot move
-				this.x = 1000; this.y = 1000; //move player offscreen
-				tran = true; //fade transition
+				canMove = false; //prevent player movement
+				this.x = this.y = 1000; //move player offscreen
+				tran = true; //run fade transition
 			}
-
-			/* if (currentScene = "Weapon") {
-				//transition to boss room here
-				nextScene = "Boss";
-				tran = true;
-				this.spawnPos();
-			} */
 		}
 	}
+
+	checkCollision(moveX, moveY) {
+		//temp hitbox
+		let nextX = this.x + moveX;
+		let nextY = this.y + moveY;
+
+		for (let barrier of barrierManager.barriers) {
+			if (barrier.playerCollision({ x: nextX, y: nextY, width: this.player.width, height: this.player.height })) { //W youtube tutorial
+				return true; //collision
+			}
+		}
+		return false; //no collision
+	}
+
 
 	spawnPos() {
 		this.y = 269;
 		this.x = width / 2;
 	}
 
+
 	display() {
-		//display armando
+		//rotates player when he gets near the dummy if this isnt here idk why
+		this.player.rotation = 0;
+
 		if (tranAlpha <= 0) {
 			this.player.position.set(this.x, this.y);
 		}
 	}
+
 
 	update() {
 		this.move();
@@ -433,26 +355,135 @@ class Dummy {
 	constructor(xPos, yPos, dummy) {
 		this.x = xPos;
 		this.y = yPos;
-		this.hit = false;
 		this.dummy = dummy;
+		this.hit = false;
+
+		//load dummy animations
+		dummy.addAnimation("dummyIdle", dummyIdleAnim);
+		dummy.addAnimation("dummyHit", dummyHitAnim);
+
+		dummyIdleAnim.frameDelay = 24;
+		dummyHitAnim.frameDelay = 1;
 	}
 
-	animations(){
-		if(this.hit){
+	animations() {
+		//rotates when player gets close if this isnt here for some reason idk why
+		this.dummy.rotation = 0;
+
+		if (this.hit) {
 			this.dummy.changeAnimation("dummyHit");
 		}
 
-		else{
+		else {
 			this.dummy.changeAnimation("dummyIdle");
+		}
+
+
+		//make the player go above the dummy if in front of it
+		//behind the dummy if behind it
+		if (playerClass.player.y < this.y) {
+			playerClass.player.layer = 0;
+			this.dummy.layer = 1;
+		}
+
+		else {
+			playerClass.player.layer = 1;
+			this.dummy.layer = 0;
 		}
 	}
 
-	spawnPos(){
-		this.dummy.position.set(this.x, this.y);
+	position() {
+		if (tranAlpha <= 0 && currentScene === "Weapon") { //only shown in weapon room
+			this.dummy.position.set(this.x, this.y);
+		}
 	}
 
-	update(){
+	spawnPos() {
+		this.x = 500;
+		this.y = height / 2;
+	}
+
+	update() {
 		this.animations();
-		this.spawnPos();
+		this.position();
 	}
 }
+
+class Barrier {
+	constructor(xPos, yPos, width, height, scene) {
+		this.x = xPos;
+		this.y = yPos;
+		this.width = width;
+		this.height = height;
+		this.scene = scene;
+		this.barrier = createSprite(this.x, this.y, this.width, this.height);
+		this.barrier.visible = false; //start hidden (debug var delete when done)
+		this.active = false; //start inactive
+	}
+
+	setActive(isActive) {
+		this.active = isActive;
+		this.barrier.rotation = 0; //prevent rotation
+
+		if (isActive) {
+			this.barrier.position.set(this.x, this.y);  //set to original position
+			//this.barrier.visible = true;
+		}
+
+		else {
+			this.barrier.position.set(-1000, -1000);  //move off screen
+			//this.barrier.visible = false;
+		}
+	}
+
+	playerCollision(player) {
+		if (!this.active) {
+			return false; //barrier isnt active = ignore it
+		}
+
+		//W youtube tutorial
+		let playerRect = {
+			x: player.x,
+			y: player.y,
+			width: player.width,
+			height: player.height
+		};
+
+		let barrierRect = {
+			x: this.x,
+			y: this.y,
+			width: this.width,
+			height: this.height
+		};
+
+		if (collideRectRect(playerRect.x, playerRect.y, playerRect.width, playerRect.height, barrierRect.x, barrierRect.y, barrierRect.width, barrierRect.height)) {
+			return true; //collision detected
+		}
+
+		return false; //no collision
+	}
+}
+
+class BarrierManager {
+	constructor() {
+		this.barriers = []; //array for barriers
+	}
+
+	addBarrier(x, y, w, h, scene) { //add and push barrier to array
+		let newBarrier = new Barrier(x, y, w, h, scene);
+		this.barriers.push(newBarrier);
+	}
+
+	updateBarriersForState(currentState) {
+		//check for correct scene, if so, barriers become active
+		for (let barrier of this.barriers) {
+			let isActive = barrier.scene === currentState;
+			barrier.setActive(isActive);
+		}
+	}
+}
+
+
+
+
+
