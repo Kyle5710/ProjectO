@@ -29,7 +29,6 @@ function setup() {
 	barrierManager.addBarrier(550, 280, -20, -50, "Weapon");
 
 	//set initial vars
-	playerClass.spawnPos();
 	titleButtonMode = titleButton;
 	currentScene = "Title";
 	currentMusic = titleMusic;
@@ -42,9 +41,13 @@ function draw() {
 	determineEvents();
 
 	//player events
-	if (canMove) { //scenes where player can move
+	if (canMove && tranAlpha <= 0) { //scenes where player can move
 		playerClass.update();
 		dummyClass.update();
+	}
+
+	else {
+		playerClass.spawnPos();
 	}
 
 	//transition ready for when tran = true
@@ -116,6 +119,7 @@ function determineEvents() {
 			else if (currentLine === 5) {
 				//transition to tutorial room here
 				nextScene = "Tutorial";
+				canMove = false;
 				tran = true;
 			}
 
@@ -134,7 +138,7 @@ function determineEvents() {
 
 	//TUTORIAL ROOM
 	if (currentScene === "Tutorial") {
-		canMove = true; //player can move from here all the way to the boss room
+		//player can move from here all the way to the boss room
 		currentBackground = tutorialBackground;
 		currentMusic.pause();
 		currentMusic = lobbyMusic;
@@ -145,10 +149,15 @@ function determineEvents() {
 	if (currentScene === "Weapon") {
 		currentBackground = weaponBackground;
 	}
+
+	if(currentScene === "Boss"){
+		currentBackground = tutorialBackground;
+	}
 }
 
 function sceneTransition() {
 	//transition
+	//find a way to track when the transition ends and set canMove = true; then instead of how it is now
 	if (tranAlpha > 0) {
 		fill(0, 0, 0, tranAlpha);
 		rect(0, 0, width, height);
@@ -157,14 +166,16 @@ function sceneTransition() {
 	if (tran) {
 		tranAlpha += 255 / (fadeDur / deltaTime);
 		if (tranAlpha >= 255) { //transition
+
+			//bring classes back on screen
+			canMove = true; //player can move but tranAlpha prevents it
+			playerClass.spawnPos();
+			dummyClass.spawnPos();
+
 			tran = false;
 			tranAlpha = 255;
 			currentScene = nextScene;
 			nextScene = ""; //reset nextScene
-
-			//bring classes back on screen
-			playerClass.spawnPos();
-			dummyClass.spawnPos();
 		}
 	}
 
@@ -190,6 +201,7 @@ function titleHover() {
 		if (mouseIsPressed) {
 			//transition to yapping room here
 			nextScene = "Tutorial";
+			canMove = false;
 			tran = true;
 			buttonSound.play();
 			lastChangeTime = millis();
@@ -255,7 +267,7 @@ class Player {
 			moveY = -1;
 			lastDir = "Up";
 		}
-		
+
 		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 			this.player.changeAnimation("playerDown");
 			moveY = 1;
@@ -306,11 +318,16 @@ class Player {
 
 		// Checking room transition
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
+			this.x = this.y = 1000; //move player offscreen
+			canMove = false; //prevent player movement
+			tran = true; //run fade transition
+
 			if (currentScene === "Tutorial") {
 				nextScene = "Weapon";
-				canMove = false; //prevent player movement
-				this.x = this.y = 1000; //move player offscreen
-				tran = true; //run fade transition
+			}
+
+			if (currentScene === "Weapon") {
+				nextScene = "Boss";
 			}
 		}
 	}
@@ -328,22 +345,17 @@ class Player {
 		return false; //no collision
 	}
 
-
 	spawnPos() {
 		this.y = 269;
 		this.x = width / 2;
 	}
 
-
 	display() {
 		//rotates player when he gets near the dummy if this isnt here idk why
 		this.player.rotation = 0;
+		this.player.position.set(this.x, this.y);
 
-		if (tranAlpha <= 0) {
-			this.player.position.set(this.x, this.y);
-		}
 	}
-
 
 	update() {
 		this.move();
@@ -378,7 +390,6 @@ class Dummy {
 			this.dummy.changeAnimation("dummyIdle");
 		}
 
-
 		//make the player go above the dummy if in front of it
 		//behind the dummy if behind it
 		if (playerClass.player.y < this.y) {
@@ -393,8 +404,12 @@ class Dummy {
 	}
 
 	position() {
-		if (tranAlpha <= 0 && currentScene === "Weapon") { //only shown in weapon room
+		if (currentScene === "Weapon") { //only shown in weapon room
 			this.dummy.position.set(this.x, this.y);
+
+			if(tran){
+				this.dummy.position.set(1000, 1000);
+			}
 		}
 	}
 
@@ -438,7 +453,7 @@ class Barrier {
 
 	playerCollision(player) {
 		if (!this.active) {
-			return false; //barrier isnt active = ignore it
+			return false; //barrier isnt active then ignore it
 		}
 
 		//W youtube tutorial
@@ -482,8 +497,3 @@ class BarrierManager {
 		}
 	}
 }
-
-
-
-
-

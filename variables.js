@@ -37,4 +37,3 @@ let currentBackground, currentScene, currentMusic;
 
 //STORES BARRIERS
 let barrierManager;
-let overlap;

@@ -29,6 +29,13 @@ function preloadAssets() {
 
 	dummyHitAnim = loadAnimation("assets/sprites/dummyHit/dummyHit.png");
 
+	//LOAD OBAMA ANIMATIONS
+	obamaDownAnim = loadImage("assets/sprites/obamaDown/obamaDown1.png", "assets/sprites/obamaDown/obamaDown2.png",
+		"assets/sprites/obamaDown/obamaDown3.png", "assets/sprites/obamaDown/obamaDown4.png",)
+
+	obamaUpAnim = loadImage("assets/sprites/obamaUp/obamaUp1.png", "assets/sprites/obamaUp/obamaUp2.png",
+		"assets/sprites/obamaUp/obamaUp3.png", "assets/sprites/obamaUp/obamaUp4.png",)
+
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
 	titleBackground = loadImage("assets/sprites/titleScreen/titleBack.png");
