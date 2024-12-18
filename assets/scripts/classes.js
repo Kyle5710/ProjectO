@@ -1,236 +1,3 @@
-function preload() {
-	//VARIABLES ARE ALL IN variables.js
-	preloadAssets(); //preloadScript.js
-}
-
-function setup() {
-	//setup stuffs
-	createCanvas(640, 360, WEBGL);
-	displayMode("centered", "pixelated");
-	noStroke();
-	noCursor();
-	pixelDensity(1);
-
-	//properties
-	textSize(40);
-	titleMusic.setVolume(1); titleMusic.setLoop(true);
-	lobbyMusic.setVolume(1); lobbyMusic.setLoop(true);
-
-	//put sprites off-screen so not shown during title/intro
-	player = createSprite(1000, 1000, 80, 151);
-	dummy = createSprite(1000, 1000, 88, 140);
-
-	//create classes
-	playerClass = new Player(width / 2, height / 2, player);
-	dummyClass = new Dummy(width / 2, height / 2, dummy);
-	barrierManager = new BarrierManager();
-
-	//dummy barrier
-	barrierManager.addBarrier(550, 280, -20, -50, "Weapon");
-
-	//set initial vars
-	titleButtonMode = titleButton;
-	currentScene = "Title";
-	currentMusic = titleMusic;
-}
-
-function draw() {
-	barrierManager.updateBarriersForState(currentScene, playerClass.player);
-
-	//main func
-	determineEvents();
-
-	//player events
-	if (canMove && tranAlpha <= 0) { //scenes where player can move
-		playerClass.update();
-		dummyClass.update();
-	}
-
-	else {
-		playerClass.spawnPos();
-	}
-
-	//transition ready for when tran = true
-	sceneTransition();
-
-	//debug
-	drawDebug();
-}
-
-function drawDebug() {
-	//display current scene
-	fill("white");
-	textAlign(LEFT);
-	text("Scene: " + currentScene, 5, 25);
-
-	//hitboxes
-	playerClass.player.debug = true;
-	dummyClass.dummy.debug = true;
-}
-
-function determineEvents() {
-	//set font
-	textFont(font);
-
-	//background
-	if (currentBackground) {
-		background(currentBackground);
-	}
-
-	//TITLE ROOM
-	if (currentScene === "Title") {
-		//display title background
-		currentBackground = titleBackground;
-
-		//music
-		//currentMusic.play();
-
-		//move logo position
-		logoPos = moveLogo(logoPos);
-
-		//check if mouse hovering over play button
-		titleHover();
-
-		//display images
-		imageMode(CENTER);
-		image(titleButtonMode, width / 2, 300); // x = width/2, y = 300, width = 254, height = 82
-		image(titleLogo, width / 2, logoPos, 300, 140);
-		imageMode(NORMAL);
-
-		//display cursor
-		image(userCursor, mouseX, mouseY, 33, 33);
-	}
-
-	//YAPPING ROOM
-	if (currentScene === "Yapping") {
-		currentBackground = yappingBack;
-
-		//display text
-		textAlign(CENTER, BOTTOM);
-		text(yapDialogue[currentLine], width / 2, 340);
-
-		//change the lines in the dialogue based of delay var
-		if (millis() - lastChangeTime > delay) {
-			//events based on line #
-			if (currentLine === 4) {
-				fill("red");
-			}
-
-			else if (currentLine === 5) {
-				//transition to tutorial room here
-				nextScene = "Tutorial";
-				canMove = false;
-				tran = true;
-			}
-
-			else {
-				fill("white");
-			}
-
-			buttonSound.play(); //sfx
-			currentLine = (currentLine + 1) % yapDialogue.length; //loops through array infinitely
-			lastChangeTime = millis();
-		}
-
-		//display cursor
-		image(userCursor, mouseX, mouseY, 33, 33);
-	}
-
-	//TUTORIAL ROOM
-	if (currentScene === "Tutorial") {
-		//player can move from here all the way to the boss room
-		currentBackground = tutorialBackground;
-		currentMusic.pause();
-		currentMusic = lobbyMusic;
-		//currentMusic.play();
-	}
-
-	//WEAPON ROOM
-	if (currentScene === "Weapon") {
-		currentBackground = weaponBackground;
-	}
-
-	if(currentScene === "Boss"){
-		currentBackground = tutorialBackground;
-	}
-}
-
-function sceneTransition() {
-	//transition
-	//find a way to track when the transition ends and set canMove = true; then instead of how it is now
-	if (tranAlpha > 0) {
-		fill(0, 0, 0, tranAlpha);
-		rect(0, 0, width, height);
-	}
-
-	if (tran) {
-		tranAlpha += 255 / (fadeDur / deltaTime);
-		if (tranAlpha >= 255) { //transition
-
-			//bring classes back on screen
-			canMove = true; //player can move but tranAlpha prevents it
-			playerClass.spawnPos();
-			dummyClass.spawnPos();
-
-			tran = false;
-			tranAlpha = 255;
-			currentScene = nextScene;
-			nextScene = ""; //reset nextScene
-		}
-	}
-
-	else if (tranAlpha > 0) {
-		tranAlpha -= 255 / (fadeDur / deltaTime);
-	}
-}
-
-function titleHover() {
-	//calc button properties to account for imageMode(CENTER)
-	let yPos = width / 2 - 254 / 4;
-	let xPos = 300 - 82 / 4;
-	let bWidth = 254 / 2;
-	let bHeight = 82 / 2;
-
-	//check for mouse collision
-	buttonHover = collidePointRect(mouseX, mouseY, yPos, xPos, bWidth, bHeight);
-
-	if (buttonHover) {
-		//collision
-		titleButtonMode = titleButtonHover; //red/blue button
-
-		if (mouseIsPressed) {
-			//transition to yapping room here
-			nextScene = "Tutorial";
-			canMove = false;
-			tran = true;
-			buttonSound.play();
-			lastChangeTime = millis();
-		}
-	}
-
-	else {
-		//no collision
-		titleButtonMode = titleButton; //normal button
-	}
-}
-
-function moveLogo(logoPos) {
-	//check logo pos
-	if (logoPos <= 80 || logoPos >= 120) {
-		logoDir = !logoDir;
-	}
-
-	//move logo
-	if (logoDir) {
-		return logoPos - 0.5;
-	}
-
-	else {
-		return logoPos + 0.5;
-	}
-}
-
-//ClASSES
 class Player {
 	constructor(xPos, yPos, player) {
 		this.x = xPos;
@@ -318,16 +85,19 @@ class Player {
 
 		// Checking room transition
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
-			this.x = this.y = 1000; //move player offscreen
-			canMove = false; //prevent player movement
-			tran = true; //run fade transition
 
-			if (currentScene === "Tutorial") {
-				nextScene = "Weapon";
-			}
+			if (currentScene !== "Boss") {
+				this.x = this.y = 1000; //move player offscreen
+				canMove = false; //prevent player movement
+				tran = true; //run fade transition
 
-			if (currentScene === "Weapon") {
-				nextScene = "Boss";
+				if (currentScene === "Tutorial") {
+					nextScene = "Weapon";
+				}
+
+				else if (currentScene === "Weapon") {
+					nextScene = "Boss";
+				}
 			}
 		}
 	}
@@ -407,7 +177,7 @@ class Dummy {
 		if (currentScene === "Weapon") { //only shown in weapon room
 			this.dummy.position.set(this.x, this.y);
 
-			if(tran){
+			if (tran) {
 				this.dummy.position.set(1000, 1000);
 			}
 		}
@@ -489,7 +259,7 @@ class BarrierManager {
 		this.barriers.push(newBarrier);
 	}
 
-	updateBarriersForState(currentState) {
+	updateBarState(currentState) {
 		//check for correct scene, if so, barriers become active
 		for (let barrier of this.barriers) {
 			let isActive = barrier.scene === currentState;
