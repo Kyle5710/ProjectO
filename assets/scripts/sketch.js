@@ -1,3 +1,6 @@
+//ProjectO
+//Kyle and Alexandre
+
 function preload() {
 	//variables in variables.js
 	//classes in classes.js
@@ -25,9 +28,6 @@ function draw() {
 		//can't move so set spawn position
 		playerClass.spawnPos();
 	}
-
-	//debug
-	drawDebug();
 }
 
 function drawDebug() {
@@ -86,7 +86,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Tutorial";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

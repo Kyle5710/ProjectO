@@ -29,33 +29,67 @@ class Player {
 		let moveY = 0;
 
 		//set movement
-		if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
-			this.player.changeAnimation("playerUp");
-			moveY = -1;
-			lastDir = "Up";
+
+		if (keyIsDown(69)) {
+			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+				this.player.changeAnimation("playerUp");
+				moveY = -1;
+				lastDir = "Up";
+			}
+
+			else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+				this.player.changeAnimation("playerDown");
+				moveY = 1;
+				lastDir = "Down";
+			}
+
+			else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+				this.player.changeAnimation("playerLeft");
+				moveX = -1;
+				lastDir = "Left";
+			}
+
+			else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+				this.player.changeAnimation("playerRight");
+				moveX = 1;
+				lastDir = "Right";
+			}
+
+			else if (!keyIsPressed) { // IDLE
+				this.player.changeAnimation("playerIdle" + lastDir);
+			}
 		}
 
-		else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
-			this.player.changeAnimation("playerDown");
-			moveY = 1;
-			lastDir = "Down";
+		else if (!keyIsDown(69)) {
+			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+				this.player.changeAnimation("playerUp");
+				moveY = -1;
+				lastDir = "Up";
+			}
+
+			else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+				this.player.changeAnimation("playerDown");
+				moveY = 1;
+				lastDir = "Down";
+			}
+
+			else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+				this.player.changeAnimation("playerLeft");
+				moveX = -1;
+				lastDir = "Left";
+			}
+
+			else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+				this.player.changeAnimation("playerRight");
+				moveX = 1;
+				lastDir = "Right";
+			}
+
+			else if (!keyIsPressed) { // IDLE
+				this.player.changeAnimation("playerIdle" + lastDir);
+			}
 		}
 
-		else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
-			this.player.changeAnimation("playerLeft");
-			moveX = -1;
-			lastDir = "Left";
-		}
-
-		else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
-			this.player.changeAnimation("playerRight");
-			moveX = 1;
-			lastDir = "Right";
-		}
-
-		else if (!keyIsPressed) { // IDLE
-			this.player.changeAnimation("playerIdle" + lastDir);
-		}
 
 		//normalize velocity
 		let tempVelocity = createVector(moveX, moveY);
@@ -124,7 +158,6 @@ class Player {
 		//rotates player when he gets near the dummy if this isnt here idk why
 		this.player.rotation = 0;
 		this.player.position.set(this.x, this.y);
-
 	}
 
 	update() {

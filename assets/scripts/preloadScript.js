@@ -23,6 +23,24 @@ function preloadAssets() {
 
 	playerIdleRightAnim = loadAnimation("assets/sprites/playerIdle/playerIdleRight1.png", "assets/sprites/playerIdle/playerIdleRight2.png");
 
+	//PLAYER ATTACK ANIMS
+	playerUpAttackAnim = loadAnimation("assets/sprites/playerAttack/playerUpMic1.png", "assets/sprites/playerAttack/playerUpMic2.png");
+
+	playerLeftAttackAnim = loadAnimation("assets/sprites/playerAttack/playerLeftMic1.png", "assets/sprites/playerAttack/playerLeftMic2.png");
+
+	playerRightAttackAnim = loadAnimation("assets/sprites/playerAttack/playerRightMic1.png", "assets/sprites/playerAttack/playerRightMic2.png");
+
+	playerDownAttackAnim = loadAnimation("assets/sprites/playerAttack/playerDownMic1.png", "assets/sprites/playerAttack/playerDownMic2.png");
+
+	//MIC SPRITES
+	downMic = loadAnimation("assets/sprites/playerAttack/downMic1.png", "assets/sprites/playerAttack/downMic2.png");
+
+	upMic = loadAnimation("assets/sprites/playerAttack/upMic1.png", "assets/sprites/playerAttack/upMic2.png");
+
+	leftMic = loadAnimation("assets/sprites/playerAttack/leftMic1.png", "assets/sprites/playerAttack/leftMic2.png");
+
+	rightMic = loadAnimation("assets/sprites/playerAttack/rightMic1.png", "assets/sprites/playerAttack/rightMic2.png");
+
 	//LOAD DUMMY ASSETS
 	dummyIdleAnim = loadAnimation("assets/sprites/dummyIdle/dummyIdle1.png", "assets/sprites/dummyIdle/dummyIdle2.png",
 		"assets/sprites/dummyIdle/dummyIdle3.png", "assets/sprites/dummyIdle/dummyIdle4.png");
