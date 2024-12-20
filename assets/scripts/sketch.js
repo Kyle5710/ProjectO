@@ -86,7 +86,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Tutorial";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

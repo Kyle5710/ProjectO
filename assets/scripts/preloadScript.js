@@ -64,7 +64,11 @@ function preloadAssets() {
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
 	//LOAD YAPPING ASSETS
-	yappingBack = loadImage("assets/sprites/temporaryArt.jpeg");
+	yappingBack1 = loadImage("assets/yappingScreen/yap1.png");
+	yappingBack2 = loadImage("assets/yappingScreen/yap2.png");
+	yappingBack3 = loadImage("assets/yappingScreen/yap3.png");
+	yappingBack4 = loadImage("assets/yappingScreen/yap4.png");
+	yappingBack5 = loadImage("assets/temporaryArt.jpeg");
 
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");

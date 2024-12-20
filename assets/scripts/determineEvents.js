@@ -33,7 +33,6 @@ function determineEvents() {
 
 	//YAPPING ROOM
 	if (currentScene === "Yapping") {
-		currentBackground = yappingBack;
 
 		//display text
 		textAlign(CENTER, BOTTOM);
@@ -68,7 +67,6 @@ function determineEvents() {
 
 	//TUTORIAL ROOM
 	if (currentScene === "Tutorial") {
-		//player can move from here all the way to the boss room
 		currentBackground = tutorialBackground;
 		currentMusic.pause();
 		currentMusic = lobbyMusic;
@@ -84,6 +82,6 @@ function determineEvents() {
 		currentBackground = tutorialBackground;
 	}
 
-    //transition ready for when tran = true
+	//transition ready for when tran = true
 	sceneTransition();
 }
