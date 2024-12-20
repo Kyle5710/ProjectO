@@ -32,10 +32,10 @@ function preloadAssets() {
 
 	playerDownAttackAnim = loadAnimation("assets/sprites/playerAttack/playerDownMic1.png", "assets/sprites/playerAttack/playerDownMic2.png");
 
-	//MIC SPRITES
+	//MIC ANIMS
 	downMic = loadAnimation("assets/sprites/playerAttack/downMic1.png", "assets/sprites/playerAttack/downMic2.png");
 
-	upMic = loadAnimation("assets/sprites/playerAttack/upMic1.png", "assets/sprites/playerAttack/upMic2.png");
+	upMic = loadAnimation("assets/sprites/playerAttack/upMic1.png");
 
 	leftMic = loadAnimation("assets/sprites/playerAttack/leftMic1.png", "assets/sprites/playerAttack/leftMic2.png");
 
