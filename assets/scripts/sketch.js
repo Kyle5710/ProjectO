@@ -28,6 +28,8 @@ function draw() {
 		//can't move so set spawn position
 		playerClass.spawnPos();
 	}
+
+	drawDebug();
 }
 
 function drawDebug() {
@@ -39,6 +41,7 @@ function drawDebug() {
 	//hitboxes
 	playerClass.player.debug = true;
 	dummyClass.dummy.debug = true;
+	
 }
 
 function sceneTransition() {
@@ -86,7 +89,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Tutorial";
 			canMove = false;
 			tran = true;
 			buttonSound.play();
