@@ -6,6 +6,9 @@ let canMove = false; //if player can move
 //DUMMY
 let dummy;
 
+//MICROPHONE
+let mic;
+
 //FADE TRANSITION
 let tranAlpha = 0;
 let tran = false; //if a transition is happening or not

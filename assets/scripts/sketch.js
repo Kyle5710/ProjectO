@@ -20,7 +20,7 @@ function draw() {
 
 	if (canMove && tranAlpha <= 0) {
 		//scenes where player can move
-		playerClass.update();
+		playerClass.update(dummyClass);
 		dummyClass.update();
 	}
 
@@ -41,7 +41,6 @@ function drawDebug() {
 	//hitboxes
 	playerClass.player.debug = true;
 	dummyClass.dummy.debug = true;
-	
 }
 
 function sceneTransition() {

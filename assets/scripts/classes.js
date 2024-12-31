@@ -7,7 +7,7 @@ class Player {
 		this.velocity = createVector(0, 0);
 		this.isAttacking = false;
 		this.attackStartTime = 0;
-		this.attackCooldown = 500; //milliseconds
+		this.attackCooldown = 10; //milliseconds
 
 		//add animations to player sprite
 		player.addAnimation("playerUp", playerUpAnim);
@@ -27,10 +27,10 @@ class Player {
 		//frame rate for animations
 		playerUpAnim.frameDelay = playerDownAnim.frameDelay = playerLeftAnim.frameDelay = playerRightAnim.frameDelay = 15;
 		playerIdleDownAnim.frameDelay = playerIdleUpAnim.frameDelay = playerIdleLeftAnim.frameDelay = playerIdleRightAnim.frameDelay = 30;
-		playerAttackDownAnim.frameDelay = playerAttackUpAnim.frameDelay = playerAttackLeftAnim.frameDelay = playerAttackRightAnim.frameDelay = 30;
+		playerAttackDownAnim.frameDelay = playerAttackUpAnim.frameDelay = playerAttackLeftAnim.frameDelay = playerAttackRightAnim.frameDelay = 10;
 
 		//mic instance
-		this.microphone = new Microphone();
+		this.mic = new Microphone();
 	}
 
 	move() {
@@ -70,7 +70,6 @@ class Player {
 				this.player.changeAnimation("playerIdle" + lastDir);
 			}
 		}
-
 
 		//normalize velocity
 		let tempVelocity = createVector(moveX, moveY);
@@ -144,9 +143,9 @@ class Player {
 		this.player.animation.play(); //play
 
 		//show mic
-		this.microphone.update(this.x, this.y, lastDir);
+		this.mic.update(this.x, this.y, lastDir);
 
-		const frameDelay = 30; //delay set for the attack anims
+		const frameDelay = 10; //delay set for the attack anims
 		const frameCount = 2;  //all attacks anims are 2 frames long
 		this.attackDuration = frameDelay * frameCount; //duration calc
 
@@ -156,7 +155,7 @@ class Player {
 		//attack is complete
 		setTimeout(() => {
 			this.resetAnimations();
-			this.microphone.hide();
+			this.mic.hide();
 		},
 			convertedDuration);
 	}
@@ -184,21 +183,33 @@ class Player {
 		this.x = width / 2;
 	}
 
-	display() {
+	display(dummy) {
 		//rotates player when he gets near the dummy if this isnt here idk why
 		this.player.rotation = 0;
 		this.player.position.set(this.x, this.y);
 
-		this.microphone.display();
+		if (this.y < dummy.y - 20) {
+			//player behind dummy
+			this.mic.display();
+			this.player.draw();
+			dummy.dummy.draw();
+		} 
+		
+		else {
+			//player in front of dummy
+			dummy.dummy.draw();
+			this.player.draw();
+			this.mic.display();
+		}
 	}
 
-	update() {
+	update(dummy) {
 		if (keyIsDown(69) && !this.isAttacking) {
 			this.attack();
 		}
 
 		this.move();
-		this.display();
+		this.display(dummy);
 	}
 }
 
@@ -213,7 +224,7 @@ class Dummy {
 		dummy.addAnimation("dummyIdle", dummyIdleAnim);
 		dummy.addAnimation("dummyHit", dummyHitAnim);
 
-		dummyIdleAnim.frameDelay = 24;
+		dummyIdleAnim.frameDelay = 30;
 		dummyHitAnim.frameDelay = 1;
 	}
 
@@ -227,18 +238,6 @@ class Dummy {
 
 		else {
 			this.dummy.changeAnimation("dummyIdle");
-		}
-
-		//make the player go above the dummy if in front of it
-		//behind the dummy if behind it
-		if (playerClass.player.y < this.y) {
-			playerClass.player.layer = 0;
-			this.dummy.layer = 1;
-		}
-
-		else {
-			playerClass.player.layer = 1;
-			this.dummy.layer = 0;
 		}
 	}
 
@@ -339,23 +338,25 @@ class BarrierManager {
 
 class Microphone {
 	constructor() {
-		this.sprite = createSprite(0, 0, "s");
+		this.mic = createSprite(0, 0, "s");
 
 		//directional anims
-		this.sprite.addAnimation("micDown", downMic);
-		this.sprite.addAnimation("micUp", upMic);
-		this.sprite.addAnimation("micLeft", leftMic);
-		this.sprite.addAnimation("micRight", rightMic);
+		this.mic.addAnimation("micDown", downMic);
+		this.mic.addAnimation("micUp", upMic);
+		this.mic.addAnimation("micLeft", leftMic);
+		this.mic.addAnimation("micRight", rightMic);
 
 		//frame delay
-		downMic.frameDelay = upMic.frameDelay = leftMic.frameDelay = rightMic.frameDelay = 30;
+		downMic.frameDelay = upMic.frameDelay = leftMic.frameDelay = rightMic.frameDelay = 10;
+
+		this.mic.debug = true;
 
 		//initially hide mic
-		this.sprite.visible = false;
+		this.mic.visible = false;
 
 		//position offset
 		this.offsets = {
-			"Up": { x: 1, y: -40 },
+			"Up": { x: 1, y: -48 },
 			"Down": { x: 1, y: 40 },
 			"Left": { x: -30, y: 5 },
 			"Right": { x: 30, y: 5 }
@@ -364,16 +365,16 @@ class Microphone {
 
 	update(playerX, playerY, direction) {
 		//show mic
-		this.sprite.visible = true;
+		this.mic.visible = true;
 
 		//prevent rotation
-		this.sprite.rotation = 0;
+		this.mic.rotation = 0;
 
 		//directional offset
 		const offset = this.offsets[direction];
 
 		//update mic position based on offset
-		this.sprite.position.set(playerX + offset.x, playerY + offset.y);
+		this.mic.position.set(playerX + offset.x, playerY + offset.y);
 
 		//anim based on dir
 		const animations = {
@@ -382,32 +383,31 @@ class Microphone {
 			"Left": "micLeft",
 			"Right": "micRight"
 		};
-		
+
 		//change anim
-		this.sprite.changeAnimation(animations[direction]);
+		this.mic.changeAnimation(animations[direction]);
 
 		//go to frame 0
-		this.sprite.animation.frame = 0;
+		this.mic.animation.frame = 0;
 
 		//no looping
-		this.sprite.animation.looping = false;
+		this.mic.animation.looping = false;
 
 		//play anim
-		this.sprite.animation.play();
+		this.mic.animation.play();
 	}
 
 	hide() {
 		//hide mic
-		this.sprite.visible = false;
+		this.mic.visible = false;
 
 		//stop anim
-		this.sprite.animation.stop();
+		this.mic.animation.stop();
 	}
 
 	display() {
-		if (this.sprite.visible) {
-			this.sprite.draw();
+		if (this.mic.visible) {
+			this.mic.draw();
 		}
 	}
 }
-

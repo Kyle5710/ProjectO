@@ -25,7 +25,7 @@ function preloadAssets() {
 
 	//MIC ANIMS
 	downMic = loadAnimation("assets/sprites/playerAttack/downMic1.png", "assets/sprites/playerAttack/downMic2.png");
-	upMic = loadAnimation("assets/sprites/playerAttack/upMic1.png", "assets/sprites/playerAttack/upMic1.png");
+	upMic = loadAnimation("assets/sprites/playerAttack/upMic1.png", "assets/sprites/playerAttack/upMic2.png");
 	leftMic = loadAnimation("assets/sprites/playerAttack/leftMic1.png", "assets/sprites/playerAttack/leftMic2.png");
 	rightMic = loadAnimation("assets/sprites/playerAttack/rightMic1.png", "assets/sprites/playerAttack/rightMic2.png");
 
