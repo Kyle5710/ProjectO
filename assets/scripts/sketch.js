@@ -29,7 +29,7 @@ function draw() {
 		playerClass.spawnPos();
 	}
 
-	drawDebug();
+	//drawDebug();
 }
 
 function drawDebug() {
@@ -39,8 +39,8 @@ function drawDebug() {
 	text("Scene: " + currentScene, 5, 25);
 
 	//hitboxes
-	playerClass.player.debug = true;
-	dummyClass.dummy.debug = true;
+	player.debug = true;
+	dummy.debug = true;
 }
 
 function sceneTransition() {

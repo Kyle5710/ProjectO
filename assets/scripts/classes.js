@@ -1,5 +1,5 @@
 class Player {
-	constructor(xPos, yPos, player) {
+	constructor(xPos, yPos, player, micHitbox) {
 		this.x = xPos;
 		this.y = yPos;
 		this.player = player;
@@ -193,8 +193,8 @@ class Player {
 			this.mic.display();
 			this.player.draw();
 			dummy.dummy.draw();
-		} 
-		
+		}
+
 		else {
 			//player in front of dummy
 			dummy.dummy.draw();
@@ -210,19 +210,24 @@ class Player {
 
 		this.move();
 		this.display(dummy);
+
+		//reset mic hitbox so anims dont loop
+		this.mic.reset();
 	}
 }
 
 class Dummy {
-	constructor(xPos, yPos, dummy) {
+	constructor(xPos, yPos, dummy, player) {
 		this.x = xPos;
 		this.y = yPos;
 		this.dummy = dummy;
-		this.hit = false;
+		this.player = player;
 
 		//load dummy animations
 		dummy.addAnimation("dummyIdle", dummyIdleAnim);
 		dummy.addAnimation("dummyHit", dummyHitAnim);
+
+		dummy.changeAnimation("dummyIdle");
 
 		dummyIdleAnim.frameDelay = 30;
 		dummyHitAnim.frameDelay = 1;
@@ -232,13 +237,6 @@ class Dummy {
 		//rotates when player gets close if this isnt here for some reason idk why
 		this.dummy.rotation = 0;
 
-		if (this.hit) {
-			this.dummy.changeAnimation("dummyHit");
-		}
-
-		else {
-			this.dummy.changeAnimation("dummyIdle");
-		}
 	}
 
 	position() {
@@ -336,9 +334,71 @@ class BarrierManager {
 	}
 }
 
+class MicHitbox {
+	constructor(mic, dummy) {
+		this.mic = mic;
+		this.dummy = dummy;
+		this.offsets = { //hitbox offset
+			"Up": { x: -2, y: 20, width: 50, height: 60 },
+			"Down": { x: -2, y: -20, width: 50, height: 60 },
+			"Left": { x: 10, y: 0, width: 60, height: 50 },
+			"Right": { x: -10, y: 0, width: 60, height: 50 }
+		};
+
+		this.hitbox = createSprite(this.mic.position.x, this.mic.position.y, 20, 20, "s");
+		this.hitbox.visible = false;
+		this.hitDummy = false;
+	}
+
+	//reset mic hitbox so anims dont loop
+	reset(){
+		if(this.hitDummy){
+			setTimeout(() => {
+				this.hitDummy = false;
+			}, 200); //200ms is the delay between enemy animations
+		}
+
+		else {
+			this.dummy.changeAnimation("dummyIdle");
+		}
+	}
+
+	update(direction) {
+		if (this.mic && this.mic.position) {
+			const offset = this.offsets[direction];
+			this.hitbox.position.x = this.mic.position.x + offset.x;
+			this.hitbox.position.y = this.mic.position.y + offset.y;
+			this.hitbox.width = offset.width;
+			this.hitbox.height = offset.height;
+		}
+
+		//check for collision with dummy using p5play2dcollision library
+		if (collideRectRect(
+			this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
+			this.hitbox.width, this.hitbox.height,
+			dummy.position.x - dummy.width / 2, dummy.position.y - dummy.height / 2,
+			dummy.width, dummy.height
+		) && !this.hitDummy) {
+			
+			this.dummy.changeAnimation("dummyHit"); //find dummyClass
+			this.hitDummy = true;
+		}
+	}
+}
+
 class Microphone {
 	constructor() {
 		this.mic = createSprite(0, 0, "s");
+
+		this.hitbox = new MicHitbox(this.mic, dummy); //hitbox for mic attacks
+
+		//position offset
+		this.offsets = {
+			"Up": { x: 1, y: -48 },
+			"Down": { x: 1, y: 40 },
+			"Left": { x: -30, y: 5 },
+			"Right": { x: 30, y: 5 }
+		};
 
 		//directional anims
 		this.mic.addAnimation("micDown", downMic);
@@ -349,18 +409,8 @@ class Microphone {
 		//frame delay
 		downMic.frameDelay = upMic.frameDelay = leftMic.frameDelay = rightMic.frameDelay = 10;
 
-		this.mic.debug = true;
-
 		//initially hide mic
 		this.mic.visible = false;
-
-		//position offset
-		this.offsets = {
-			"Up": { x: 1, y: -48 },
-			"Down": { x: 1, y: 40 },
-			"Left": { x: -30, y: 5 },
-			"Right": { x: 30, y: 5 }
-		};
 	}
 
 	update(playerX, playerY, direction) {
@@ -375,6 +425,8 @@ class Microphone {
 
 		//update mic position based on offset
 		this.mic.position.set(playerX + offset.x, playerY + offset.y);
+		this.hitbox.reset();
+		this.hitbox.update(direction);
 
 		//anim based on dir
 		const animations = {
@@ -397,12 +449,20 @@ class Microphone {
 		this.mic.animation.play();
 	}
 
+	//reset hitbox anims so anims dont loop
+	reset(){
+		this.hitbox.reset();
+	}
+
 	hide() {
 		//hide mic
 		this.mic.visible = false;
 
 		//stop anim
 		this.mic.animation.stop();
+
+		//send hitbox of mic offscreen when finished attack to stop anims looping
+		this.hitbox.hitbox.position.set(-1000,-1000);
 	}
 
 	display() {

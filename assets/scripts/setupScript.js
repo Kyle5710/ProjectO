@@ -12,11 +12,11 @@ function setupFunction() {
 
     //put sprites off-screen so not shown during title/intro
     player = createSprite(1000, 1000, 80, 151, "s");
-    dummy = createSprite(1000, 1000, 88, 140, "s");
+    dummy = createSprite(1000, 1000, 40, 60, "s");
 
     //create classes
     playerClass = new Player(width / 2, height / 2, player);
-    dummyClass = new Dummy(width / 2, height / 2, dummy);
+    dummyClass = new Dummy(width / 2, height / 2, dummy, player);
     barrierManager = new BarrierManager();
 
     //dummy barrier
