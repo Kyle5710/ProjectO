@@ -2,6 +2,14 @@ function preloadAssets() {
 	//LOAD FONT
 	font = loadFont("assets/font/font.ttf");
 
+	//LOAD AUDIO
+	enemyHit = loadSound("assets/audio/enemyHit.wav");
+	playerAttack = loadSound("assets/audio/playerAttack.mp3");
+	newRoom = loadSound("assets/audio/newRoom.mp3");
+	playerStep = loadSound("assets/audio/playerStep.wav");
+	cameraFlash = loadSound("assets/audio/cameraFlash.wav");
+	obamaLeft = loadSound("assets/audio/obamaLeft.mp3");
+
 	//LOAD PLAYER ANIMATIONS
 	playerUpAnim = loadAnimation("assets/sprites/playerUp/playerUp1.png", "assets/sprites/playerUp/playerUp2.png",
 		"assets/sprites/playerUp/playerUp3.png", "assets/sprites/playerUp/playerUp4.png");
@@ -34,11 +42,15 @@ function preloadAssets() {
 		"assets/sprites/dummyIdle/dummyIdle3.png", "assets/sprites/dummyIdle/dummyIdle4.png");
 	dummyHitAnim = loadAnimation("assets/sprites/dummyHit/dummyHit.png");
 
-	//LOAD OBAMA ANIMATIONS
-	obamaDownAnim = loadImage("assets/sprites/obamaDown/obamaDown1.png", "assets/sprites/obamaDown/obamaDown2.png",
-		"assets/sprites/obamaDown/obamaDown3.png", "assets/sprites/obamaDown/obamaDown4.png",)
-	obamaUpAnim = loadImage("assets/sprites/obamaUp/obamaUp1.png", "assets/sprites/obamaUp/obamaUp2.png",
-		"assets/sprites/obamaUp/obamaUp3.png", "assets/sprites/obamaUp/obamaUp4.png",)
+	//LOAD OBAMA ANIMS
+	obamaDownAnim = loadAnimation("assets/sprites/obamaDown/obamaDown1.png", "assets/sprites/obamaDown/obamaDown2.png",
+		"assets/sprites/obamaDown/obamaDown3.png", "assets/sprites/obamaDown/obamaDown4.png");
+	obamaUpAnim = loadAnimation("assets/sprites/obamaUp/obamaUp1.png", "assets/sprites/obamaUp/obamaUp2.png",
+		"assets/sprites/obamaUp/obamaUp3.png", "assets/sprites/obamaUp/obamaUp4.png");
+	obamaIdle = loadAnimation("assets/sprites/obamaDown/obamaDown1.png");
+
+	//LOAD BOSS OBAMA ANIMS
+	tempObama = loadAnimation("assets/sprites/bossObama/tempObama.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -50,11 +62,11 @@ function preloadAssets() {
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
 
 	//LOAD YAPPING ASSETS
-	yappingBack1 = loadImage("assets/yappingScreen/yap1.png");
-	yappingBack2 = loadImage("assets/yappingScreen/yap2.png");
-	yappingBack3 = loadImage("assets/yappingScreen/yap3.png");
-	yappingBack4 = loadImage("assets/yappingScreen/yap4.png");
-	yappingBack5 = loadImage("assets/temporaryArt.jpeg");
+	yappingBack1 = loadImage("assets/sprites/yappingScreen/yap1.png");
+	yappingBack2 = loadImage("assets/sprites/yappingScreen/yap2.png");
+	yappingBack3 = loadImage("assets/sprites/yappingScreen/yap3.png");
+	yappingBack4 = loadImage("assets/sprites/yappingScreen/yap4.png");
+	yappingBack5 = loadImage("assets/sprites/yappingScreen/yap5.png");
 
 	//LOAD TUTORIAL ROOM ASSETS
 	tutorialBackground = loadImage("assets/sprites/tutorialScreen/tutorialBack.png");
@@ -62,4 +74,6 @@ function preloadAssets() {
 
 	//LOAD WEAPON ROOM ASSETS
 	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
+	textBox = loadImage("assets/sprites/textBox.png");
+	yapBox = loadImage("assets/sprites/yapBox.png");
 }

@@ -2,12 +2,19 @@
 let player;
 let lastDir = "Up"; //stores last direction player moved in
 let canMove = false; //if player can move
+let stepSound = false; //player step sfx
 
 //DUMMY
 let dummy;
 
 //MICROPHONE
 let mic;
+
+//OBAMA
+let weaponObama; //obama room
+
+//STORES BARRIERS
+let barrierManager;
 
 //FADE TRANSITION
 let tranAlpha = 0;
@@ -20,6 +27,7 @@ let titleBackground, titleButton, titleMusic;
 let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
+let tutorialEvent = true;
 
 //YAPPING ROOM
 let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
@@ -28,15 +36,21 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 let currentLine = 0;
 let delay = 2000; //delay between dialogue lines
 let lastChangeTime = 0;
+let back = 0;
 
 //TUTORIAL ROOM
 let tutorialBackground;
 
 //WEAPON ROOM
 let weaponBackground;
+let weaponEvent = true;
+
+//OBAMA ROOM
+let obamaEvent = true; //prevent player from moving during event
+let obamaDialogue = ["", "WOAHH!!!", "Who are you supposed to be?", "A reporter?", "Hmph.", "Well, unfortunately I'm quite busy at the moment.", "Presidential duties or whatever...", "If you excuse me, I'll be leaving now."];
+
+//BOSS ROOM
+let bossObamaEvent = true;
 
 //STATE VARS
 let currentBackground, currentScene, currentMusic;
-
-//STORES BARRIERS
-let barrierManager;

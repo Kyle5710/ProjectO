@@ -13,11 +13,59 @@ function setup() {
 
 function draw() {
 	//update barriers based on currentScene
-	barrierManager.updateBarState(currentScene, playerClass.player);
+	//barrierManager.updateBarState(currentScene, playerClass.player);
 
-	//main func
 	determineEvents(); //check determineEvents.js
 
+	classEvents(); //scenes where player canMove + dummyClass
+
+	//drawDebug();
+}
+
+function textBoxFunc() {
+	if (player.x !== 1000 && currentScene === "Obama") {
+		weaponObamaClass.update();
+		if (tranAlpha <= 0 && weaponObama.position.y === 100) {
+			let dialogue = obamaDialogue[currentLine];
+			let wrappedText = wrapText(dialogue, 300); //max width
+			let yPos = 292; //vertical distance between lines
+
+			//draw textbox + set textAlign
+			imageMode(CENTER);
+			image(textBox, width / 2, 300, 460, 120);
+			imageMode(NORMAL);
+			textAlign(LEFT);
+
+			for (let i = 0; i < wrappedText.length; i++) {
+				//display lines
+				fill("white");
+				text(wrappedText[i], width / 2 - 120, yPos);
+				yPos += textLeading();
+			}
+
+			if (millis() - lastChangeTime > delay) {
+				//events based on line #
+
+				if (currentLine === 1) {
+					weaponObamaClass.idle = true;
+				}
+
+
+				if (currentLine === 7) {
+					weaponObamaClass.triggerLeave();
+					lastDir = "Up";
+					obamaLeft.play();
+				}
+
+				buttonSound.play();
+				currentLine = (currentLine + 1) % obamaDialogue.length; //loops through array infinitely
+				lastChangeTime = millis();
+			}
+		}
+	}
+}
+
+function classEvents() {
 	if (canMove && tranAlpha <= 0) {
 		//scenes where player can move
 		playerClass.update(dummyClass);
@@ -25,11 +73,15 @@ function draw() {
 	}
 
 	else {
-		//can't move so set spawn position
-		playerClass.spawnPos();
-	}
+		if(currentScene !== "Obama"){
+			playerClass.spawnPos();
+		}
+		
 
-	//drawDebug();
+		if (currentScene === "Weapon" && tranAlpha < 255) {
+			dummyClass.spawnPos();
+		}
+	}
 }
 
 function drawDebug() {
@@ -41,6 +93,7 @@ function drawDebug() {
 	//hitboxes
 	player.debug = true;
 	dummy.debug = true;
+	mic.debug = true;
 }
 
 function sceneTransition() {
@@ -54,10 +107,7 @@ function sceneTransition() {
 		tranAlpha += 255 / (fadeDur / deltaTime);
 		if (tranAlpha >= 255) { //screen fully black
 			if (nextScene !== "Yapping") {
-				canMove = true; //player can move but tranAlpha prevents it
-				//bring classes back on screen
-				playerClass.spawnPos();
-				dummyClass.spawnPos();
+				canMove = true;
 			}
 
 			tran = false;
@@ -88,7 +138,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Tutorial";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
 			buttonSound.play();
@@ -116,4 +166,22 @@ function moveLogo(logoPos) {
 	else {
 		return logoPos + 0.5;
 	}
+}
+
+function wrapText(str, maxWidth) { //use this to wrap text when needed W youtube tutorial
+	let words = str.split(' ');
+	let lines = [];
+	let currentLine = words[0];
+
+	for (let i = 1; i < words.length; i++) {
+		let testLine = currentLine + ' ' + words[i];
+		if (textWidth(testLine) <= maxWidth) {
+			currentLine = testLine;
+		} else {
+			lines.push(currentLine);
+			currentLine = words[i];
+		}
+	}
+	lines.push(currentLine);
+	return lines;
 }

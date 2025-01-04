@@ -1,5 +1,5 @@
 class Player {
-	constructor(xPos, yPos, player, micHitbox) {
+	constructor(xPos, yPos, player) {
 		this.x = xPos;
 		this.y = yPos;
 		this.player = player;
@@ -33,6 +33,20 @@ class Player {
 		this.mic = new Microphone();
 	}
 
+	stepSound() {
+		let anim = this.player.animation;
+		let currentFrame = anim.frame;
+
+		if ((currentFrame % 2 === 1) && !stepSound) {
+			stepSound = true;
+			playerStep.play();
+		}
+
+		else if (currentFrame % 2 === 0) {
+			stepSound = false;
+		}
+	}
+
 	move() {
 		this.velocity.set(0, 0); //reset velocity each frame
 
@@ -46,28 +60,33 @@ class Player {
 				this.player.changeAnimation("playerUp");
 				moveY = -1;
 				lastDir = "Up";
+				this.stepSound();
 			}
 
 			else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
 				this.player.changeAnimation("playerDown");
 				moveY = 1;
 				lastDir = "Down";
+				this.stepSound();
 			}
 
 			else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
 				this.player.changeAnimation("playerLeft");
 				moveX = -1;
 				lastDir = "Left";
+				this.stepSound();
 			}
 
 			else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
 				this.player.changeAnimation("playerRight");
 				moveX = 1;
 				lastDir = "Right";
+				this.stepSound();
 			}
 
 			else if (!keyIsPressed) { // IDLE
 				this.player.changeAnimation("playerIdle" + lastDir);
+				stepSound = false;
 			}
 		}
 
@@ -101,16 +120,22 @@ class Player {
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 
 			if (currentScene !== "Boss") {
-				this.x = this.y = 1000; //move player offscreen
+				newRoom.play(); //sfx
+				this.x = this.y = -1000; //move player offscreen
 				canMove = false; //prevent player movement
 				tran = true; //run fade transition
 
 				if (currentScene === "Tutorial") {
+					nextScene = "Obama";
+				}
+
+				else if (currentScene === "Obama") {
 					nextScene = "Weapon";
 				}
 
 				else if (currentScene === "Weapon") {
 					nextScene = "Boss";
+					dummy.position.set(-1000, -1000);
 				}
 			}
 		}
@@ -124,6 +149,9 @@ class Player {
 		//start attack
 		this.isAttacking = true;
 		this.attackStartTime = millis();
+
+		//play sfx
+		playerAttack.play();
 
 		//set up attack animations to use later
 		const attackAnimations = {
@@ -184,22 +212,39 @@ class Player {
 	}
 
 	display(dummy) {
-		//rotates player when he gets near the dummy if this isnt here idk why
-		this.player.rotation = 0;
+		this.player.rotation = 0; //prevent rotation
 		this.player.position.set(this.x, this.y);
 
-		if (this.y < dummy.y - 20) {
-			//player behind dummy
-			this.mic.display();
-			this.player.draw();
-			dummy.dummy.draw();
+		if (currentScene === "Weapon") {
+			if (this.y < dummy.y - 20) {
+				//player behind dummy
+				this.mic.display();
+				this.player.draw();
+				dummy.dummy.draw();
+			}
+
+			else {
+				//player in front of dummy
+				dummy.dummy.draw();
+				this.player.draw();
+				this.mic.display();
+			}
 		}
 
 		else {
-			//player in front of dummy
-			dummy.dummy.draw();
 			this.player.draw();
 			this.mic.display();
+		}
+
+		if (tranAlpha <= 0) {
+			textBoxFunc();
+			if (currentScene === "Tutorial") {
+				tutorialEvent = false;
+			}
+
+			else if (currentScene === "Weapon") {
+				weaponEvent = false;
+			}
 		}
 	}
 
@@ -230,33 +275,23 @@ class Dummy {
 		dummy.changeAnimation("dummyIdle");
 
 		dummyIdleAnim.frameDelay = 30;
-		dummyHitAnim.frameDelay = 1;
 	}
 
 	animations() {
 		//rotates when player gets close if this isnt here for some reason idk why
 		this.dummy.rotation = 0;
-
-	}
-
-	position() {
-		if (currentScene === "Weapon") { //only shown in weapon room
-			this.dummy.position.set(this.x, this.y);
-
-			if (tran) {
-				this.dummy.position.set(1000, 1000);
-			}
-		}
 	}
 
 	spawnPos() {
-		this.x = 500;
-		this.y = height / 2;
+		if (nextScene !== "Boss") {
+			this.x = 150;
+			this.y = height / 2;
+			this.dummy.position.set(this.x, this.y);
+		}
 	}
 
 	update() {
 		this.animations();
-		this.position();
 	}
 }
 
@@ -351,8 +386,8 @@ class MicHitbox {
 	}
 
 	//reset mic hitbox so anims dont loop
-	reset(){
-		if(this.hitDummy){
+	reset() {
+		if (this.hitDummy) {
 			setTimeout(() => {
 				this.hitDummy = false;
 			}, 200); //200ms is the delay between enemy animations
@@ -379,8 +414,9 @@ class MicHitbox {
 			dummy.position.x - dummy.width / 2, dummy.position.y - dummy.height / 2,
 			dummy.width, dummy.height
 		) && !this.hitDummy) {
-			
+
 			this.dummy.changeAnimation("dummyHit"); //find dummyClass
+			enemyHit.play(); //sfx
 			this.hitDummy = true;
 		}
 	}
@@ -450,7 +486,7 @@ class Microphone {
 	}
 
 	//reset hitbox anims so anims dont loop
-	reset(){
+	reset() {
 		this.hitbox.reset();
 	}
 
@@ -462,7 +498,7 @@ class Microphone {
 		this.mic.animation.stop();
 
 		//send hitbox of mic offscreen when finished attack to stop anims looping
-		this.hitbox.hitbox.position.set(-1000,-1000);
+		this.hitbox.hitbox.position.set(-1000, -1000);
 	}
 
 	display() {
@@ -471,3 +507,86 @@ class Microphone {
 		}
 	}
 }
+
+class WeaponObama {
+	constructor(xPos, yPos, weaponObama, player) {
+		this.xPos = xPos;
+		this.yPos = yPos; // Initial y position of Obama
+		this.obama = weaponObama;
+		this.player = player;
+		this.idle = false;
+		this.state = "entering";
+
+		// Add animations
+		weaponObama.addAnimation("obamaDown", obamaDownAnim);
+		weaponObama.addAnimation("obamaUp", obamaUpAnim);
+		weaponObama.addAnimation("obamaIdle", obamaIdle);
+
+		obamaUpAnim.frameDelay = 15;
+		obamaDownAnim.frameDelay = 5;
+	}
+
+	enter() {
+		canMove = false; //player cant move
+
+		//set anims
+		if (!this.idle) {
+			this.obama.changeAnimation("obamaDown");
+		}
+
+		else {
+			this.obama.changeAnimation("obamaIdle");
+		}
+
+		this.player.changeAnimation("playerIdleUp");
+
+		//update obama pos
+		this.obama.position.set(this.xPos, this.yPos);
+
+		//obama movement
+		if (this.yPos < 100) {
+			this.yPos += 10;
+			playerClass.y -= 8;
+		}
+
+		else {
+			this.yPos = 100;
+		}
+	}
+
+	leave() {
+		//set anim
+		this.obama.changeAnimation("obamaUp");
+
+		//obama movement
+		if (this.yPos > -100) {
+			this.yPos -= 3;
+		}
+
+		else {
+			this.yPos = -100;
+			canMove = true;
+		}
+
+		if (this.yPos === -100) {
+			obamaEvent = false; //obama cutscene over
+		}
+	}
+
+	triggerLeave() {
+		this.state = "leaving"; //changed from textBoxFunc() in sketch.js
+	}
+
+	update() {
+		if (this.state === "entering") {
+			this.enter();
+		}
+
+		else if (this.state === "leaving") {
+			this.leave();
+		}
+
+		this.obama.position.y = this.yPos;
+	}
+}
+
