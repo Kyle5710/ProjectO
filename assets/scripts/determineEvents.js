@@ -7,8 +7,8 @@ function determineEvents() {
 	//set font
 	textFont(font);
 
-	/* //music
-	currentMusic.play(); */
+	//music
+	currentMusic.play();
 
 	//TITLE ROOM
 	if (currentScene === "Title") {
@@ -52,23 +52,23 @@ function determineEvents() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 0){
+			if (currentLine === 0) {
 				currentBackground = yappingBack1;
 			}
-			if (currentLine === 1){
+			if (currentLine === 1) {
 				currentBackground = yappingBack2;
 			}
-			if (currentLine === 2){
+			if (currentLine === 2) {
 				currentBackground = yappingBack3;
 			}
-			if (currentLine === 3){
+			if (currentLine === 3) {
 				currentBackground = yappingBack4;
 			}
 
 			if (currentLine === 4) {
-				currentBackground = yappingBack5;
 				textSize(40);
 				fill("red");
+				currentBackground = yappingBack5;
 			}
 
 			else if (currentLine === 5) {
@@ -108,10 +108,10 @@ function determineEvents() {
 			canMove = true;
 		}
 
-		/* //set music
+		//set music
 		currentMusic.pause();
 		currentMusic = lobbyMusic;
-		currentMusic.play(); */
+		currentMusic.play();
 	}
 
 	//OBAMA ROOM
@@ -145,9 +145,10 @@ function determineEvents() {
 		currentBackground = weaponBackground;
 
 		if (bossObamaEvent) {
-			canMove = false;
-			player.changeAnimation("playerIdleUp");
-			playerClass.display(dummyClass);
+			if (!canMove) {
+				playerClass.display(dummyClass);
+			}
+			bossObamaClass.update();
 		}
 	}
 

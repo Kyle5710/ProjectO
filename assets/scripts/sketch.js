@@ -22,10 +22,11 @@ function draw() {
 	//drawDebug();
 }
 
-function textBoxFunc() {
+function obamaDialogueFunc() {
 	if (player.x !== 1000 && currentScene === "Obama") {
 		weaponObamaClass.update();
-		if (tranAlpha <= 0 && weaponObama.position.y === 100) {
+
+		if (weaponObama.position.y === 100 && currentScene === "Obama") {
 			let dialogue = obamaDialogue[currentLine];
 			let wrappedText = wrapText(dialogue, 300); //max width
 			let yPos = 292; //vertical distance between lines
@@ -50,7 +51,6 @@ function textBoxFunc() {
 					weaponObamaClass.idle = true;
 				}
 
-
 				if (currentLine === 7) {
 					weaponObamaClass.triggerLeave();
 					lastDir = "Up";
@@ -65,6 +65,40 @@ function textBoxFunc() {
 	}
 }
 
+
+function bossDialogueFunc() {
+	if (bossObamaClass.state === "dialogue") {
+		let dialogue = bossDialogue[currentLine];
+		let wrappedText = wrapText(dialogue, 300); //max width
+		let yPos = 292; //vertical distance between lines
+
+		//draw textbox + set textAlign
+		imageMode(CENTER);
+		image(textBox, width / 2, 300, 460, 120);
+		imageMode(NORMAL);
+		textAlign(LEFT);
+
+		for (let i = 0; i < wrappedText.length; i++) {
+			//display lines
+			fill("white");
+			text(wrappedText[i], width / 2 - 120, yPos);
+			yPos += textLeading();
+		}
+
+		if (millis() - lastChangeTime > delay) {
+			//events based on line #
+			if (currentLine === 15) {
+				bossObamaClass.state = "attack";
+			}
+
+			buttonSound.play();
+			currentLine = (currentLine + 1) % bossDialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+	}
+}
+
+
 function classEvents() {
 	if (canMove && tranAlpha <= 0) {
 		//scenes where player can move
@@ -73,10 +107,10 @@ function classEvents() {
 	}
 
 	else {
-		if(currentScene !== "Obama"){
+		if (currentScene !== "Obama") {
 			playerClass.spawnPos();
 		}
-		
+
 
 		if (currentScene === "Weapon" && tranAlpha < 255) {
 			dummyClass.spawnPos();
@@ -91,9 +125,12 @@ function drawDebug() {
 	text("Scene: " + currentScene, 5, 25);
 
 	//hitboxes
-	player.debug = true;
-	dummy.debug = true;
-	mic.debug = true;
+	if (currentScene) {
+		player.debug = true;
+		dummy.debug = true;
+		bossObama.debug = true;
+	}
+
 }
 
 function sceneTransition() {
@@ -138,7 +175,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Boss";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

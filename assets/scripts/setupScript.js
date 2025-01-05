@@ -12,8 +12,8 @@ function setupFunction() {
     textLeading(30);
 
     //audio volumes
-    titleMusic.setVolume(1); titleMusic.setLoop(true);
-    lobbyMusic.setVolume(1); lobbyMusic.setLoop(true);
+    titleMusic.setVolume(0.7); titleMusic.setLoop(true);
+    lobbyMusic.setVolume(0.7); lobbyMusic.setLoop(true);
 
     enemyHit.setVolume(0.4);
     playerAttack.setVolume(1);
@@ -22,14 +22,16 @@ function setupFunction() {
     obamaLeft.setVolume(0.7); obamaLeft.setLoop(false);
 
     //put sprites off-screen so not shown during title/intro
-    player = createSprite(1000, 1000, 80, 151, "s");
+    player = createSprite(1000, 1000, 40, 76, "s");
     dummy = createSprite(1000, 1000, 40, 60, "s");
     weaponObama = createSprite(1000, 1000, 84, 160, "s");
+    bossObama = createSprite(1000, 1000, 36, 70, "s");
 
     //create classes
     playerClass = new Player(width / 2, height / 2, player);
     dummyClass = new Dummy(width / 2, height / 2, dummy, player);
     weaponObamaClass = new WeaponObama(width / 2, 10, weaponObama, player);
+    bossObamaClass = new BossObama(width / 2, -50, bossObama, player);
     barrierManager = new BarrierManager();
 
     //dummy barrier

@@ -8,6 +8,8 @@ class Player {
 		this.isAttacking = false;
 		this.attackStartTime = 0;
 		this.attackCooldown = 10; //milliseconds
+		this.health = 10;
+		this.playerHit = false;
 
 		//add animations to player sprite
 		player.addAnimation("playerUp", playerUpAnim);
@@ -33,6 +35,24 @@ class Player {
 		this.mic = new Microphone();
 	}
 
+	drawHealthBar() {
+		const barWidth = 420;
+		const barHeight = 20;
+
+		//map values for healthbar + scale to current health
+		const currentHealthWidth = map(this.health, 0, 10, 0, barWidth);
+
+		rectMode(CENTER);
+		//grey bg
+		fill(200);
+		rect(width / 2, 340, barWidth, barHeight);
+
+		//blue healthbar
+		fill(0, 0, 255);
+		rect(width / 2, 340, currentHealthWidth, barHeight);
+		rectMode(NORMAL);
+	}
+
 	stepSound() {
 		let anim = this.player.animation;
 		let currentFrame = anim.frame;
@@ -50,41 +70,41 @@ class Player {
 	move() {
 		this.velocity.set(0, 0); //reset velocity each frame
 
-		// temp movement dir
+		//temp movement dir
 		let moveX = 0;
 		let moveY = 0;
 
 		//set movement
 		if (!this.isAttacking) {
-			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { // UP
+			if (keyIsDown(87) || keyIsDown(UP_ARROW)) { //UP
 				this.player.changeAnimation("playerUp");
 				moveY = -1;
 				lastDir = "Up";
 				this.stepSound();
 			}
 
-			else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { // DOWN
+			else if (keyIsDown(83) || keyIsDown(DOWN_ARROW)) { //DOWN
 				this.player.changeAnimation("playerDown");
 				moveY = 1;
 				lastDir = "Down";
 				this.stepSound();
 			}
 
-			else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { // LEFT
+			else if (keyIsDown(65) || keyIsDown(LEFT_ARROW)) { //LEFT
 				this.player.changeAnimation("playerLeft");
 				moveX = -1;
 				lastDir = "Left";
 				this.stepSound();
 			}
 
-			else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { // RIGHT
+			else if (keyIsDown(68) || keyIsDown(RIGHT_ARROW)) { //RIGHT
 				this.player.changeAnimation("playerRight");
 				moveX = 1;
 				lastDir = "Right";
 				this.stepSound();
 			}
 
-			else if (!keyIsPressed) { // IDLE
+			else if (!keyIsPressed) { //IDLE
 				this.player.changeAnimation("playerIdle" + lastDir);
 				stepSound = false;
 			}
@@ -215,8 +235,9 @@ class Player {
 		this.player.rotation = 0; //prevent rotation
 		this.player.position.set(this.x, this.y);
 
+		//WEAPON DRAWING
 		if (currentScene === "Weapon") {
-			if (this.y < dummy.y - 20) {
+			if (this.y < dummy.y) {
 				//player behind dummy
 				this.mic.display();
 				this.player.draw();
@@ -231,13 +252,38 @@ class Player {
 			}
 		}
 
+		//BOSS DRAWING
+		if (currentScene === "Boss") {
+			if (bossObamaClass.state === "attack") {
+				this.drawHealthBar();
+			}
+
+			if (player.y < bossObama.y) {
+				//player behind obama
+				this.mic.display();
+				this.player.draw();
+				bossObama.draw();
+			}
+
+			else {
+				//player in front of obama
+				bossObama.draw();
+				this.player.draw();
+				this.mic.display();
+			}
+		}
+
+		//ALL OTHER SCENES
 		else {
 			this.player.draw();
 			this.mic.display();
 		}
 
 		if (tranAlpha <= 0) {
-			textBoxFunc();
+			//run dialogue funcs
+			obamaDialogueFunc();
+			bossDialogueFunc();
+
 			if (currentScene === "Tutorial") {
 				tutorialEvent = false;
 			}
@@ -248,12 +294,24 @@ class Player {
 		}
 	}
 
+	death() { //RESET EVERYTHING HERE DO THIS TOMORROW
+		if (this.health <= 0) {
+			//reset the game
+			this.health = 10;
+			setupFunction();
+			tran = true;
+			nextScene = "Title";
+		}
+
+	}
+
 	update(dummy) {
 		if (keyIsDown(69) && !this.isAttacking) {
 			this.attack();
 		}
 
 		this.move();
+		this.death();
 		this.display(dummy);
 
 		//reset mic hitbox so anims dont loop
@@ -370,9 +428,11 @@ class BarrierManager {
 }
 
 class MicHitbox {
-	constructor(mic, dummy) {
+	constructor(mic, dummy, bossObama) {
 		this.mic = mic;
 		this.dummy = dummy;
+		this.obama = bossObama;
+
 		this.offsets = { //hitbox offset
 			"Up": { x: -2, y: 20, width: 50, height: 60 },
 			"Down": { x: -2, y: -20, width: 50, height: 60 },
@@ -383,6 +443,7 @@ class MicHitbox {
 		this.hitbox = createSprite(this.mic.position.x, this.mic.position.y, 20, 20, "s");
 		this.hitbox.visible = false;
 		this.hitDummy = false;
+		this.hitBoss = false;
 	}
 
 	//reset mic hitbox so anims dont loop
@@ -395,6 +456,12 @@ class MicHitbox {
 
 		else {
 			this.dummy.changeAnimation("dummyIdle");
+		}
+
+		if (this.hitBoss) {
+			setTimeout(() => {
+				this.hitBoss = false;
+			}, 200); //200ms is the delay between enemy animations
 		}
 	}
 
@@ -412,12 +479,24 @@ class MicHitbox {
 			this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
 			this.hitbox.width, this.hitbox.height,
 			dummy.position.x - dummy.width / 2, dummy.position.y - dummy.height / 2,
-			dummy.width, dummy.height
-		) && !this.hitDummy) {
+			dummy.width, dummy.height) && !this.hitDummy) {
 
 			this.dummy.changeAnimation("dummyHit"); //find dummyClass
 			enemyHit.play(); //sfx
 			this.hitDummy = true;
+		}
+
+		//collision with bossObama
+		if (collideRectRect(
+			this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
+			this.hitbox.width, this.hitbox.height,
+			bossObama.position.x - bossObama.width / 2, bossObama.position.y - bossObama.height / 2,
+			bossObama.width, bossObama.height) && !this.hitBoss) {
+
+			enemyHit.play(); //sfx
+			bossObamaClass.health -= 1;
+			print(bossObamaClass.health);
+			this.hitBoss = true;
 		}
 	}
 }
@@ -426,7 +505,7 @@ class Microphone {
 	constructor() {
 		this.mic = createSprite(0, 0, "s");
 
-		this.hitbox = new MicHitbox(this.mic, dummy); //hitbox for mic attacks
+		this.hitbox = new MicHitbox(this.mic, dummy, bossObama); //hitbox for mic attacks
 
 		//position offset
 		this.offsets = {
@@ -511,13 +590,13 @@ class Microphone {
 class WeaponObama {
 	constructor(xPos, yPos, weaponObama, player) {
 		this.xPos = xPos;
-		this.yPos = yPos; // Initial y position of Obama
+		this.yPos = yPos;
 		this.obama = weaponObama;
 		this.player = player;
 		this.idle = false;
 		this.state = "entering";
 
-		// Add animations
+		//add anims
 		weaponObama.addAnimation("obamaDown", obamaDownAnim);
 		weaponObama.addAnimation("obamaUp", obamaUpAnim);
 		weaponObama.addAnimation("obamaIdle", obamaIdle);
@@ -574,7 +653,7 @@ class WeaponObama {
 	}
 
 	triggerLeave() {
-		this.state = "leaving"; //changed from textBoxFunc() in sketch.js
+		this.state = "leaving"; //changed from obamaDialogueFuncFunc() in sketch.js
 	}
 
 	update() {
@@ -590,3 +669,222 @@ class WeaponObama {
 	}
 }
 
+class BossObama {
+	constructor(xPos, yPos, obama, player) {
+		this.x = xPos;
+		this.y = yPos;
+		this.obama = obama;
+		this.player = player;
+		this.state = "entering";
+		this.currentAttackState = "idle";
+		this.chargeCooldown = 0;
+		this.chargeAngle = null;
+		this.isCharging = false;
+		this.attackCooldown = 0;
+		this.health = 20;
+
+		bossObama.addAnimation("obamaDown", obamaDownAnim);
+		bossObama.addAnimation("obamaUp", obamaUpAnim);
+		bossObama.addAnimation("obamaIdle", obamaIdle);
+		bossObama.addAnimation("obamaCart", tempObama);
+	}
+
+	enter() {
+		canMove = false;//player cant move
+
+		//set anims
+		this.obama.animation.frameDelay = 15;
+		this.obama.changeAnimation("obamaDown");
+
+		//move obama
+		if (this.y < 100 && tranAlpha <= 0) {
+			this.y += 2;
+		}
+
+		//play dialogue
+		else if (this.y === 100) {
+			this.obama.changeAnimation("obamaIdle");
+			this.state = "dialogue";
+		}
+	}
+
+	dialogue() {
+		bossDialogueFunc();
+	}
+
+	chargeAttack() {
+		//randomize whether boss will bounce off of walls or not
+		let shouldBounce = random() > 0.5;
+
+		//randomize speed + duration
+		let moveSpeed = random(3, 4);
+		let attackDuration = int(random(60, 240));
+
+		if (this.currentAttackState === "charge") {
+			if (!this.isCharging) {
+				//set values
+				this.obama.changeAnimation("obamaCart");
+				let angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
+				let randomize = random(-Math.PI / 12, Math.PI / 12);
+				this.chargeAngle = angleToPlayer + randomize;
+				this.chargeTimer = 0;
+				this.isCharging = true;
+				this.attackDuration = attackDuration;
+			}
+
+			//move obama
+			this.x += Math.cos(this.chargeAngle) * moveSpeed;
+			this.y += Math.sin(this.chargeAngle) * moveSpeed;
+
+			if (shouldBounce) {
+				//bounce off of walls
+				if (this.x <= 30 || this.x >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
+				if (this.y <= 50 || this.y >= 275) this.chargeAngle = -this.chargeAngle;
+			}
+
+			else {
+				//stop
+				if (this.x <= 30 || this.x >= 610 || this.y <= 50 || this.y >= 275) {
+					this.currentAttackState = "idle";
+					this.chargeCooldown = 60;
+					this.isCharging = false;
+				}
+			}
+
+			//keep obama onscreen
+			this.x = constrain(this.x, 0, 640);
+			this.y = constrain(this.y, 0, 360);
+
+			//stop charging
+			if (this.attackDuration <= this.chargeTimer++) {
+				this.currentAttackState = "idle";
+				this.chargeCooldown = 60;
+				this.isCharging = false;
+			}
+
+			return;
+		}
+
+		//idle
+		if (this.currentAttackState === "idle") {
+			this.obama.changeAnimation("obamaIdle");
+
+			if (this.chargeCooldown > 0) {
+				this.chargeCooldown--;
+				return;
+			}
+
+			else if (this.chargeCooldown === 0) {
+				this.currentAttackState = "charge";
+			}
+		}
+	}
+
+	drawHealthBar() {
+		const barWidth = 420;
+		const barHeight = 20;
+
+		//map values for healthbar + scale to current health
+		const currentHealthWidth = map(this.health, 0, 20, 0, barWidth);
+
+		rectMode(CENTER);
+		//grey bg
+		fill(200);
+		rect(width / 2, 20, barWidth, barHeight);
+
+		//red healthbar
+		fill(255, 0, 0);
+		rect(width / 2, 20, currentHealthWidth, barHeight);
+		rectMode(NORMAL);
+	}
+
+
+	leaving() {
+		//target exit position
+		let leaveX = width / 2;
+		let leaveY = -100;
+
+		playerClass.mic.mic.position.set(-1000, -1000); //move mic offscreen so it doesnt float
+
+		//move x axis
+		if (this.x < leaveX) {
+			this.x += 3;
+		}
+
+		else if (this.x > leaveX) {
+			this.x -= 3;
+		}
+
+		//make sure we dont skip over leaveX
+		if (Math.abs(this.x - leaveX) <= 3) {
+			this.x = leaveX;
+		}
+
+		//move y axis
+		if (this.x === leaveX) {
+			this.y -= 3;
+		}
+
+		if (this.y <= leaveY) {
+			this.y = leaveY;
+			canMove = true;
+			bossObamaEvent = false;
+		}
+	}
+
+	checkCollision() {
+		if (collideRectRect(
+			this.player.x - this.player.width / 2, this.player.y - this.player.height / 2,
+			this.player.width, this.player.height,
+			this.obama.x - this.obama.width / 2, this.obama.y - this.obama.height / 2,
+			this.obama.width, this.obama.height)) {
+
+			//player hasnt been hit already
+			if (!playerClass.playerHit) {
+				playerClass.playerHit = true;
+
+				if (canMove) { //player can move → not a cutscene
+					playerClass.health -= 1;
+				}
+			}
+		}
+
+		else { //reset
+			playerClass.playerHit = false;
+		}
+	}
+
+	update() {
+		//events via state
+		if (this.state === "entering") {
+			this.player.changeAnimation("playerIdleUp");
+			this.enter();
+		}
+
+		if (this.state === "dialogue") {
+			this.dialogue();
+		}
+
+		if (this.state === "attack") {
+			canMove = true;
+			this.drawHealthBar(); //draw health
+			this.chargeAttack();
+			this.checkCollision();
+
+			if (this.health <= 0) {
+				canMove = false;
+				this.state = "leaving";
+			}
+		}
+
+		if (this.state === "leaving") {
+			//set anim + direction before leaving
+			this.player.changeAnimation("playerIdleUp");
+			lastDir = "Up";
+			this.leaving();
+		}
+
+		//set position
+		this.obama.position.set(this.x, this.y);
+	}
+}
