@@ -9,6 +9,7 @@ function preloadAssets() {
 	playerStep = loadSound("assets/audio/playerStep.wav");
 	cameraFlash = loadSound("assets/audio/cameraFlash.wav");
 	obamaLeft = loadSound("assets/audio/obamaLeft.mp3");
+	playerHurt = loadSound("assets/audio/playerHurt.wav");
 
 	//LOAD PLAYER ANIMATIONS
 	playerUpAnim = loadAnimation("assets/sprites/playerUp/playerUp1.png", "assets/sprites/playerUp/playerUp2.png",
@@ -30,6 +31,9 @@ function preloadAssets() {
 	playerAttackLeftAnim = loadAnimation("assets/sprites/playerAttack/playerLeftMic1.png", "assets/sprites/playerAttack/playerLeftMic2.png");
 	playerAttackRightAnim = loadAnimation("assets/sprites/playerAttack/playerRightMic1.png", "assets/sprites/playerAttack/playerRightMic2.png");
 	playerAttackDownAnim = loadAnimation("assets/sprites/playerAttack/playerDownMic1.png", "assets/sprites/playerAttack/playerDownMic2.png");
+
+	//PLAYER DEATH SPRITE
+	playerDeathAnim = loadAnimation("assets/sprites/playerDeath/playerDeath.png");
 
 	//MIC ANIMS
 	downMic = loadAnimation("assets/sprites/playerAttack/downMic1.png", "assets/sprites/playerAttack/downMic2.png");
@@ -76,4 +80,7 @@ function preloadAssets() {
 	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
 	textBox = loadImage("assets/sprites/textBox.png");
 	yapBox = loadImage("assets/sprites/yapBox.png");
+
+	//LOAD YOU SUCK ROOM ASSETS
+	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
 }

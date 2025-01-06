@@ -1,5 +1,4 @@
 function setupFunction() {
-    createCanvas(640, 360, WEBGL);
     displayMode("centered", "pixelated");
     noStroke();
     noCursor();
@@ -16,13 +15,14 @@ function setupFunction() {
     lobbyMusic.setVolume(0.7); lobbyMusic.setLoop(true);
 
     enemyHit.setVolume(0.4);
+    playerHurt.setVolume(0.8);
     playerAttack.setVolume(1);
     newRoom.setVolume(0.7);
     playerStep.setVolume(0.6); playerStep.setLoop(false);
     obamaLeft.setVolume(0.7); obamaLeft.setLoop(false);
 
     //put sprites off-screen so not shown during title/intro
-    player = createSprite(1000, 1000, 40, 76, "s");
+    player = createSprite(1000, 1000, 22, 44, "s");
     dummy = createSprite(1000, 1000, 40, 60, "s");
     weaponObama = createSprite(1000, 1000, 84, 160, "s");
     bossObama = createSprite(1000, 1000, 36, 70, "s");
@@ -37,8 +37,6 @@ function setupFunction() {
     //dummy barrier
     //barrierManager.addBarrier(550, 280, -20, -50, "Weapon");
 
-    //set initial vars
-    titleButtonMode = titleButton;
-    currentScene = "Title";
     currentMusic = titleMusic;
+    titleButtonMode = titleButton;
 }

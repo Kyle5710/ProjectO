@@ -8,7 +8,7 @@ function determineEvents() {
 	textFont(font);
 
 	//music
-	currentMusic.play();
+	playMusic();
 
 	//TITLE ROOM
 	if (currentScene === "Title") {
@@ -23,7 +23,7 @@ function determineEvents() {
 
 		//display images
 		imageMode(CENTER);
-		image(titleButtonMode, width / 2, 300); // x = width/2, y = 300, width = 254, height = 82
+		image(titleButtonMode, width / 2, 300); //x = width/2, y = 300, width = 254, height = 82
 		image(titleLogo, width / 2, logoPos, 300, 140);
 		imageMode(NORMAL);
 
@@ -107,11 +107,6 @@ function determineEvents() {
 		else {
 			canMove = true;
 		}
-
-		//set music
-		currentMusic.pause();
-		currentMusic = lobbyMusic;
-		currentMusic.play();
 	}
 
 	//OBAMA ROOM
@@ -149,6 +144,44 @@ function determineEvents() {
 				playerClass.display(dummyClass);
 			}
 			bossObamaClass.update();
+		}
+	}
+
+	//LOSE SCREEN
+	if (currentScene === "YOUSUCK") {
+		if (!timerStarted) {
+			timerStart = millis();
+			timerStarted = true;
+		}
+
+		let elapsedTime = millis() - timerStart;
+		let remainingTime = timerDuration - elapsedTime;
+
+		allSprites.remove();
+
+		canMove = false;
+		playerClass.player.position.set(-1000, -1000);
+		player.changeAnimation("playerDeath");
+
+		currentBackground = youSuckBackground;
+		rect(0, 0, width, height);
+
+		textAlign(CENTER, CENTER);
+		textSize(30);
+		fill(255);
+
+		if (remainingTime > 0) {
+			let secondsLeft = Math.ceil(remainingTime / 1000); //convert to secs
+			text("Dang, you suck.", width / 2, height / 2 - 60)
+			text("Travelling back in time in " + secondsLeft + " seconds.", width / 2, height / 2);
+		}
+
+		else {
+			text("Good Luck!", width / 2, height / 2);
+		}
+
+		if (remainingTime <= 0) {
+			location.reload();
 		}
 	}
 
