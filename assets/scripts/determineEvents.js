@@ -147,6 +147,11 @@ function determineEvents() {
 		}
 	}
 
+	//BUTTON ROOM
+	if(currentScene === "Button"){
+		currentBackground = weaponBackground;
+	}
+
 	//LOSE SCREEN
 	if (currentScene === "YOUSUCK") {
 		if (!timerStarted) {
@@ -160,7 +165,6 @@ function determineEvents() {
 		allSprites.remove();
 
 		canMove = false;
-		playerClass.player.position.set(-1000, -1000);
 		player.changeAnimation("playerDeath");
 
 		currentBackground = youSuckBackground;

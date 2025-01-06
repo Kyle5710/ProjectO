@@ -51,10 +51,11 @@ function preloadAssets() {
 		"assets/sprites/obamaDown/obamaDown3.png", "assets/sprites/obamaDown/obamaDown4.png");
 	obamaUpAnim = loadAnimation("assets/sprites/obamaUp/obamaUp1.png", "assets/sprites/obamaUp/obamaUp2.png",
 		"assets/sprites/obamaUp/obamaUp3.png", "assets/sprites/obamaUp/obamaUp4.png");
-	obamaIdle = loadAnimation("assets/sprites/obamaDown/obamaDown1.png");
+	obamaIdleAnim = loadAnimation("assets/sprites/obamaIdle/obamaIdle1.png", "assets/sprites/obamaIdle/obamaIdle2.png",
+		"assets/sprites/obamaIdle/obamaIdle3.png", "assets/sprites/obamaIdle/obamaIdle4.png");
 
 	//LOAD BOSS OBAMA ANIMS
-	tempObama = loadAnimation("assets/sprites/bossObama/tempObama.png");
+	obamaJetpack = loadAnimation("assets/sprites/obamaJetpack/obamaJetpack1.png", "assets/sprites/obamaJetpack/obamaJetpack2.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");

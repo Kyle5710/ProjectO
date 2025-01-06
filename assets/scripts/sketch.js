@@ -22,7 +22,7 @@ function draw() {
 
 	classEvents(); //scenes where player canMove + dummyClass
 
-	//drawDebug();
+	drawDebug();
 }
 
 function playMusic() {
@@ -128,15 +128,6 @@ function classEvents() {
 			playerClass.spawnPos();
 		}
 
-		if (currentScene === "Title") {
-			if (player) {
-				//get player offscreen and reset health
-				playerClass.player.position.set(-1000, -1000);
-				playerClass.health = 10;
-				bossObamaClass.health = 20;
-			}
-		}
-
 		if (currentScene === "Weapon" && tranAlpha < 255) {
 			dummyClass.spawnPos();
 		}
@@ -199,7 +190,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Boss";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

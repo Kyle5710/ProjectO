@@ -3,7 +3,7 @@ class Player {
 		this.x = xPos;
 		this.y = yPos;
 		this.player = player;
-		this.speed = 3;
+		this.speed = 4;
 		this.velocity = createVector(0, 0);
 		this.isAttacking = false;
 		this.attackStartTime = 0;
@@ -169,6 +169,10 @@ class Player {
 					dummy.position.set(-1000, -1000);
 				}
 			}
+
+			else if (currentScene === "Boss" && !bossObamaEvent) {
+				nextScene = "Button";
+			}
 		}
 	}
 
@@ -265,7 +269,7 @@ class Player {
 		}
 
 		//BOSS DRAWING
-		if (currentScene === "Boss") {
+		else if (currentScene === "Boss") {
 			if (bossObamaClass.state === "attack") {
 				this.drawHealthBar();
 			}
@@ -454,7 +458,8 @@ class MicHitbox {
 		};
 
 		this.hitbox = createSprite(this.mic.position.x, this.mic.position.y, 20, 20, "s");
-		this.hitbox.visible = false;
+		this.hitbox.visible = true;
+		this.hitbox.debug = true;
 		this.hitDummy = false;
 		this.hitBoss = false;
 	}
@@ -612,9 +617,9 @@ class WeaponObama {
 		//add anims
 		weaponObama.addAnimation("obamaDown", obamaDownAnim);
 		weaponObama.addAnimation("obamaUp", obamaUpAnim);
-		weaponObama.addAnimation("obamaIdle", obamaIdle);
+		weaponObama.addAnimation("obamaIdle", obamaIdleAnim);
 
-		obamaUpAnim.frameDelay = 15;
+		obamaUpAnim.frameDelay = obamaIdleAnim.frameDelay = 15;
 		obamaDownAnim.frameDelay = 5;
 	}
 
@@ -698,8 +703,8 @@ class BossObama {
 
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);
-		bossObama.addAnimation("obamaIdle", obamaIdle);
-		bossObama.addAnimation("obamaCart", tempObama);
+		bossObama.addAnimation("obamaIdle", obamaIdleAnim);
+		bossObama.addAnimation("obamaJetpack", obamaJetpack);
 	}
 
 	enter() {
@@ -728,15 +733,15 @@ class BossObama {
 	chargeAttack() {
 		//random gives a value between 0-1 so 50% chance to get t or f
 		let shouldBounce = random() > 0.5;
-	
+
 		//randomize speed and duration
 		let moveSpeed = random(3, 4);
 		let attackDuration = int(random(60, 240));
-	
+
 		if (this.currentAttackState === "charge") {
 			if (!this.isCharging) {
 				//start charge + set vars
-				this.obama.changeAnimation("obamaCart");
+				this.obama.changeAnimation("obamaJetpack");
 				let angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
 				let randomize = random(-Math.PI / 12, Math.PI / 12);
 				this.chargeAngle = angleToPlayer + randomize;
@@ -744,23 +749,23 @@ class BossObama {
 				this.isCharging = true;
 				this.attackDuration = attackDuration;
 			}
-	
+
 			//find next pos to move to
 			let nextX = this.x + Math.cos(this.chargeAngle) * moveSpeed;
 			let nextY = this.y + Math.sin(this.chargeAngle) * moveSpeed;
-	
+
 			//these are checks for the wall/boundaries
 			let onLeftWall = this.x <= 30;
 			let onRightWall = this.x >= 610;
 			let onTopWall = this.y <= 50;
 			let onBottomWall = this.y >= 275;
-	
-			if (shouldBounce) { 
+
+			if (shouldBounce) {
 				//attack will bounce off of walls
 				if (nextX <= 30 || nextX >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
 				if (nextY <= 50 || nextY >= 275) this.chargeAngle = -this.chargeAngle;
-			} 
-			
+			}
+
 			else {
 				//attack wont bounce and will slide off of walls or stop
 				if (onLeftWall || onRightWall) {
@@ -770,31 +775,31 @@ class BossObama {
 					this.chargeAngle = this.player.x > this.x ? 0 : Math.PI;
 				}
 			}
-	
+
 			this.x = constrain(nextX, 31, 609);
 			this.y = constrain(nextY, 51, 274);
-	
+
 			//stop charging
 			if (this.attackDuration <= this.chargeTimer++) {
 				this.currentAttackState = "idle";
 				this.chargeCooldown = 60; //time between attacks
 				this.isCharging = false;
 			}
-	
+
 			//same thing but if sliding into walls
 			if (!shouldBounce && (onLeftWall || onRightWall || onTopWall || onBottomWall)) {
 				this.currentAttackState = "idle";
 				this.chargeCooldown = 60;
 				this.isCharging = false;
 			}
-	
+
 			return;
 		}
-	
+
 		//idle state
 		if (this.currentAttackState === "idle") {
 			this.obama.changeAnimation("obamaIdle");
-	
+
 			if (this.chargeCooldown > 0) {
 				this.chargeCooldown--;
 				return;
@@ -803,7 +808,7 @@ class BossObama {
 			}
 		}
 	}
-	
+
 	drawHealthBar() {
 		const barWidth = 420;
 		const barHeight = 20;

@@ -35,7 +35,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 100; //delay between dialogue lines  originally 2000 btw
+let delay = 2000; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
@@ -56,6 +56,10 @@ let bossObamaEvent = true;
 let bossDialogue = ["", "You're persistent aren't you?", "What do you want anyway?", "My last name!!!", "Nah gang that's been kept under wraps for years",
 	"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
 	"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
+
+//BUTTON ROOM
+let buttonEvent = true;
+let buttonDialogue = ["", "This is button dialogue replace it later on."];
 
 //YOUSUCK ROOM
 let timerStart = 0;
