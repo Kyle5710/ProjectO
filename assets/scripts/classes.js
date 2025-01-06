@@ -26,6 +26,8 @@ class Player {
 		player.addAnimation("playerAttackRight", playerAttackRightAnim);
 		player.addAnimation("playerAttackLeft", playerAttackLeftAnim);
 
+		player.addAnimation("playerDeath", playerDeathAnim);
+
 		//frame rate for animations
 		playerUpAnim.frameDelay = playerDownAnim.frameDelay = playerLeftAnim.frameDelay = playerRightAnim.frameDelay = 15;
 		playerIdleDownAnim.frameDelay = playerIdleUpAnim.frameDelay = playerIdleLeftAnim.frameDelay = playerIdleRightAnim.frameDelay = 30;
@@ -45,12 +47,21 @@ class Player {
 		rectMode(CENTER);
 		//grey bg
 		fill(200);
-		rect(width / 2, 340, barWidth, barHeight);
+		rect(width / 2, 333, barWidth, barHeight);
+
 
 		//blue healthbar
 		fill(0, 0, 255);
-		rect(width / 2, 340, currentHealthWidth, barHeight);
+		rect(width / 2, 333, currentHealthWidth, barHeight);
 		rectMode(NORMAL);
+
+		stroke("black");
+		strokeWeight(2);
+		fill("white");
+		textSize(20);
+		textAlign(CENTER);
+		text("Armando, the reporter", width / 2, 338);
+
 	}
 
 	stepSound() {
@@ -136,7 +147,7 @@ class Player {
 		this.x = constrain(this.x, 20, 620);
 		this.y = constrain(this.y, 30, 281);
 
-		// Checking room transition
+		//room transition
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 
 			if (currentScene !== "Boss") {
@@ -229,6 +240,7 @@ class Player {
 	spawnPos() {
 		this.y = 269;
 		this.x = width / 2;
+		lastDir = "Up";
 	}
 
 	display(dummy) {
@@ -294,15 +306,16 @@ class Player {
 		}
 	}
 
-	death() { //RESET EVERYTHING HERE DO THIS TOMORROW
+	death() {
 		if (this.health <= 0) {
-			//reset the game
-			this.health = 10;
-			setupFunction();
-			tran = true;
-			nextScene = "Title";
+			//reload the page to end the game cause i spent like an hour trying to reset vars and stuff 
+			//and do not want to ever live through that experience ever again i think i broke my mouse oml
+			if (!timerStarted) {
+				currentScene = "YOUSUCK";
+				timerStart = millis();
+				timerStarted = true;
+			}
 		}
-
 	}
 
 	update(dummy) {
@@ -713,16 +726,16 @@ class BossObama {
 	}
 
 	chargeAttack() {
-		//randomize whether boss will bounce off of walls or not
+		//random gives a value between 0-1 so 50% chance to get t or f
 		let shouldBounce = random() > 0.5;
-
-		//randomize speed + duration
+	
+		//randomize speed and duration
 		let moveSpeed = random(3, 4);
 		let attackDuration = int(random(60, 240));
-
+	
 		if (this.currentAttackState === "charge") {
 			if (!this.isCharging) {
-				//set values
+				//start charge + set vars
 				this.obama.changeAnimation("obamaCart");
 				let angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
 				let randomize = random(-Math.PI / 12, Math.PI / 12);
@@ -731,55 +744,66 @@ class BossObama {
 				this.isCharging = true;
 				this.attackDuration = attackDuration;
 			}
-
-			//move obama
-			this.x += Math.cos(this.chargeAngle) * moveSpeed;
-			this.y += Math.sin(this.chargeAngle) * moveSpeed;
-
-			if (shouldBounce) {
-				//bounce off of walls
-				if (this.x <= 30 || this.x >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
-				if (this.y <= 50 || this.y >= 275) this.chargeAngle = -this.chargeAngle;
-			}
-
+	
+			//find next pos to move to
+			let nextX = this.x + Math.cos(this.chargeAngle) * moveSpeed;
+			let nextY = this.y + Math.sin(this.chargeAngle) * moveSpeed;
+	
+			//these are checks for the wall/boundaries
+			let onLeftWall = this.x <= 30;
+			let onRightWall = this.x >= 610;
+			let onTopWall = this.y <= 50;
+			let onBottomWall = this.y >= 275;
+	
+			if (shouldBounce) { 
+				//attack will bounce off of walls
+				if (nextX <= 30 || nextX >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
+				if (nextY <= 50 || nextY >= 275) this.chargeAngle = -this.chargeAngle;
+			} 
+			
 			else {
-				//stop
-				if (this.x <= 30 || this.x >= 610 || this.y <= 50 || this.y >= 275) {
-					this.currentAttackState = "idle";
-					this.chargeCooldown = 60;
-					this.isCharging = false;
+				//attack wont bounce and will slide off of walls or stop
+				if (onLeftWall || onRightWall) {
+					this.chargeAngle = this.player.y > this.y ? Math.PI / 2 : -Math.PI / 2;
+				}
+				if (onTopWall || onBottomWall) {
+					this.chargeAngle = this.player.x > this.x ? 0 : Math.PI;
 				}
 			}
-
-			//keep obama onscreen
-			this.x = constrain(this.x, 0, 640);
-			this.y = constrain(this.y, 0, 360);
-
+	
+			this.x = constrain(nextX, 31, 609);
+			this.y = constrain(nextY, 51, 274);
+	
 			//stop charging
 			if (this.attackDuration <= this.chargeTimer++) {
+				this.currentAttackState = "idle";
+				this.chargeCooldown = 60; //time between attacks
+				this.isCharging = false;
+			}
+	
+			//same thing but if sliding into walls
+			if (!shouldBounce && (onLeftWall || onRightWall || onTopWall || onBottomWall)) {
 				this.currentAttackState = "idle";
 				this.chargeCooldown = 60;
 				this.isCharging = false;
 			}
-
+	
 			return;
 		}
-
-		//idle
+	
+		//idle state
 		if (this.currentAttackState === "idle") {
 			this.obama.changeAnimation("obamaIdle");
-
+	
 			if (this.chargeCooldown > 0) {
 				this.chargeCooldown--;
 				return;
-			}
-
-			else if (this.chargeCooldown === 0) {
+			} else if (this.chargeCooldown === 0) {
 				this.currentAttackState = "charge";
 			}
 		}
 	}
-
+	
 	drawHealthBar() {
 		const barWidth = 420;
 		const barHeight = 20;
@@ -790,12 +814,20 @@ class BossObama {
 		rectMode(CENTER);
 		//grey bg
 		fill(200);
-		rect(width / 2, 20, barWidth, barHeight);
+		rect(width / 2, 10, barWidth, barHeight);
 
 		//red healthbar
 		fill(255, 0, 0);
-		rect(width / 2, 20, currentHealthWidth, barHeight);
+		rect(width / 2, 10, currentHealthWidth, barHeight);
 		rectMode(NORMAL);
+
+		stroke("black");
+		strokeWeight(2);
+		fill("white");
+		textAlign(CENTER);
+		textSize(20);
+		text("Obama, the guy", width / 2, 14);
+
 	}
 
 
@@ -844,6 +876,7 @@ class BossObama {
 				playerClass.playerHit = true;
 
 				if (canMove) { //player can move → not a cutscene
+					playerHurt.play(); //sfx
 					playerClass.health -= 1;
 				}
 			}

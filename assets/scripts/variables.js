@@ -57,5 +57,10 @@ let bossDialogue = ["", "You're persistent aren't you?", "What do you want anywa
 	"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
 	"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
 
+//YOUSUCK ROOM
+let timerStart = 0;
+let timerDuration = 5000;
+let timerStarted = false;
+
 //STATE VARS
 let currentBackground, currentScene, currentMusic;

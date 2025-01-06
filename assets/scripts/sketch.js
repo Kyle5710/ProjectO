@@ -8,6 +8,9 @@ function preload() {
 }
 
 function setup() {
+	createCanvas(640, 360, WEBGL);
+	currentScene = "Title";
+
 	setupFunction(); //check setupScript.js
 }
 
@@ -20,6 +23,20 @@ function draw() {
 	classEvents(); //scenes where player canMove + dummyClass
 
 	//drawDebug();
+}
+
+function playMusic() {
+	if (currentScene === "Title" && currentMusic !== titleMusic) {
+		currentMusic.pause();
+		currentMusic = titleMusic;
+	}
+
+	else if (currentScene === "Tutorial" && currentMusic !== lobbyMusic) {
+		currentMusic.pause();
+		currentMusic = lobbyMusic;
+	}
+
+	currentMusic.play();
 }
 
 function obamaDialogueFunc() {
@@ -107,10 +124,18 @@ function classEvents() {
 	}
 
 	else {
-		if (currentScene !== "Obama") {
+		if (currentScene !== "Yapping" && currentScene !== "Title" && currentScene !== "Obama" && currentScene !== "YOUSUCK") {
 			playerClass.spawnPos();
 		}
 
+		if (currentScene === "Title") {
+			if (player) {
+				//get player offscreen and reset health
+				playerClass.player.position.set(-1000, -1000);
+				playerClass.health = 10;
+				bossObamaClass.health = 20;
+			}
+		}
 
 		if (currentScene === "Weapon" && tranAlpha < 255) {
 			dummyClass.spawnPos();
@@ -130,7 +155,6 @@ function drawDebug() {
 		dummy.debug = true;
 		bossObama.debug = true;
 	}
-
 }
 
 function sceneTransition() {
@@ -143,7 +167,7 @@ function sceneTransition() {
 	if (tran) {
 		tranAlpha += 255 / (fadeDur / deltaTime);
 		if (tranAlpha >= 255) { //screen fully black
-			if (nextScene !== "Yapping") {
+			if (nextScene !== "Yapping" && nextScene !== "Title") {
 				canMove = true;
 			}
 
