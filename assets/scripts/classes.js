@@ -311,6 +311,9 @@ class Player {
 				bossDialogueFunc();
 			}
 
+			else if (currentScene === "Button") {
+				buttonDialogueFunc();
+			}
 
 			else if (currentScene === "Tutorial") {
 				tutorialEvent = false;
@@ -711,7 +714,7 @@ class BossObama {
 		this.chargeAngle = null;
 		this.isCharging = false;
 		this.attackCooldown = 0;
-		this.health = 1;
+		this.health = 20;
 
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);
@@ -747,8 +750,8 @@ class BossObama {
 		let shouldBounce = random() > 0.5;
 
 		//randomize speed and duration
-		let moveSpeed = random(3, 4);
-		let attackDuration = int(random(60, 240));
+		let moveSpeed = random(4, 6);
+		let attackDuration = int(random(60, 270));
 
 		if (this.currentAttackState === "charge") {
 			if (!this.isCharging) {

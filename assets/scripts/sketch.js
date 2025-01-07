@@ -156,6 +156,38 @@ function bossDialogueFunc() {
 	}
 }
 
+function buttonDialogueFunc() {
+	if (player.x !== 1000 && currentScene === "Button") {
+		//show portrait sprites
+		showPortrait = true;
+
+		let dialogue = buttonDialogue[currentLine];
+		let wrappedText = wrapText(dialogue, 310); //max width
+		let yPos = 292; //vertical distance between lines
+
+		//draw textbox + set textAlign
+		imageMode(CENTER);
+		image(textBox, width / 2, 300, 460, 120);
+		imageMode(NORMAL);
+		textAlign(LEFT);
+
+		for (let i = 0; i < wrappedText.length; i++) {
+			//display lines
+			fill("white");
+			text(wrappedText[i], width / 2 - 120, yPos);
+			yPos += textLeading();
+		}
+
+		if (millis() - lastChangeTime > delay) {
+			//events based on line #
+
+
+			buttonSound.play();
+			currentLine = (currentLine + 1) % buttonDialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+	}
+}
 
 function classEvents() {
 	if (canMove && tranAlpha <= 0) {
