@@ -68,6 +68,12 @@ let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAV
 	"ANYWAYS","THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
 	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
 
+let goodButton;
+let badButton;
+let jokeButton;
+let jokeButton2;
+let doorButton;
+
 //YOUSUCK ROOM
 let timerStart = 0;
 let timerDuration = 5000;
