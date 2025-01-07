@@ -34,8 +34,9 @@ function setupFunction() {
     bossObamaClass = new BossObama(width / 2, -50, bossObama, player);
     barrierManager = new BarrierManager();
 
-    //dummy barrier
-    //barrierManager.addBarrier(550, 280, -20, -50, "Weapon");
+    //hallway barriers
+    barrierManager.addBarrier(0, 0, 260, 1000, "Obama");
+    barrierManager.addBarrier(400, 0, 260, 1000, "Obama");
 
     currentMusic = titleMusic;
     titleButtonMode = titleButton;

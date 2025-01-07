@@ -33,6 +33,7 @@ function determineEvents() {
 
 	//YAPPING ROOM
 	if (currentScene === "Yapping") {
+
 		let dialogue = yapDialogue[currentLine];
 		let wrappedText = wrapText(dialogue, 440); //max width
 		let yPos = 327; //vertical distance between lines
@@ -111,7 +112,7 @@ function determineEvents() {
 
 	//OBAMA ROOM
 	if (currentScene === "Obama") {
-		currentBackground = weaponBackground;
+		currentBackground = hallway;
 
 		if (obamaEvent) {
 			player.changeAnimation("playerIdleUp");
@@ -150,6 +151,16 @@ function determineEvents() {
 	//BUTTON ROOM
 	if(currentScene === "Button"){
 		currentBackground = weaponBackground;
+
+		if (buttonEvent) {
+			canMove = false;
+			player.changeAnimation("playerIdleUp");
+			playerClass.display(dummyClass);
+		}
+
+		else {
+			canMove = true;
+		}
 	}
 
 	//LOSE SCREEN

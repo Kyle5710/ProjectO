@@ -14,6 +14,9 @@ let mic;
 let weaponObama; //obama room
 let bossObama; //boss room
 
+//PORTRAIT
+let showPortrait = false;
+
 //STORES BARRIERS
 let barrierManager;
 
@@ -35,7 +38,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 2000; //delay between dialogue lines  originally 2000 btw
+let delay = 2; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
@@ -67,4 +70,4 @@ let timerDuration = 5000;
 let timerStarted = false;
 
 //STATE VARS
-let currentBackground, currentScene, currentMusic;
+let currentBackground, currentScene, currentMusic, currentPortrait;

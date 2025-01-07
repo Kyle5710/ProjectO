@@ -16,13 +16,20 @@ function setup() {
 
 function draw() {
 	//update barriers based on currentScene
-	//barrierManager.updateBarState(currentScene, playerClass.player);
+	barrierManager.updateBarState(currentScene, playerClass.player);
 
 	determineEvents(); //check determineEvents.js
-
+	showPortraits(); //show character portraits
 	classEvents(); //scenes where player canMove + dummyClass
 
+	//debug
 	drawDebug();
+}
+
+function showPortraits() {
+	if (showPortrait) {
+		image(currentPortrait, 107, 260);
+	}
 }
 
 function playMusic() {
@@ -44,8 +51,11 @@ function obamaDialogueFunc() {
 		weaponObamaClass.update();
 
 		if (weaponObama.position.y === 100 && currentScene === "Obama") {
+			//show portrait sprites
+			showPortrait = true;
+
 			let dialogue = obamaDialogue[currentLine];
-			let wrappedText = wrapText(dialogue, 300); //max width
+			let wrappedText = wrapText(dialogue, 310); //max width
 			let yPos = 292; //vertical distance between lines
 
 			//draw textbox + set textAlign
@@ -64,14 +74,32 @@ function obamaDialogueFunc() {
 			if (millis() - lastChangeTime > delay) {
 				//events based on line #
 
-				if (currentLine === 1) {
-					weaponObamaClass.idle = true;
+				if (currentLine === 0) {
+					currentPortrait = shock;
 				}
 
-				if (currentLine === 7) {
+				else if (currentLine === 1) {
+					weaponObamaClass.idle = true;
+					currentPortrait = confused;
+				}
+
+				else if (currentLine === 3) {
+					currentPortrait = appalled;
+				}
+
+				else if (currentLine === 4) {
+					currentPortrait = neutral;
+				}
+
+				else if (currentLine === 6) {
+					currentPortrait = smile;
+				}
+
+				else if (currentLine === 7) {
 					weaponObamaClass.triggerLeave();
 					lastDir = "Up";
 					obamaLeft.play();
+					showPortrait = false;
 				}
 
 				buttonSound.play();
@@ -85,8 +113,11 @@ function obamaDialogueFunc() {
 
 function bossDialogueFunc() {
 	if (bossObamaClass.state === "dialogue") {
+		//show portrait sprites
+		showPortrait = true;
+
 		let dialogue = bossDialogue[currentLine];
-		let wrappedText = wrapText(dialogue, 300); //max width
+		let wrappedText = wrapText(dialogue, 310); //max width
 		let yPos = 292; //vertical distance between lines
 
 		//draw textbox + set textAlign
@@ -104,8 +135,18 @@ function bossDialogueFunc() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
+			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
+			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
+			else if (currentLine === 4) currentPortrait = angry;
+			else if (currentLine === 6) currentPortrait = happy;
+			else if (currentLine === 11) currentPortrait = smile;
+			else if (currentLine === 12) currentPortrait = shock;
+			else if (currentLine === 14) currentPortrait = sansundertale;
+
 			if (currentLine === 15) {
 				bossObamaClass.state = "attack";
+				showPortrait = false;
 			}
 
 			buttonSound.play();
@@ -152,6 +193,7 @@ function sceneTransition() {
 	if (tranAlpha > 0) {
 		//create rect
 		fill(0, 0, 0, tranAlpha);
+		rectMode(CORNER);
 		rect(0, 0, width, height);
 	}
 
@@ -229,11 +271,14 @@ function wrapText(str, maxWidth) { //use this to wrap text when needed W youtube
 		let testLine = currentLine + ' ' + words[i];
 		if (textWidth(testLine) <= maxWidth) {
 			currentLine = testLine;
-		} else {
+		}
+
+		else {
 			lines.push(currentLine);
 			currentLine = words[i];
 		}
 	}
+
 	lines.push(currentLine);
 	return lines;
 }

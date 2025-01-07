@@ -151,6 +151,7 @@ class Player {
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 
 			if (currentScene !== "Boss") {
+
 				newRoom.play(); //sfx
 				this.x = this.y = -1000; //move player offscreen
 				canMove = false; //prevent player movement
@@ -170,7 +171,12 @@ class Player {
 				}
 			}
 
-			else if (currentScene === "Boss" && !bossObamaEvent) {
+			else if (bossObamaClass.health <= 0) {
+				textSize(30);
+				newRoom.play(); //sfx
+				this.x = this.y = -1000; //move player offscreen
+				canMove = false; //prevent player movement
+				tran = true; //run fade transition
 				nextScene = "Button";
 			}
 		}
@@ -297,10 +303,16 @@ class Player {
 
 		if (tranAlpha <= 0) {
 			//run dialogue funcs
-			obamaDialogueFunc();
-			bossDialogueFunc();
+			if (currentScene === "Obama") {
+				obamaDialogueFunc();
+			}
 
-			if (currentScene === "Tutorial") {
+			else if (currentScene === "Boss") {
+				bossDialogueFunc();
+			}
+
+
+			else if (currentScene === "Tutorial") {
 				tutorialEvent = false;
 			}
 
@@ -377,8 +389,9 @@ class Barrier {
 		this.width = width;
 		this.height = height;
 		this.scene = scene;
-		this.barrier = createSprite(this.x, this.y, this.width, this.height);
+		this.barrier = createSprite(this.x, this.y, this.width, this.height, "s");
 		this.barrier.visible = false; //start hidden (debug var delete when done)
+		//this.barrier.debug = true;
 		this.active = false; //start inactive
 	}
 
@@ -513,7 +526,6 @@ class MicHitbox {
 
 			enemyHit.play(); //sfx
 			bossObamaClass.health -= 1;
-			print(bossObamaClass.health);
 			this.hitBoss = true;
 		}
 	}
@@ -699,7 +711,7 @@ class BossObama {
 		this.chargeAngle = null;
 		this.isCharging = false;
 		this.attackCooldown = 0;
-		this.health = 20;
+		this.health = 1;
 
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);
@@ -852,7 +864,7 @@ class BossObama {
 			this.x -= 3;
 		}
 
-		//make sure we dont skip over leaveX
+		//make sure we dont skip over leaveX by taking abs
 		if (Math.abs(this.x - leaveX) <= 3) {
 			this.x = leaveX;
 		}

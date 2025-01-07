@@ -57,6 +57,16 @@ function preloadAssets() {
 	//LOAD BOSS OBAMA ANIMS
 	obamaJetpack = loadAnimation("assets/sprites/obamaJetpack/obamaJetpack1.png", "assets/sprites/obamaJetpack/obamaJetpack2.png");
 
+	//PORTRAITS
+	angry = loadImage("assets/sprites/portraits/angry.png");
+	appalled = loadImage("assets/sprites/portraits/appalled.png");
+	confused = loadImage("assets/sprites/portraits/confused.png");
+	happy = loadImage("assets/sprites/portraits/happy.png");
+	neutral = loadImage("assets/sprites/portraits/neutral.png");
+	shock = loadImage("assets/sprites/portraits/shock.png");
+	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
+	smile = loadImage("assets/sprites/portraits/smile.png");
+
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
 	titleBackground = loadImage("assets/sprites/titleScreen/titleBack.png");
@@ -84,4 +94,7 @@ function preloadAssets() {
 
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
+
+	//HALLWAY
+	hallway = loadImage("assets/sprites/hallway/hallway.png");
 }
