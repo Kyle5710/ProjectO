@@ -38,7 +38,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 2000; //delay between dialogue lines  originally 2000 btw
+let delay = 2; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
