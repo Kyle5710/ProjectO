@@ -38,7 +38,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 2000; //delay between dialogue lines  originally 2000 btw
+let delay = 1; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
@@ -69,9 +69,9 @@ let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAV
 	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
 
 let goodButton;
-let badButton;
 let jokeButton;
 let jokeButton2;
+let badButton;
 let doorButton;
 
 //YOUSUCK ROOM

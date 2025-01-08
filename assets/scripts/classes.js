@@ -714,7 +714,7 @@ class BossObama {
 		this.chargeAngle = null;
 		this.isCharging = false;
 		this.attackCooldown = 0;
-		this.health = 20;
+		this.health = 1;
 
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);

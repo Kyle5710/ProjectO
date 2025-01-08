@@ -110,7 +110,6 @@ function obamaDialogueFunc() {
 	}
 }
 
-
 function bossDialogueFunc() {
 	if (bossObamaClass.state === "dialogue") {
 		//show portrait sprites
@@ -221,6 +220,10 @@ function drawDebug() {
 	}
 }
 
+function randomizeButtons() {
+	//randomize button sprites
+}
+
 function sceneTransition() {
 	if (tranAlpha > 0) {
 		//create rect
@@ -264,7 +267,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Boss";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

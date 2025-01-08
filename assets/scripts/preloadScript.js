@@ -66,6 +66,7 @@ function preloadAssets() {
 	shock = loadImage("assets/sprites/portraits/shock.png");
 	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
 	smile = loadImage("assets/sprites/portraits/smile.png");
+	facepalm = loadImage("assets/sprites/portraits/facepalm/png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -91,6 +92,15 @@ function preloadAssets() {
 	weaponBackground = loadImage("assets/sprites/weaponScreen/weaponBack.png");
 	textBox = loadImage("assets/sprites/textBox.png");
 	yapBox = loadImage("assets/sprites/yapBox.png");
+
+	//STAGE ROOM ASSETS
+	stageBackground = loadImage("assets/sprites/stageScreen/stageBack.png");
+
+	blueButton = loadAnimation("assets/sprites/buttons/blueUp.png", "assets/sprites/buttons/blueDown.png");
+	greenButton = loadAnimation("assets/sprites/buttons/greenUp.png", "assets/sprites/buttons/greenDown.png");
+	purpleButton = loadAnimation("assets/sprites/buttons/purpleUp.png", "assets/sprites/buttons/purpleDown.png");
+	redButton = loadAnimation("assets/sprites/buttons/redUp.png", "assets/sprites/buttons/redDown.png");
+	yellowButton = loadAnimation("assets/sprites/buttons/yellowUp.png", "assets/sprites/buttons/yellowDown.png");
 
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");

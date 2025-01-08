@@ -56,12 +56,15 @@ function determineEvents() {
 			if (currentLine === 0) {
 				currentBackground = yappingBack1;
 			}
+
 			if (currentLine === 1) {
 				currentBackground = yappingBack2;
 			}
+
 			if (currentLine === 2) {
 				currentBackground = yappingBack3;
 			}
+
 			if (currentLine === 3) {
 				currentBackground = yappingBack4;
 			}
@@ -150,7 +153,9 @@ function determineEvents() {
 
 	//BUTTON ROOM
 	if(currentScene === "Button"){
-		currentBackground = weaponBackground;
+		currentBackground = stageBackground;
+
+		randomizeButtons(); //broken func
 
 		if (buttonEvent) {
 			canMove = false;
