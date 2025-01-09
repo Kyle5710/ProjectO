@@ -157,7 +157,7 @@ function determineEvents() {
 
 		randomizeButtons(); //broken func
 
-		if (buttonEvent) {
+		if (buttonState === "dialogue") {
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
 			playerClass.display(dummyClass);

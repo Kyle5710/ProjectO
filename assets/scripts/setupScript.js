@@ -38,6 +38,9 @@ function setupFunction() {
     barrierManager.addBarrier(0, 0, 260, 1000, "Obama");
     barrierManager.addBarrier(400, 0, 260, 1000, "Obama");
 
+    //button barriers
+    barrierManager.addBarrier(0, 0, 1000, 130, "Button");
+
     currentMusic = titleMusic;
     titleButtonMode = titleButton;
 }

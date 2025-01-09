@@ -67,6 +67,8 @@ let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAV
 	"CARSON YOU NEED TO PLUG IT IN", "THERE'S A CORD RIGHT IN FRONT OF YOU", "*sigh* let me just do it...", "*click*",
 	"ANYWAYS","THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
 	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
+let buttonState = "dialogue";
+
 
 let goodButton;
 let jokeButton;

@@ -50,7 +50,7 @@ function obamaDialogueFunc() {
 	if (player.x !== 1000 && currentScene === "Obama") {
 		weaponObamaClass.update();
 
-		if (weaponObama.position.y === 100 && currentScene === "Obama") {
+		if (weaponObama.position.y === 100) {
 			//show portrait sprites
 			showPortrait = true;
 
@@ -156,7 +156,7 @@ function bossDialogueFunc() {
 }
 
 function buttonDialogueFunc() {
-	if (player.x !== 1000 && currentScene === "Button") {
+	if (player.x !== 1000 && currentScene === "Button" && buttonState === "dialogue") {
 		//show portrait sprites
 		showPortrait = true;
 
@@ -180,6 +180,11 @@ function buttonDialogueFunc() {
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
 
+			if(currentLine === 19){
+				canMove = true;
+				showPortrait = false;
+				buttonState = "gameshow";
+			}
 
 			buttonSound.play();
 			currentLine = (currentLine + 1) % buttonDialogue.length; //loops through array infinitely

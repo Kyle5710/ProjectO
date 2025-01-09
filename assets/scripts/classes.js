@@ -148,7 +148,7 @@ class Player {
 		this.y = constrain(this.y, 30, 281);
 
 		//room transition
-		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
+		if (this.x >= 296 && this.x <= 344 && this.y <= 31 && currentScene !== "Button") {
 
 			if (currentScene !== "Boss") {
 
@@ -394,7 +394,7 @@ class Barrier {
 		this.scene = scene;
 		this.barrier = createSprite(this.x, this.y, this.width, this.height, "s");
 		this.barrier.visible = false; //start hidden (debug var delete when done)
-		//this.barrier.debug = true;
+		this.barrier.debug = false;
 		this.active = false; //start inactive
 	}
 
@@ -686,7 +686,7 @@ class WeaponObama {
 	}
 
 	triggerLeave() {
-		this.state = "leaving"; //changed from obamaDialogueFuncFunc() in sketch.js
+		this.state = "leaving"; //changed from obamaDialogueFunc() in sketch.js
 	}
 
 	update() {
