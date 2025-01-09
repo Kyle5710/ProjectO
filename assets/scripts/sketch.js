@@ -272,7 +272,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Boss";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
 			buttonSound.play();

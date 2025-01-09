@@ -66,7 +66,9 @@ function preloadAssets() {
 	shock = loadImage("assets/sprites/portraits/shock.png");
 	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
 	smile = loadImage("assets/sprites/portraits/smile.png");
-	facepalm = loadImage("assets/sprites/portraits/facepalm/png");
+	facepalm = loadImage("assets/sprites/portraits/facepalm.png");
+
+	dummyPortrait = loadImage("assets/sprites/portraits/dummy.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -95,6 +97,7 @@ function preloadAssets() {
 
 	//STAGE ROOM ASSETS
 	stageBackground = loadImage("assets/sprites/stageScreen/stageBack.png");
+	stageDarkBackground = loadImage("assets/sprites/stageScreen/stageDark.png");
 
 	blueButton = loadAnimation("assets/sprites/buttons/blueUp.png", "assets/sprites/buttons/blueDown.png");
 	greenButton = loadAnimation("assets/sprites/buttons/greenUp.png", "assets/sprites/buttons/greenDown.png");
