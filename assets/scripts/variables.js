@@ -38,7 +38,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 1; //delay between dialogue lines  originally 2000 btw
+let delay = 2000; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
@@ -62,19 +62,33 @@ let bossDialogue = ["", "You're persistent aren't you?", "What do you want anywa
 
 //BUTTON ROOM
 let buttonEvent = true;
+let darkStage = true;
+let buttonState = "setButtons";
+let buttonDialogueRunning = false;
+let currentButton = null; //stores dialogue of last button hit
+let buttonsDialogue = [];
+let buttons = []; //where the randomized buttons end up
+
+let dummyKids; //vars for the dummies in the crowd
+let dummyWife;
+let explosion;
+
+let canLeaveButton = false; //if player has hit the button to leave the room yet
+
+//dialogue upon entering room
 let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAVE AN UNEXPECTED",
 	"and rather intrusive...", "CONTESTANT!!!", "CARSON HIT THE LIGHTS!!!", "...", "HIT THE LIGHTS!", "...", 
 	"CARSON YOU NEED TO PLUG IT IN", "THERE'S A CORD RIGHT IN FRONT OF YOU", "*sigh* let me just do it...", "*click*",
 	"ANYWAYS","THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
 	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
-let buttonState = "dialogue";
 
+//LONGHALLWAY ROOMS
+let longHallwayEvent = true;
+let longHallway2Event = true;
+let longHallway3Event = true;
 
-let goodButton;
-let jokeButton;
-let jokeButton2;
-let badButton;
-let doorButton;
+//BOSS 2 ROOM
+let bossObama2Event = true;
 
 //YOUSUCK ROOM
 let timerStart = 0;

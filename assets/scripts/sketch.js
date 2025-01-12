@@ -23,12 +23,16 @@ function draw() {
 	classEvents(); //scenes where player canMove + dummyClass
 
 	//debug
-	drawDebug();
+	//drawDebug();
 }
 
 function showPortraits() {
-	if (showPortrait) {
+	if (showPortrait && buttonState !== "dialogue") {
 		image(currentPortrait, 107, 260);
+	}
+
+	else if (buttonState === "dialogue") {
+		image(currentPortrait, 107, 20);
 	}
 }
 
@@ -43,7 +47,131 @@ function playMusic() {
 		currentMusic = lobbyMusic;
 	}
 
+	else if (currentScene === "Boss" && bossObamaClass.state === "attack" && currentMusic !== bossMusic) {
+		currentMusic.pause();
+		currentMusic = bossMusic;
+	}
+
+	else if (currentScene === "Button") {
+		if (buttonState === "dialogue" && currentMusic !== gameshowMusic) {
+			currentMusic.pause();
+			currentMusic = gameshowMusic;
+		}
+
+		else if (buttonState === "gameshow" && currentMusic !== gameshowChoice) {
+			currentMusic.pause();
+			currentMusic = gameshowChoice;
+		}
+	}
+
+	else if (currentScene === "longHallway" && currentMusic !== hallwaysMusic) {
+		currentMusic.pause();
+		currentMusic = hallwaysMusic;
+	}
+
 	currentMusic.play();
+}
+
+function randomizeButtons() {
+	//set pos and anims of all the buttons
+	let buttonInfo = [
+		{ x: 120, y: 192, upAnimation: blueButtonUp, downAnimation: blueButtonDown },
+		{ x: 220, y: 192, upAnimation: greenButtonUp, downAnimation: greenButtonDown },
+		{ x: 320, y: 192, upAnimation: purpleButtonUp, downAnimation: purpleButtonDown },
+		{ x: 420, y: 192, upAnimation: redButtonUp, downAnimation: redButtonDown },
+		{ x: 520, y: 192, upAnimation: yellowButtonUp, downAnimation: yellowButtonDown }
+	];
+
+	//button dialogue + events (later)
+	let goodButton = {
+		dialogue: ["", "Wow.", "You weren't supposed to click that one", "Were you cheating or something?", "Anyways, I guess you get a damage buff"],
+		events: ["obamaNeutral", null, null, "damageBuff"]
+	};
+
+	let jokeButton = {
+		dialogue: ["", "*explosion*", "...", "...", "Maybe YOU should be the president"],
+		events: ["dummyExplosion", "obamaAppalled", "dummyAppalled", "obamaNeutral"]
+	};
+
+	let jokeButton2 = {
+		dialogue: ["", "...", "Does that one just not work?", "huh", "definitely not because of lazy devs or anything", "surely not"],
+		events: ["obamaNeutral", "obamaConfused", "obamaNeutral", "obamaThinking", "obamaNeutral"]
+	};
+
+	let badButton = {
+		dialogue: ["", "Wow.", "How unfortunate for you.", "On the other hand, I'm quite entertained.", "You'll get a damage debuff"],
+		events: ["obamaNeutral", "obamaFacepalm", "obamaHappy", "obamaNeutral"]
+	};
+
+	let doorButton = {
+		dialogue: ["", "...", "Carson.", "Remember when I told you to deactivate", "A CERTAIN BUTTON", "we were going to trap them here remember?", "...", "this guy is useless..."],
+		events: ["obamaAppalled", "obamaNeutral", "obamaNeutral", "obamaAngry", "obamaHappy", "obamaNeutral", "unlockDoor"]
+	};
+
+	//randomize the dialogue (shoutout the indian guy on yt who taught fisher yates shuffle algo)
+	let buttonsDialogue = [goodButton, jokeButton, jokeButton2, badButton, doorButton];
+	for (let i = buttonsDialogue.length - 1; i > 0; i--) {
+		let j = Math.floor(Math.random() * (i + 1));
+		[buttonsDialogue[i], buttonsDialogue[j]] = [buttonsDialogue[j], buttonsDialogue[i]];
+	}
+
+	//give each button its pos, anim, dialogue, events
+	for (let i = 0; i < buttonInfo.length; i++) {
+		let button = new Sprite(buttonInfo[i].x, buttonInfo[i].y, 20, 20, "s"); //xPos, yPos, w, h, static
+		button.addAnimation("up", buttonInfo[i].upAnimation);
+		button.addAnimation("down", buttonInfo[i].downAnimation);
+		button.changeAnimation("up");
+		button.dialogue = buttonsDialogue[i].dialogue;
+		button.events = buttonsDialogue[i].events;
+
+		//put them into global array
+		buttons.push(button);
+	}
+}
+
+function gameshowEvents(event) {
+	switch (event) {
+		case "damageBuff":
+			currentPortrait = happy;
+			print("players damage doubled");
+			break;
+		case "dummyExplosion":
+			currentPortrait = ""; //explosion portrait would be cool
+			explosion.play(); //sfx
+			//change anims
+			dummyKids.changeAnimation("dummyKidsDeath");
+			dummyWife.changeAnimation("dummyWifeDeath");
+			dummy.changeAnimation("dummyHit");
+			break;
+		case "obamaAppalled":
+			currentPortrait = appalled;
+			break;
+		case "dummyAppalled":
+			currentPortrait = dummyAppalled;
+			break;
+		case "obamaNeutral":
+			currentPortrait = neutral;
+			dummy.changeAnimation("dummyIdle");
+			break;
+		case "obamaConfused":
+			currentPortrait = confused;
+			break;
+		case "obamaThinking":
+			print("obamaThinking portrait");
+			break;
+		case "obamaFacepalm":
+			currentPortrait = facepalm;
+			break;
+		case "obamaHappy":
+			currentPortrait = happy;
+			break;
+		case "obamaAngry":
+			currentPortrait = angry;
+			break;
+		case "unlockDoor":
+			currentPortrait = facepalm;
+			canLeaveButton = true;
+	}
 }
 
 function obamaDialogueFunc() {
@@ -56,7 +184,7 @@ function obamaDialogueFunc() {
 
 			let dialogue = obamaDialogue[currentLine];
 			let wrappedText = wrapText(dialogue, 310); //max width
-			let yPos = 292; //vertical distance between lines
+			let yPos = 292;
 
 			//draw textbox + set textAlign
 			imageMode(CENTER);
@@ -91,10 +219,6 @@ function obamaDialogueFunc() {
 					currentPortrait = neutral;
 				}
 
-				else if (currentLine === 6) {
-					currentPortrait = smile;
-				}
-
 				else if (currentLine === 7) {
 					weaponObamaClass.triggerLeave();
 					lastDir = "Up";
@@ -117,7 +241,7 @@ function bossDialogueFunc() {
 
 		let dialogue = bossDialogue[currentLine];
 		let wrappedText = wrapText(dialogue, 310); //max width
-		let yPos = 292; //vertical distance between lines
+		let yPos = 292;
 
 		//draw textbox + set textAlign
 		imageMode(CENTER);
@@ -139,7 +263,6 @@ function bossDialogueFunc() {
 			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
 			else if (currentLine === 4) currentPortrait = angry;
 			else if (currentLine === 6) currentPortrait = happy;
-			else if (currentLine === 11) currentPortrait = smile;
 			else if (currentLine === 12) currentPortrait = shock;
 			else if (currentLine === 14) currentPortrait = sansundertale;
 
@@ -156,15 +279,66 @@ function bossDialogueFunc() {
 }
 
 function buttonDialogueFunc() {
-	if (player.x !== 1000 && currentScene === "Button" && buttonState === "dialogue") {
+	if (currentScene === "Button" && buttonState === "dialogue") {
 		//show portrait sprites
 		showPortrait = true;
 
 		let dialogue = buttonDialogue[currentLine];
 		let wrappedText = wrapText(dialogue, 310); //max width
-		let yPos = 292; //vertical distance between lines
+		let yPos = 52;
 
 		//draw textbox + set textAlign
+		imageMode(CENTER);
+		image(textBox, width / 2, 60, 460, 120);
+		imageMode(NORMAL);
+		textAlign(LEFT);
+
+		for (let i = 0; i < wrappedText.length; i++) {
+			//display lines
+			fill("white");
+			text(wrappedText[i], width / 2 - 120, yPos);
+			yPos += textLeading();
+		}
+
+		if (millis() - lastChangeTime > delay) {
+			//events based on line #
+
+			if (currentLine === 13) {
+				darkStage = false; //turn off the darkStage background
+				click.play(); //sfx
+				//set dummies positions
+				dummyKids.position.set(560, 50);
+				dummyWife.position.set(600, 40);
+				dummyClass.dummy.position.set(520, 40);
+			}
+
+			if (currentLine === 19) {
+				canMove = true;
+				showPortrait = false;
+				buttonState = "gameshow";
+			}
+
+			if (currentLine !== 13) {
+				buttonSound.play();
+			}
+
+			currentLine = (currentLine + 1) % buttonDialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+	}
+}
+
+function gameshowDialogueFunc() {
+	if (buttonDialogueRunning && buttonState === "gameshowTalking") {
+		//show portrait sprites
+		showPortrait = true;
+
+		//we store the dialogue of the button that was hit in currentButton
+		let dialogue = currentButton.dialogue[currentLine];
+		let wrappedText = wrapText(dialogue, 310); //max width
+		let yPos = 292;
+
+		//textbox
 		imageMode(CENTER);
 		image(textBox, width / 2, 300, 460, 120);
 		imageMode(NORMAL);
@@ -179,15 +353,27 @@ function buttonDialogueFunc() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
+			let event = currentButton.events[currentLine];
+			if (event) {
+				//call func based on event from currentLine
+				gameshowEvents(event);
+			}
 
-			if(currentLine === 19){
-				canMove = true;
+			if (currentLine === currentButton.dialogue.length - 1) {
+				//dialogue over
 				showPortrait = false;
+				buttonDialogueRunning = false;
 				buttonState = "gameshow";
+
+				let index = buttons.indexOf(currentButton); //get index from the array
+				if (index !== -1) { //it exists
+					currentButton.remove(); //remove sprite
+					buttons.splice(index, 1); //remove from array
+				}
 			}
 
 			buttonSound.play();
-			currentLine = (currentLine + 1) % buttonDialogue.length; //loops through array infinitely
+			currentLine = (currentLine + 1) % currentButton.dialogue.length; //loops through array infinitely
 			lastChangeTime = millis();
 		}
 	}
@@ -200,13 +386,26 @@ function classEvents() {
 		dummyClass.update();
 	}
 
-	else {
-		if (currentScene !== "Yapping" && currentScene !== "Title" && currentScene !== "Obama" && currentScene !== "YOUSUCK") {
-			playerClass.spawnPos();
-		}
+	else if (currentScene === "Weapon" && tranAlpha < 255) {
+		dummyClass.spawnPos();
+	}
 
-		if (currentScene === "Weapon" && tranAlpha < 255) {
-			dummyClass.spawnPos();
+	else {
+		if (currentScene !== "Yapping" && currentScene !== "Title" && currentScene !== "Obama" && currentScene !== "YOUSUCK" && currentScene !== "longHallway" && currentScene !== "longHallway2" && currentScene !== "longHallway3") {
+			if (buttonState === "gameshowTalking" && currentScene === "Button") {
+				playerClass.x = playerClass.x;
+				playerClass.y = playerClass.y;
+				playerClass.mic.mic.position.set(-1000, -1000);
+			}
+
+			else if (buttonEvent) {
+				playerClass.spawnPos();
+				buttonEvent = false;
+			}
+
+			else if (currentScene !== "Button" || currentScene === "Boss2") {
+				playerClass.spawnPos();
+			}
 		}
 	}
 }
@@ -223,10 +422,6 @@ function drawDebug() {
 		dummy.debug = true;
 		bossObama.debug = true;
 	}
-}
-
-function randomizeButtons() {
-	//randomize button sprites
 }
 
 function sceneTransition() {

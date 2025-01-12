@@ -10,6 +10,8 @@ function preloadAssets() {
 	cameraFlash = loadSound("assets/audio/cameraFlash.wav");
 	obamaLeft = loadSound("assets/audio/obamaLeft.mp3");
 	playerHurt = loadSound("assets/audio/playerHurt.wav");
+	explosion = loadSound("assets/audio/explosion.mp3");
+	click = loadSound("assets/audio/click.mp3");
 
 	//LOAD PLAYER ANIMATIONS
 	playerUpAnim = loadAnimation("assets/sprites/playerUp/playerUp1.png", "assets/sprites/playerUp/playerUp2.png",
@@ -65,10 +67,9 @@ function preloadAssets() {
 	neutral = loadImage("assets/sprites/portraits/neutral.png");
 	shock = loadImage("assets/sprites/portraits/shock.png");
 	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
-	smile = loadImage("assets/sprites/portraits/smile.png");
 	facepalm = loadImage("assets/sprites/portraits/facepalm.png");
 
-	dummyPortrait = loadImage("assets/sprites/portraits/dummy.png");
+	dummyAppalled = loadImage("assets/sprites/portraits/dummy.png");
 
 	//LOAD TITLE SCREEN ASSETS
 	userCursor = loadImage("assets/sprites/cursor.png");
@@ -95,19 +96,44 @@ function preloadAssets() {
 	textBox = loadImage("assets/sprites/textBox.png");
 	yapBox = loadImage("assets/sprites/yapBox.png");
 
+	//BOSS ROOM ASSETS
+	bossMusic = loadSound("assets/audio/bossMusic.mp3");
+
 	//STAGE ROOM ASSETS
 	stageBackground = loadImage("assets/sprites/stageScreen/stageBack.png");
 	stageDarkBackground = loadImage("assets/sprites/stageScreen/stageDark.png");
 
-	blueButton = loadAnimation("assets/sprites/buttons/blueUp.png", "assets/sprites/buttons/blueDown.png");
-	greenButton = loadAnimation("assets/sprites/buttons/greenUp.png", "assets/sprites/buttons/greenDown.png");
-	purpleButton = loadAnimation("assets/sprites/buttons/purpleUp.png", "assets/sprites/buttons/purpleDown.png");
-	redButton = loadAnimation("assets/sprites/buttons/redUp.png", "assets/sprites/buttons/redDown.png");
-	yellowButton = loadAnimation("assets/sprites/buttons/yellowUp.png", "assets/sprites/buttons/yellowDown.png");
+	blueButtonUp = loadAnimation("assets/sprites/buttons/blueUp.png");
+	blueButtonDown = loadAnimation("assets/sprites/buttons/blueDown.png");
+	greenButtonUp = loadAnimation("assets/sprites/buttons/greenUp.png");
+	greenButtonDown = loadAnimation("assets/sprites/buttons/greenDown.png");
+	purpleButtonUp = loadAnimation("assets/sprites/buttons/purpleUp.png");
+	purpleButtonDown = loadAnimation("assets/sprites/buttons/purpleDown.png");
+	redButtonUp = loadAnimation("assets/sprites/buttons/redUp.png");
+	redButtonDown = loadAnimation("assets/sprites/buttons/redDown.png");
+	yellowButtonUp = loadAnimation("assets/sprites/buttons/yellowUp.png");
+	yellowButtonDown = loadAnimation("assets/sprites/buttons/yellowDown.png");
+
+	arrow = loadImage("assets/sprites/arrow.png");
+
+	dummyKidsIdle = loadAnimation("assets/sprites/dummyFamily/dummyKids1.png", "assets/sprites/dummyFamily/dummyKids2.png",
+		"assets/sprites/dummyFamily/dummyKids3.png", "assets/sprites/dummyFamily/dummyKids4.png");
+	dummyKidsDeath = loadAnimation("assets/sprites/dummyFamily/dummyKidsDeath.png");
+	dummyWifeIdle = loadAnimation("assets/sprites/dummyFamily/dummyWife1.png", "assets/sprites/dummyFamily/dummyWife2.png",
+		"assets/sprites/dummyFamily/dummyWife3.png", "assets/sprites/dummyFamily/dummyWife4.png");
+	dummyWifeDeath = loadAnimation("assets/sprites/dummyFamily/dummyWifeDeath.png");
+
+	gameshowMusic = loadSound("assets/audio/gameshow.mp3");
+	gameshowChoice = loadSound("assets/audio/choice.mp3");
+
+	//LOAD HALLWAYS ASSETS
+	hallwayBackground = loadImage("assets/sprites/hallway/hallway.png");
+	longHallwayBackground = loadImage("assets/sprites/hallway/longHallway.png");
+	hallwayCurveBackground = loadImage("assets/sprites/hallway/hallwayCurve.png");
+	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
 
-	//HALLWAY
-	hallway = loadImage("assets/sprites/hallway/hallway.png");
+
 }

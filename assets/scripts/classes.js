@@ -148,7 +148,7 @@ class Player {
 		this.y = constrain(this.y, 30, 281);
 
 		//room transition
-		if (this.x >= 296 && this.x <= 344 && this.y <= 31 && currentScene !== "Button") {
+		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 
 			if (currentScene !== "Boss") {
 
@@ -163,11 +163,20 @@ class Player {
 
 				else if (currentScene === "Obama") {
 					nextScene = "Weapon";
+					
 				}
 
 				else if (currentScene === "Weapon") {
 					nextScene = "Boss";
 					dummy.position.set(-1000, -1000);
+				}
+
+				else if (currentScene === "longHallway2"){
+					nextScene = "longHallway3";
+				}
+
+				else if (currentScene === "longHallway3"){
+					nextScene = "Boss2";
 				}
 			}
 
@@ -253,6 +262,12 @@ class Player {
 		lastDir = "Up";
 	}
 
+	hallSpawn(){
+		this.y = height/2;
+		this.x = 21;
+		lastDir = "Right";
+	}
+
 	display(dummy) {
 		this.player.rotation = 0; //prevent rotation
 		this.player.position.set(this.x, this.y);
@@ -295,6 +310,22 @@ class Player {
 			}
 		}
 
+		//BUTTON
+		else if (currentScene === "Button") {
+			if (buttonState === "setButtons") {
+				randomizeButtons();
+				buttonState = "dialogue";
+			}
+
+			//player in front of buttons
+			for (let button of buttons) { //global button array
+				button.draw();
+			}
+
+			this.player.draw();
+			this.mic.display();
+		}
+
 		//ALL OTHER SCENES
 		else {
 			this.player.draw();
@@ -311,16 +342,22 @@ class Player {
 				bossDialogueFunc();
 			}
 
-			else if (currentScene === "Button") {
-				buttonDialogueFunc();
-			}
-
 			else if (currentScene === "Tutorial") {
 				tutorialEvent = false;
 			}
 
 			else if (currentScene === "Weapon") {
 				weaponEvent = false;
+			}
+
+			else if (currentScene === "Button") {
+				if (buttonDialogueRunning) {
+					gameshowDialogueFunc();
+				}
+
+				else if (!buttonDialogueRunning) {
+					buttonDialogueFunc();
+				}
 			}
 		}
 	}
@@ -359,17 +396,16 @@ class Dummy {
 		this.player = player;
 
 		//load dummy animations
-		dummy.addAnimation("dummyIdle", dummyIdleAnim);
 		dummy.addAnimation("dummyHit", dummyHitAnim);
+		dummy.addAnimation("dummyIdle", dummyIdleAnim);
 
-		dummy.changeAnimation("dummyIdle");
-
-		dummyIdleAnim.frameDelay = 30;
+		dummyIdleAnim.frameDelay = 15;
 	}
 
 	animations() {
 		//rotates when player gets close if this isnt here for some reason idk why
 		this.dummy.rotation = 0;
+
 	}
 
 	spawnPos() {
@@ -474,25 +510,27 @@ class MicHitbox {
 		};
 
 		this.hitbox = createSprite(this.mic.position.x, this.mic.position.y, 20, 20, "s");
-		this.hitbox.visible = true;
-		this.hitbox.debug = true;
+		this.hitbox.visible = false;
+		//this.hitbox.debug = true;
 		this.hitDummy = false;
 		this.hitBoss = false;
 	}
 
 	//reset mic hitbox so anims dont loop
 	reset() {
-		if (this.hitDummy) {
-			setTimeout(() => {
-				this.hitDummy = false;
-			}, 200); //200ms is the delay between enemy animations
+		if (currentScene === "Weapon") {
+			if (this.hitDummy) {
+				setTimeout(() => {
+					this.hitDummy = false;
+				}, 200); //200ms is the delay between enemy animations
+			}
+
+			else {
+				this.dummy.changeAnimation("dummyIdle");
+			}
 		}
 
-		else {
-			this.dummy.changeAnimation("dummyIdle");
-		}
-
-		if (this.hitBoss) {
+		else if (this.hitBoss) {
 			setTimeout(() => {
 				this.hitBoss = false;
 			}, 200); //200ms is the delay between enemy animations
@@ -530,6 +568,23 @@ class MicHitbox {
 			enemyHit.play(); //sfx
 			bossObamaClass.health -= 1;
 			this.hitBoss = true;
+		}
+
+		//the buttons in the global button array
+		for (let button of buttons) {
+			if (collideRectRect(
+				this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
+				this.hitbox.width, this.hitbox.height,
+				button.position.x - button.width / 2, button.position.y - button.height / 2,
+				button.width, button.height)) {
+
+				if (!buttonDialogueRunning) {
+					buttonState = "gameshowTalking";
+					button.changeAnimation("down"); //button anim
+					currentButton = button;
+					buttonDialogueRunning = true; //dialogue running
+				}
+			}
 		}
 	}
 }
@@ -714,7 +769,7 @@ class BossObama {
 		this.chargeAngle = null;
 		this.isCharging = false;
 		this.attackCooldown = 0;
-		this.health = 1;
+		this.health = 20;
 
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);

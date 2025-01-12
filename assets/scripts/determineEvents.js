@@ -115,7 +115,7 @@ function determineEvents() {
 
 	//OBAMA ROOM
 	if (currentScene === "Obama") {
-		currentBackground = hallway;
+		currentBackground = hallwayBackground;
 
 		if (obamaEvent) {
 			player.changeAnimation("playerIdleUp");
@@ -136,7 +136,6 @@ function determineEvents() {
 		else {
 			canMove = true;
 		}
-
 	}
 
 	//BOSS ROOM
@@ -147,24 +146,138 @@ function determineEvents() {
 			if (!canMove) {
 				playerClass.display(dummyClass);
 			}
+
 			bossObamaClass.update();
 		}
 	}
 
 	//BUTTON ROOM
-	if(currentScene === "Button"){
+	if (currentScene === "Button") {
+
+		if (darkStage) {
+			image(stageDarkBackground, 0, 0, width, height)
+		}
+
 		currentBackground = stageBackground;
 
-		randomizeButtons(); //broken func
+		dummyKids.draw();
+		dummyWife.draw();
+		dummy.draw();
 
-		if (buttonState === "dialogue") {
+		if (buttonState === "dialogue" || buttonState === "gameshowTalking") {
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
 			playerClass.display(dummyClass);
 		}
 
+		else if (canLeaveButton) {
+			canMove = true;
+			image(arrow, 520, 243, 80, 45);
+
+			for (let i = buttons.length - 1; i >= 0; i--) { //remove all other buttons
+				buttons[i].remove();
+				buttons.pop();
+			}
+
+			if (playerClass.x >= 619 && currentScene === "Button") {
+				if (!tran) {
+					player.position.set(-1000, -1000); //move player offscreen
+
+					//remove sprites we dont need from here on out
+					dummyKids.remove();
+					dummyWife.remove();
+					dummy.remove();
+
+					canMove = false; //prevent player movement
+					tran = true; //run fade transition
+					nextScene = "longHallway"; //transition to next room
+					newRoom.play(); //sfx
+				}
+			}
+		}
+
 		else {
 			canMove = true;
+		}
+	}
+
+	//LONG HALLWAY ROOM
+	if (currentScene === "longHallway") {
+		currentBackground = longHallwayBackground;
+
+		if (longHallwayEvent) {
+			canMove = false;
+			player.changeAnimation("playerIdleRight");
+			playerClass.hallSpawn();
+			playerClass.display(dummyClass);
+		}
+
+		else if (!longHallwayEvent) {
+			canMove = true;
+			if (playerClass.x >= 619 && currentScene === "longHallway") {
+				if (!tran) {
+					player.position.set(-1000, -1000); //move player offscreen
+					canMove = false; //prevent player movement
+					tran = true; //run fade transition
+					nextScene = "longHallway2"; //transition to next room
+					newRoom.play(); //sfx
+				}
+			}
+		}
+
+		if (tranAlpha <= 0) {
+			longHallwayEvent = false;
+		}
+	}
+
+	//LONG HALLWAY 2 ROOM
+	if (currentScene === "longHallway2") {
+		currentBackground = hallwayCurveBackground;
+
+		if (longHallway2Event) {
+			canMove = false;
+			player.changeAnimation("playerIdleRight");
+			playerClass.hallSpawn();
+			playerClass.display(dummyClass);
+		}
+
+		else if (!longHallway2Event) {
+			canMove = true;
+		}
+
+		if (tranAlpha <= 0) {
+			longHallway2Event = false;
+		}
+	}
+
+	//LONG HALLWAY 3 ROOM
+	if (currentScene === "longHallway3") {
+		currentBackground = hallwayBackground;
+
+		if (longHallway3Event) {
+			canMove = false;
+			player.changeAnimation("playerIdleUp");
+			playerClass.spawnPos();
+			playerClass.display(dummyClass);
+		}
+
+		else if (!longHallway3Event) {
+			canMove = true;
+		}
+
+		if (tranAlpha <= 0) {
+			longHallway3Event = false;
+		}
+	}
+
+	//BOSS 2 ROOM
+	if (currentScene === "Boss2") {
+		currentBackground = weaponBackground;
+
+		if (bossObama2Event) {
+			if (!canMove) {
+				playerClass.display(dummyClass);
+			}
 		}
 	}
 
