@@ -150,7 +150,7 @@ class Player {
 		//room transition
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
 
-			if (currentScene !== "Boss") {
+			if (currentScene !== "Boss" && currentScene !== "Boss2") {
 
 				newRoom.play(); //sfx
 				this.x = this.y = -1000; //move player offscreen
@@ -180,7 +180,7 @@ class Player {
 				}
 			}
 
-			else if (bossObamaClass.health <= 0) {
+			else if (bossObamaClass.health <= 0 && currentScene === "Boss") {
 				textSize(30);
 				newRoom.play(); //sfx
 				this.x = this.y = -1000; //move player offscreen
@@ -397,6 +397,7 @@ class Dummy {
 
 		//load dummy animations
 		dummy.addAnimation("dummyHit", dummyHitAnim);
+		dummy.addAnimation("dummyMourn", dummyMournAnim);
 		dummy.addAnimation("dummyIdle", dummyIdleAnim);
 
 		dummyIdleAnim.frameDelay = 15;

@@ -47,6 +47,7 @@ function preloadAssets() {
 	dummyIdleAnim = loadAnimation("assets/sprites/dummyIdle/dummyIdle1.png", "assets/sprites/dummyIdle/dummyIdle2.png",
 		"assets/sprites/dummyIdle/dummyIdle3.png", "assets/sprites/dummyIdle/dummyIdle4.png");
 	dummyHitAnim = loadAnimation("assets/sprites/dummyHit/dummyHit.png");
+	dummyMournAnim = loadAnimation("assets/sprites/dummyFamily/dummyMourn.png");
 
 	//LOAD OBAMA ANIMS
 	obamaDownAnim = loadAnimation("assets/sprites/obamaDown/obamaDown1.png", "assets/sprites/obamaDown/obamaDown2.png",
@@ -97,6 +98,7 @@ function preloadAssets() {
 	yapBox = loadImage("assets/sprites/yapBox.png");
 
 	//BOSS ROOM ASSETS
+	bossBackground = loadImage("assets/sprites/bossScreen/bossBack.png");
 	bossMusic = loadSound("assets/audio/bossMusic.mp3");
 
 	//STAGE ROOM ASSETS
@@ -132,8 +134,11 @@ function preloadAssets() {
 	hallwayCurveBackground = loadImage("assets/sprites/hallway/hallwayCurve.png");
 	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
+	//LOAD BOSS2 ROOM ASSETS
+	peakObamaIdle = loadAnimation("assets/sprites/peakObama/peakObama.png");
+
+	obamaProjectile = loadAnimation("assets/sprites/peakObama/projectile.png");
+
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
-
-
 }

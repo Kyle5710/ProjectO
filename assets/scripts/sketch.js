@@ -1,6 +1,8 @@
 //ProjectO
 //Kyle and Alexandre
 
+//Written Response Here:
+
 function preload() {
 	//variables in variables.js
 	//classes in classes.js
@@ -104,7 +106,7 @@ function randomizeButtons() {
 	};
 
 	let doorButton = {
-		dialogue: ["", "...", "Carson.", "Remember when I told you to deactivate", "A CERTAIN BUTTON", "we were going to trap them here remember?", "...", "this guy is useless..."],
+		dialogue: ["", "...", "Carson.", "Remember when I told you to deactivate", "A CERTAIN BUTTON", "We were going to trap them here remember?", "...", "this guy is useless..."],
 		events: ["obamaAppalled", "obamaNeutral", "obamaNeutral", "obamaAngry", "obamaHappy", "obamaNeutral", "unlockDoor"]
 	};
 
@@ -141,7 +143,7 @@ function gameshowEvents(event) {
 			//change anims
 			dummyKids.changeAnimation("dummyKidsDeath");
 			dummyWife.changeAnimation("dummyWifeDeath");
-			dummy.changeAnimation("dummyHit");
+			dummy.changeAnimation("dummyMourn");
 			break;
 		case "obamaAppalled":
 			currentPortrait = appalled;

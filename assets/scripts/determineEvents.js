@@ -140,7 +140,7 @@ function determineEvents() {
 
 	//BOSS ROOM
 	if (currentScene === "Boss") {
-		currentBackground = weaponBackground;
+		currentBackground = bossBackground;
 
 		if (bossObamaEvent) {
 			if (!canMove) {
