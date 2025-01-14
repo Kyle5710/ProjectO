@@ -305,6 +305,22 @@ function buttonDialogueFunc() {
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
 
+			//neutral = 1, 3, 7, 14, 18
+			//happy = 2, 5, 8, 15, 17
+			//confused = 4, 16, 19
+			//appalled = 9
+			//angry = 10, 11
+			//facepalm = 12
+			//empty = 13
+
+			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
+			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
+			else if (currentLine === 4) currentPortrait = angry;
+			else if (currentLine === 6) currentPortrait = happy;
+			else if (currentLine === 12) currentPortrait = shock;
+			else if (currentLine === 12) currentPortrait = facepalm;
+
 			if (currentLine === 13) {
 				darkStage = false; //turn off the darkStage background
 				click.play(); //sfx
@@ -314,13 +330,13 @@ function buttonDialogueFunc() {
 				dummyClass.dummy.position.set(520, 40);
 			}
 
-			if (currentLine === 19) {
+			else if (currentLine === 19) {
 				canMove = true;
 				showPortrait = false;
 				buttonState = "gameshow";
 			}
 
-			if (currentLine !== 13) {
+			else if (currentLine !== 13) {
 				buttonSound.play();
 			}
 
@@ -469,7 +485,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Boss";
+			nextScene = "Tutorial";
 			canMove = false;
 			tran = true;
 			buttonSound.play();
