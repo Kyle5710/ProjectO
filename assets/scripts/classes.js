@@ -890,11 +890,11 @@ class BossObama {
 		rectMode(CENTER);
 		//grey bg
 		fill(200);
-		rect(width / 2, 10, barWidth, barHeight);
+		rect(width / 2, 27, barWidth, barHeight);
 
 		//red healthbar
 		fill(255, 0, 0);
-		rect(width / 2, 10, currentHealthWidth, barHeight);
+		rect(width / 2, 27, currentHealthWidth, barHeight);
 		rectMode(NORMAL);
 
 		stroke("black");
@@ -902,7 +902,7 @@ class BossObama {
 		fill("white");
 		textAlign(CENTER);
 		textSize(20);
-		text("Obama, the guy", width / 2, 14);
+		text("Obama, the guy", width / 2, 31);
 
 	}
 
