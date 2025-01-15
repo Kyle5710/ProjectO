@@ -77,11 +77,11 @@ function playMusic() {
 function randomizeButtons() {
 	//set pos and anims of all the buttons
 	let buttonInfo = [
-		{ x: 120, y: 192, upAnimation: blueButtonUp, downAnimation: blueButtonDown },
-		{ x: 220, y: 192, upAnimation: greenButtonUp, downAnimation: greenButtonDown },
-		{ x: 320, y: 192, upAnimation: purpleButtonUp, downAnimation: purpleButtonDown },
-		{ x: 420, y: 192, upAnimation: redButtonUp, downAnimation: redButtonDown },
-		{ x: 520, y: 192, upAnimation: yellowButtonUp, downAnimation: yellowButtonDown }
+		{ x: 120, y: 186.5, upAnimation: blueButtonUp, downAnimation: blueButtonDown },
+		{ x: 220, y: 186.5, upAnimation: greenButtonUp, downAnimation: greenButtonDown },
+		{ x: 320, y: 186.5, upAnimation: purpleButtonUp, downAnimation: purpleButtonDown },
+		{ x: 420, y: 186.5, upAnimation: redButtonUp, downAnimation: redButtonDown },
+		{ x: 520, y: 186.5, upAnimation: yellowButtonUp, downAnimation: yellowButtonDown }
 	];
 
 	//button dialogue + events (later)
@@ -305,23 +305,15 @@ function buttonDialogueFunc() {
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
 
-			//neutral = 1, 3, 7, 14, 18
-			//happy = 2, 5, 8, 15, 17
-			//confused = 4, 16, 19
-			//appalled = 9
-			//angry = 10, 11
-			//facepalm = 12
-			//empty = 13
+			if (currentLine === 0 || currentLine === 2 || currentLine === 6 || currentLine === 13 || currentLine === 17) currentPortrait = neutral;
+			else if (currentLine === 1 || currentLine === 4 || currentLine === 7 || currentLine === 14 || currentLine === 16) currentPortrait = happy;
+			else if (currentLine === 3 || currentLine === 15 || currentLine === 18) currentPortrait = confused;
+			else if (currentLine === 8) currentPortrait = appalled;
+			else if (currentLine === 9 || currentLine === 10) currentPortrait = angry;
+			else if (currentLine === 11) currentPortrait = facepalm;
 
-			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
-			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
-			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
-			else if (currentLine === 4) currentPortrait = angry;
-			else if (currentLine === 6) currentPortrait = happy;
-			else if (currentLine === 12) currentPortrait = shock;
-			else if (currentLine === 12) currentPortrait = facepalm;
-
-			if (currentLine === 13) {
+			if (currentLine === 12) {
+				currentPortrait = facepalm2;
 				darkStage = false; //turn off the darkStage background
 				click.play(); //sfx
 				//set dummies positions

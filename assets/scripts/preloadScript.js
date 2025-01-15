@@ -69,6 +69,8 @@ function preloadAssets() {
 	shock = loadImage("assets/sprites/portraits/shock.png");
 	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
 	facepalm = loadImage("assets/sprites/portraits/facepalm.png");
+	facepalm2 = loadImage("assets/sprites/portraits/facepalm2.png");
+	empty = loadImage("assets/sprites/portraits/empty.png");
 	
 	dummyAppalled = loadImage("assets/sprites/portraits/dummy.png");
 
