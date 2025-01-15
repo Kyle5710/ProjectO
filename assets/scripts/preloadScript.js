@@ -69,7 +69,7 @@ function preloadAssets() {
 	shock = loadImage("assets/sprites/portraits/shock.png");
 	sansundertale = loadImage("assets/sprites/portraits/sansundertale.png");
 	facepalm = loadImage("assets/sprites/portraits/facepalm.png");
-
+	
 	dummyAppalled = loadImage("assets/sprites/portraits/dummy.png");
 
 	//LOAD TITLE SCREEN ASSETS
