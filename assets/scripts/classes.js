@@ -144,8 +144,10 @@ class Player {
 		this.y += this.velocity.y;
 
 		//border check
-		this.x = constrain(this.x, 20, 620);
-		this.y = constrain(this.y, 30, 281);
+		if (canMove) {
+			this.x = constrain(this.x, 20, 620);
+			this.y = constrain(this.y, 30, 281);
+		}
 
 		//room transition
 		if (this.x >= 296 && this.x <= 344 && this.y <= 31) {
@@ -163,7 +165,7 @@ class Player {
 
 				else if (currentScene === "Obama") {
 					nextScene = "Weapon";
-					
+
 				}
 
 				else if (currentScene === "Weapon") {
@@ -171,11 +173,11 @@ class Player {
 					dummy.position.set(-1000, -1000);
 				}
 
-				else if (currentScene === "longHallway2"){
+				else if (currentScene === "longHallway2") {
 					nextScene = "longHallway3";
 				}
 
-				else if (currentScene === "longHallway3"){
+				else if (currentScene === "longHallway3") {
 					nextScene = "Boss2";
 				}
 			}
@@ -262,8 +264,8 @@ class Player {
 		lastDir = "Up";
 	}
 
-	hallSpawn(){
-		this.y = height/2;
+	hallSpawn() {
+		this.y = height / 2;
 		this.x = 21;
 		lastDir = "Right";
 	}
@@ -995,5 +997,11 @@ class BossObama {
 
 		//set position
 		this.obama.position.set(this.x, this.y);
+	}
+}
+
+class peakObama{
+	constructor(){
+		
 	}
 }

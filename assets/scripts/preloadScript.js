@@ -122,10 +122,10 @@ function preloadAssets() {
 
 	dummyKidsIdle = loadAnimation("assets/sprites/dummyFamily/dummyKids1.png", "assets/sprites/dummyFamily/dummyKids2.png",
 		"assets/sprites/dummyFamily/dummyKids3.png", "assets/sprites/dummyFamily/dummyKids4.png");
-	dummyKidsDeath = loadAnimation("assets/sprites/dummyFamily/dummyKidsDeath.png");
+	dummyKidsDeath = loadAnimation("assets/sprites/dummyFamily/explosion.png", "assets/sprites/dummyFamily/dummyKidsDeath.png");
 	dummyWifeIdle = loadAnimation("assets/sprites/dummyFamily/dummyWife1.png", "assets/sprites/dummyFamily/dummyWife2.png",
 		"assets/sprites/dummyFamily/dummyWife3.png", "assets/sprites/dummyFamily/dummyWife4.png");
-	dummyWifeDeath = loadAnimation("assets/sprites/dummyFamily/dummyWifeDeath.png");
+	dummyWifeDeath = loadAnimation("assets/sprites/dummyFamily/explosion.png", "assets/sprites/dummyFamily/dummyWifeDeath.png");
 
 	gameshowMusic = loadSound("assets/audio/gameshow.mp3");
 	gameshowChoice = loadSound("assets/audio/choice.mp3");

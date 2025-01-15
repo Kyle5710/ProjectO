@@ -160,6 +160,7 @@ function determineEvents() {
 
 		currentBackground = stageBackground;
 
+		//draw dummies
 		dummyKids.draw();
 		dummyWife.draw();
 		dummy.draw();
