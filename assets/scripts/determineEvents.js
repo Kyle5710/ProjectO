@@ -165,6 +165,14 @@ function determineEvents() {
 		dummyWife.draw();
 		dummy.draw();
 
+		//draw tv
+		tv.draw();
+
+		//draw gameshow crowd
+		carlos.draw();
+		edward.draw();
+		godfrey.draw();
+
 		if (buttonState === "dialogue" || buttonState === "gameshowTalking") {
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
@@ -188,6 +196,10 @@ function determineEvents() {
 					dummyKids.remove();
 					dummyWife.remove();
 					dummy.remove();
+					tv.remove();
+					carlos.remove();
+					edward.remove();
+					godfrey.remove();
 
 					canMove = false; //prevent player movement
 					tran = true; //run fade transition

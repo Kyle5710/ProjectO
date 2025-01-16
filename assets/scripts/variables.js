@@ -71,7 +71,10 @@ let buttons = []; //where the randomized buttons end up
 
 let dummyKids; //vars for the dummies in the crowd
 let dummyWife;
-let explosion;
+let tv; //tv in gameshow
+let carlos;
+let edward;
+let godfrey;
 
 let canLeaveButton = false; //if player has hit the button to leave the room yet
 

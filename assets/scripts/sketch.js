@@ -96,7 +96,7 @@ function randomizeButtons() {
 	//button dialogue + events (later)
 	let goodButton = {
 		dialogue: ["", "Wow.", "You weren't supposed to click that one.", "Did you cheat or something?", "Anyways, I guess you get a damage buff"],
-		events: ["obamaNeutral", null, null, "damageBuff"]
+		events: ["goodButton", null, null, "damageBuff"]
 	};
 
 	let jokeButton = {
@@ -106,17 +106,17 @@ function randomizeButtons() {
 
 	let jokeButton2 = {
 		dialogue: ["", "...", "Does that one just not work?", "huh", "definitely not because of lazy devs or anything", "surely not"],
-		events: ["obamaNeutral", "obamaConfused", "obamaNeutral", "obamaThinking", "obamaNeutral"]
+		events: ["jokeButton2", "obamaConfused", "obamaNeutral", "obamaThinking", "obamaNeutral"]
 	};
 
 	let badButton = {
 		dialogue: ["", "Wow.", "How unfortunate for you.", "On the other hand, I'm quite entertained.", "You'll get a damage debuff"],
-		events: ["obamaNeutral", "obamaFacepalm", "obamaHappy", "obamaNeutral"]
+		events: ["badButton", "obamaFacepalm", "obamaHappy", "obamaNeutral"]
 	};
 
 	let doorButton = {
 		dialogue: ["", "...", "Carson.", "Remember when I told you to deactivate", "A CERTAIN BUTTON", "We were going to trap them here remember?", "...", "this guy is useless..."],
-		events: ["obamaAppalled", "obamaNeutral", "obamaNeutral", "obamaAngry", "obamaHappy", "obamaNeutral", "unlockDoor"]
+		events: ["doorButton", "obamaNeutral", "obamaNeutral", "obamaAngry", "obamaHappy", "obamaNeutral", "unlockDoor"]
 	};
 
 	//randomize the dialogue (shoutout the indian guy on yt who taught fisher yates shuffle algo)
@@ -142,46 +142,80 @@ function randomizeButtons() {
 
 function gameshowEvents(event) {
 	switch (event) {
+		case "jokeButton2":
+			currentPortrait = neutral;
+			print("PUT JOKE2 TV SPRITE HERE");
+			break;
+
+		case "badButton":
+			currentPortrait = neutral;
+			print("PUT BAD TV SPRITE HERE");
+			break;
+
+		case "goodButton":
+			currentPortrait = neutral;
+			tv.changeAnimation("tvGood");
+			break;
+
+		case "doorButton":
+			currentPortrait = appalled;
+			tv.changeAnimation("tvDoor");
+			break;
+
 		case "damageBuff":
 			currentPortrait = happy;
-			print("players damage doubled");
+			print("PUT THE DAMAGE BUFF HERE ONCE YOU FINISH THE SECOND PHASE");
 			break;
+
 		case "dummyExplosion":
 			currentPortrait = ""; //explosion portrait would be cool
 			explosion.play(); //sfx
 			//change anims
 			dummyKids.changeAnimation("dummyKidsDeath");
+			dummyKids.animation.looping = false;
 			dummyWife.changeAnimation("dummyWifeDeath");
+			dummyWife.animation.looping = false;
 			dummy.changeAnimation("dummyMourn");
+			tv.changeAnimation("tvDummy");
 			break;
+
 		case "obamaAppalled":
 			currentPortrait = appalled;
 			break;
+
 		case "dummyAppalled":
 			currentPortrait = dummyAppalled;
 			break;
+
 		case "obamaNeutral":
 			currentPortrait = neutral;
 			dummy.changeAnimation("dummyIdle");
 			break;
+
 		case "obamaConfused":
 			currentPortrait = confused;
 			break;
+
 		case "obamaThinking":
 			print("obamaThinking portrait");
 			break;
+
 		case "obamaFacepalm":
 			currentPortrait = facepalm;
 			break;
+
 		case "obamaHappy":
 			currentPortrait = happy;
 			break;
+
 		case "obamaAngry":
 			currentPortrait = angry;
 			break;
+
 		case "unlockDoor":
 			currentPortrait = facepalm;
 			canLeaveButton = true;
+			break;
 	}
 }
 
@@ -328,6 +362,10 @@ function buttonDialogueFunc() {
 				//set dummies positions
 				dummyKids.position.set(560, 50);
 				dummyWife.position.set(600, 40);
+				tv.position.set(width / 2, 40);
+				carlos.position.set(70, 60);
+				edward.position.set(200, 50);
+				godfrey.position.set(435, 50);
 				dummyClass.dummy.position.set(520, 40);
 			}
 

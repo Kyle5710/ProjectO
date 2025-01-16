@@ -127,6 +127,17 @@ function preloadAssets() {
 		"assets/sprites/dummyFamily/dummyWife3.png", "assets/sprites/dummyFamily/dummyWife4.png");
 	dummyWifeDeath = loadAnimation("assets/sprites/dummyFamily/explosion.png", "assets/sprites/dummyFamily/dummyWifeDeath.png");
 
+	tvOff = loadAnimation("assets/sprites/stageScreen/tvOff.png");
+	tvGood = loadAnimation("assets/sprites/stageScreen/tvGood.png");
+	tvDummy = loadAnimation("assets/sprites/stageScreen/tvDummy.png");
+	tvDoor = loadAnimation("assets/sprites/stageScreen/tvDoor.png");
+	
+	carlosIdle = loadAnimation("assets/sprites/NPCs/carlos.png");
+
+	edwardIdle = loadAnimation("assets/sprites/NPCs/edward.png");
+
+	godfreyIdle = loadAnimation("assets/sprites/NPCs/godfrey.png");
+
 	gameshowMusic = loadSound("assets/audio/gameshow.mp3");
 	gameshowChoice = loadSound("assets/audio/choice.mp3");
 
