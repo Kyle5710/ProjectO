@@ -95,7 +95,7 @@ function randomizeButtons() {
 
 	//button dialogue + events (later)
 	let goodButton = {
-		dialogue: ["", "Wow.", "You weren't supposed to click that one", "Were you cheating or something?", "Anyways, I guess you get a damage buff"],
+		dialogue: ["", "Wow.", "You weren't supposed to click that one.", "Did you cheat or something?", "Anyways, I guess you get a damage buff"],
 		events: ["obamaNeutral", null, null, "damageBuff"]
 	};
 
