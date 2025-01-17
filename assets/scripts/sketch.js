@@ -177,6 +177,9 @@ function gameshowEvents(event) {
 			dummyWife.changeAnimation("dummyWifeDeath");
 			dummyWife.animation.looping = false;
 			dummy.changeAnimation("dummyMourn");
+			carlos.changeAnimation("carlosSad");
+			godfrey.changeAnimation("godfreySad");
+			edward.changeAnimation("edwardSad");
 			tv.changeAnimation("tvDummy");
 			break;
 
@@ -190,6 +193,9 @@ function gameshowEvents(event) {
 
 		case "obamaNeutral":
 			currentPortrait = neutral;
+			carlos.changeAnimation("carlosIdle");
+			godfrey.changeAnimation("godfreyIdle");
+			edward.changeAnimation("edwardIdle");
 			dummy.changeAnimation("dummyIdle");
 			break;
 

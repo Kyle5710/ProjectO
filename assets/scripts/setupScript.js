@@ -45,13 +45,20 @@ function setupFunction() {
     dummyKidsIdle.frameDelay = dummyWifeIdle.frameDelay = 15;
 
     carlos = createSprite(1000, 1000, 272, 212, "s");
+    carlos.addAnimation("carlosSad", carlosSad);
     carlos.addAnimation("carlosIdle", carlosIdle);
 
     edward = createSprite(1000, 1000, 128, 256, "s");
+    edward.addAnimation("edwardSad", edwardSad);
     edward.addAnimation("edwardIdle", edwardIdle);
 
     godfrey = createSprite(1000, 1000, 80, 120, "s");
+    godfrey.addAnimation("godfreySad", godfreySad);
     godfrey.addAnimation("godfreyIdle", godfreyIdle);
+
+    carlosIdle.frameDelay = 20;
+    edwardIdle.frameDelay = 20;
+    godfreyIdle.frameDelay = 20;
 
     tv = createSprite(1000, 1000, 208, 110, "s");
     tv.addAnimation("tvGood", tvGood);

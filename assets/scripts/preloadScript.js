@@ -135,11 +135,23 @@ function preloadAssets() {
 	tvBad = loadAnimation("assets/sprites/stageScreen/tvBad.png");
 	tvNothing = loadAnimation("assets/sprites/stageScreen/tvNothing.png");
 	
-	carlosIdle = loadAnimation("assets/sprites/NPCs/carlos.png");
+	carlosIdle = loadAnimation("assets/sprites/NPCs/carlosIdle1.png", "assets/sprites/NPCs/carlosIdle2.png");
+	carlosSad = loadAnimation("assets/sprites/NPCs/carlosSad.png");
 
-	edwardIdle = loadAnimation("assets/sprites/NPCs/edward.png");
+	edwardIdle = loadAnimation("assets/sprites/NPCs/edwardIdle1.png", "assets/sprites/NPCs/edwardIdle2.png");
+	edwardSad = loadAnimation("assets/sprites/NPCs/edwardSad.png");
 
-	godfreyIdle = loadAnimation("assets/sprites/NPCs/godfrey.png");
+	godfreyIdle = loadAnimation("assets/sprites/NPCs/godfreyIdle1.png", "assets/sprites/NPCs/godfreyIdle2.png");
+	godfreySad = loadAnimation("assets/sprites/NPCs/godfreySad.png");
+
+	sansIdle = loadAnimation("assets/sprites/projectiles/sans.png");
+	sansSad = loadAnimation("assets/sprites/projectiles/sansSad.png");
+
+	crugIdle = loadAnimation("assets/sprites/projectiles/crugIdle1.png", "assets/sprites/projectiles/crugIdle2.png")
+	crugSad = loadAnimation("assets/sprites/projectiles/crugSad.png")
+
+	heartIdle = loadAnimation("assets/sprites/projectiles/heartIdle1.png", "assets/sprites/projectiles/heartIdle2.png",
+		"assets/sprites/projectiles/heartIdle3.png", "assets/sprites/projectiles/heartIdle4.png");
 
 	gameshowMusic = loadSound("assets/audio/gameshow.mp3");
 	gameshowChoice = loadSound("assets/audio/choice.mp3");
