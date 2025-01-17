@@ -156,12 +156,12 @@ function preloadAssets() {
 		"assets/sprites/obamaThrow/throw8.png", "assets/sprites/obamaThrow/throw9.png", "assets/sprites/obamaThrow/throw10.png", "assets/sprites/obamaThrow/throw11.png",
 		"assets/sprites/obamaThrow/throw12.png");
 
-	crug = loadAnimation("assets/sprites/projectiles/crug.png");
-	iceCream = loadAnimation("assets/sprites/projectiles/icecream1.png");
-	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png");
-	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png");
+	crug = loadAnimation("assets/sprites/projectiles/crug.png", "assets/sprites/projectiles/crugSmear.png");
+	iceCream = loadAnimation("assets/sprites/projectiles/icecream1.png", "assets/sprites/projectiles/icecreamSmear1.png");
+	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png", "assets/sprites/projectiles/icecreamSmear2.png");
+	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png", "assets/sprites/projectiles/icecreamSmear3.png");
 	sans = loadAnimation("assets/sprites/projectiles/sans.png");
-	health = loadAnimation("assets/sprites/projectiles/playerHealth.png");
+	health = loadAnimation("assets/sprites/projectiles/playerHealth.png", "assets/sprites/projectiles/playerHealthSmear.png");
 
 
 	//LOAD YOU SUCK ROOM ASSETS

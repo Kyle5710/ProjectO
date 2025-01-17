@@ -3,8 +3,6 @@ let player;
 let lastDir = "Up"; //stores last direction player moved in
 let canMove = false; //if player can move
 let stepSound = false; //player step sfx
-let playerBuff = false;
-let playerDebuff = false;
 
 //DUMMY
 let dummy;
@@ -15,7 +13,6 @@ let mic;
 //OBAMA
 let weaponObama; //obama room
 let bossObama; //boss room
-let peakObama; //boss2 room
 
 //PORTRAIT
 let showPortrait = false;
@@ -24,7 +21,7 @@ let showPortrait = false;
 let barrierManager;
 
 //FADE TRANSITION
-let tranAlpha = 0; //stores alpha val
+let tranAlpha = 0;
 let tran = false; //if a transition is happening or not
 let fadeDur = 1000;
 let nextScene = "";
@@ -83,9 +80,9 @@ let canLeaveButton = false; //if player has hit the button to leave the room yet
 
 //dialogue upon entering room
 let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAVE AN UNEXPECTED",
-	"and rather intrusive...", "CONTESTANT!!!", "CARSON HIT THE LIGHTS!!!", "...", "HIT THE LIGHTS!", "...",
+	"and rather intrusive...", "CONTESTANT!!!", "CARSON HIT THE LIGHTS!!!", "...", "HIT THE LIGHTS!", "...", 
 	"CARSON YOU NEED TO PLUG IT IN", "THERE'S A CORD RIGHT IN FRONT OF YOU", "*sigh* let me just do it...", "*click*",
-	"ANYWAYS", "THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
+	"ANYWAYS","THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
 	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
 
 //LONGHALLWAY ROOMS
@@ -95,14 +92,6 @@ let longHallway3Event = true;
 
 //BOSS 2 ROOM
 let bossObama2Event = true;
-
-//projectiles that obama can throw during fight
-let crug;
-let iceCream;
-let iceCream2;
-let iceCream3;
-let sans;
-let health;
 
 //YOUSUCK ROOM
 let timerStart = 0;

@@ -291,8 +291,6 @@ function determineEvents() {
 			if (!canMove) {
 				playerClass.display(dummyClass);
 			}
-			
-			peakObamaClass.update();
 		}
 	}
 

@@ -2,7 +2,6 @@
 //Kyle and Alexandre
 
 //TODO:
-//OBAMA UP SPRITE (WITH JETPACK)
 //TV SCREEN/GAMESHOW AUDIENCE
 //2ND BOSS PHASE
 //END SCENE (OBAMA DIES OR SOMETHING)
@@ -149,7 +148,6 @@ function gameshowEvents(event) {
 
 		case "badButton":
 			currentPortrait = neutral;
-			playerDebuff = true;
 			tv.changeAnimation("tvBad");
 			break;
 
@@ -165,7 +163,7 @@ function gameshowEvents(event) {
 
 		case "damageBuff":
 			currentPortrait = happy;
-			playerBuff = true;
+			print("PUT THE DAMAGE BUFF HERE ONCE YOU FINISH THE SECOND PHASE");
 			break;
 
 		case "dummyExplosion":
@@ -479,7 +477,6 @@ function drawDebug() {
 		player.debug = true;
 		dummy.debug = true;
 		bossObama.debug = true;
-		peakObama.debug = true;
 	}
 }
 
@@ -526,7 +523,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Tutorial";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
 			buttonSound.play();
