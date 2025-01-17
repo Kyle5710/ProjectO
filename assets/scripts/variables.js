@@ -3,6 +3,8 @@ let player;
 let lastDir = "Up"; //stores last direction player moved in
 let canMove = false; //if player can move
 let stepSound = false; //player step sfx
+let playerBuff = false;
+let playerDebuff = true;
 
 //DUMMY
 let dummy;
