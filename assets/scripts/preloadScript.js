@@ -132,6 +132,8 @@ function preloadAssets() {
 	tvGood = loadAnimation("assets/sprites/stageScreen/tvGood.png");
 	tvDummy = loadAnimation("assets/sprites/stageScreen/tvDummy.png");
 	tvDoor = loadAnimation("assets/sprites/stageScreen/tvDoor.png");
+	tvBad = loadAnimation("assets/sprites/stageScreen/tvBad.png");
+	tvNothing = loadAnimation("assets/sprites/stageScreen/tvNothing.png");
 	
 	carlosIdle = loadAnimation("assets/sprites/NPCs/carlos.png");
 
@@ -149,9 +151,18 @@ function preloadAssets() {
 	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
 	//LOAD BOSS2 ROOM ASSETS
-	peakObamaIdle = loadAnimation("assets/sprites/peakObama/peakObama.png");
+	peakObamaThrow = loadAnimation("assets/sprites/obamaThrow/throw1.png", "assets/sprites/obamaThrow/throw2.png", "assets/sprites/obamaThrow/throw3.png",
+		"assets/sprites/obamaThrow/throw4.png", "assets/sprites/obamaThrow/throw5.png", "assets/sprites/obamaThrow/throw6.png", "assets/sprites/obamaThrow/throw7.png",
+		"assets/sprites/obamaThrow/throw8.png", "assets/sprites/obamaThrow/throw9.png", "assets/sprites/obamaThrow/throw10.png", "assets/sprites/obamaThrow/throw11.png",
+		"assets/sprites/obamaThrow/throw12.png");
 
-	obamaProjectile = loadAnimation("assets/sprites/peakObama/projectile.png");
+	crug = loadAnimation("assets/sprites/projectiles/crug.png");
+	iceCream = loadAnimation("assets/sprites/projectiles/icecream1.png");
+	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png");
+	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png");
+	sans = loadAnimation("assets/sprites/projectiles/sans.png");
+	health = loadAnimation("assets/sprites/projectiles/playerHealth.png");
+
 
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");

@@ -144,12 +144,13 @@ function gameshowEvents(event) {
 	switch (event) {
 		case "jokeButton2":
 			currentPortrait = neutral;
-			print("PUT JOKE2 TV SPRITE HERE");
+			tv.changeAnimation("tvNothing");
 			break;
 
 		case "badButton":
 			currentPortrait = neutral;
-			print("PUT BAD TV SPRITE HERE");
+			playerDebuff = true;
+			tv.changeAnimation("tvBad");
 			break;
 
 		case "goodButton":
@@ -164,7 +165,7 @@ function gameshowEvents(event) {
 
 		case "damageBuff":
 			currentPortrait = happy;
-			print("PUT THE DAMAGE BUFF HERE ONCE YOU FINISH THE SECOND PHASE");
+			playerBuff = true;
 			break;
 
 		case "dummyExplosion":
@@ -478,6 +479,7 @@ function drawDebug() {
 		player.debug = true;
 		dummy.debug = true;
 		bossObama.debug = true;
+		peakObama.debug = true;
 	}
 }
 

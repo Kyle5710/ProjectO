@@ -500,7 +500,7 @@ class BarrierManager {
 }
 
 class MicHitbox {
-	constructor(mic, dummy, bossObama) {
+	constructor(mic, dummy, bossObama, peakObama) {
 		this.mic = mic;
 		this.dummy = dummy;
 		this.obama = bossObama;
@@ -573,6 +573,32 @@ class MicHitbox {
 			this.hitBoss = true;
 		}
 
+		//collision with peakObama
+		if (collideRectRect(
+			this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
+			this.hitbox.width, this.hitbox.height,
+			peakObama.position.x - peakObama.width / 2, peakObama.position.y - peakObama.height / 2,
+			peakObama.width, peakObama.height) && !this.hitBoss) {
+
+			if (playerBuff) {
+				enemyHit.play(); //sfx
+				peakObamaClass.health -= 2;
+				this.hitBoss = true;
+			}
+
+			else if (playerDebuff) {
+				enemyHit.play(); //sfx
+				peakObamaClass.health -= 0.5;
+				this.hitBoss = true;
+			}
+
+			else {
+				enemyHit.play(); //sfx
+				peakObamaClass.health -= 1;
+				this.hitBoss = true;
+			}
+		}
+
 		//the buttons in the global button array
 		for (let button of buttons) {
 			if (collideRectRect(
@@ -596,7 +622,7 @@ class Microphone {
 	constructor() {
 		this.mic = createSprite(0, 0, "s");
 
-		this.hitbox = new MicHitbox(this.mic, dummy, bossObama); //hitbox for mic attacks
+		this.hitbox = new MicHitbox(this.mic, dummy, bossObama, peakObama); //hitbox for mic attacks
 
 		//position offset
 		this.offsets = {
@@ -906,7 +932,6 @@ class BossObama {
 		textAlign(CENTER);
 		textSize(20);
 		text("Obama, the guy", width / 2, 31);
-
 	}
 
 
@@ -1004,8 +1029,209 @@ class BossObama {
 	}
 }
 
-class peakObama{
-	constructor(){
-		
-	}
+class PeakObama {
+    constructor(xPos, yPos, obama, player) {
+        this.x = xPos;
+        this.y = yPos;
+        this.obama = obama;
+        this.player = player;
+        this.state = "entering";
+        this.health = 20;
+        this.projectiles = [];
+        this.chargeCooldown = 0;
+        this.isCharging = false;
+        this.throwStarted = false;
+        this.currentAttack = null;
+
+        // Preloaded animations
+        this.obama.addAnimation("obamaThrow", peakObamaThrow);
+        this.obama.addAnimation("obamaDown", obamaDownAnim);
+        this.obama.addAnimation("obamaJetpack", obamaJetpack);
+    }
+
+    enter() {
+        canMove = false;
+        this.obama.animation.frameDelay = 15;
+        this.obama.changeAnimation("obamaDown");
+
+        if (this.y < 100 && tranAlpha <= 0) {
+            this.y += 2;
+        } else if (this.y === 100) {
+            this.state = "attack";
+            canMove = true;
+            print("Boss has entered. Starting attack phase.");
+        }
+    }
+
+    startCooldown() {
+        this.state = "cooldown";
+        this.chargeCooldown = 60; // Adjust cooldown duration as needed
+    }
+
+    drawHealthBar() {
+        const barWidth = 420;
+        const barHeight = 20;
+        const currentHealthWidth = map(this.health, 0, 20, 0, barWidth);
+
+        rectMode(CENTER);
+        fill(200); // Background
+        rect(width / 2, 27, barWidth, barHeight);
+
+        fill(255, 0, 0); // Health bar
+        rect(width / 2, 27, currentHealthWidth, barHeight);
+
+        stroke("black");
+        strokeWeight(2);
+        fill("white");
+        textAlign(CENTER);
+        textSize(20);
+        text("Obama, the guy", width / 2, 31);
+        rectMode(NORMAL);
+    }
+
+    throwAttack() {
+        if (!this.throwStarted) {
+            this.obama.changeAnimation("obamaThrow");
+            this.throwStarted = true;
+            print("Boss is throwing projectiles.");
+        }
+
+        const projectiles = ["crug", "iceCream", "iceCream2", "iceCream3", "sans", "health"];
+        const randomProjectile = projectiles[int(random(projectiles.length))];
+        const angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
+
+        this.projectiles.push({
+            x: this.x,
+            y: this.y,
+            angle: angleToPlayer,
+            speed: 5,
+            type: randomProjectile,
+        });
+
+        this.startCooldown();
+        this.throwStarted = false; // Reset for the next throw
+    }
+
+    chargeAttack() {
+        if (!this.isCharging) {
+            this.obama.changeAnimation("obamaJetpack");
+
+            let angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
+            let randomize = random(-Math.PI / 12, Math.PI / 12);
+            this.chargeAngle = angleToPlayer + randomize;
+            this.chargeTimer = 0;
+            this.attackDuration = int(random(60, 270));
+            this.isCharging = true;
+            print("Boss is charging toward the player.");
+        }
+
+        const moveSpeed = random(4, 6);
+        let nextX = this.x + Math.cos(this.chargeAngle) * moveSpeed;
+        let nextY = this.y + Math.sin(this.chargeAngle) * moveSpeed;
+
+        if (nextX <= 30 || nextX >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
+        if (nextY <= 50 || nextY >= 275) this.chargeAngle = -this.chargeAngle;
+
+        this.x = constrain(nextX, 31, 609);
+        this.y = constrain(nextY, 51, 274);
+
+        if (this.attackDuration <= this.chargeTimer++) {
+            this.isCharging = false;
+            this.startCooldown();
+        }
+    }
+
+    checkCollision() {
+        if (collideRectRect(
+            this.player.x - this.player.width / 2, this.player.y - this.player.height / 2,
+            this.player.width, this.player.height,
+            this.obama.x - this.obama.width / 2, this.obama.y - this.obama.height / 2,
+            this.obama.width, this.obama.height)) {
+
+            if (!playerClass.playerHit) {
+                playerClass.playerHit = true;
+
+                if (canMove) { // Player can move → not a cutscene
+                    playerHurt.play(); // Play hurt sound effect
+                    playerClass.health -= 1;
+                    print("Player hit by the boss.");
+                }
+            }
+        } else {
+            playerClass.playerHit = false;
+        }
+    }
+
+    manageProjectiles() {
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const proj = this.projectiles[i];
+
+            proj.x += Math.cos(proj.angle) * proj.speed;
+            proj.y += Math.sin(proj.angle) * proj.speed;
+
+            if (proj.x <= 0 || proj.x >= width || proj.y <= 0 || proj.y >= height) {
+                this.projectiles.splice(i, 1);
+                continue;
+            }
+
+            switch (proj.type) {
+                case "crug":
+                    animation(crug, proj.x, proj.y);
+                    break;
+                case "iceCream":
+                    animation(iceCream, proj.x, proj.y);
+                    break;
+                case "iceCream2":
+                    animation(iceCream2, proj.x, proj.y);
+                    break;
+                case "iceCream3":
+                    animation(iceCream3, proj.x, proj.y);
+                    break;
+                case "sans":
+                    animation(sans, proj.x, proj.y);
+                    break;
+                case "health":
+                    animation(health, proj.x, proj.y);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    attack() {
+        this.drawHealthBar(); // Display health bar
+        this.checkCollision(); // Check for collisions with the player
+
+        if (!this.currentAttack) {
+            this.currentAttack = random() > 0.5 ? "charge" : "throw";
+        }
+
+        if (this.currentAttack === "charge") {
+            this.chargeAttack();
+        } else if (this.currentAttack === "throw") {
+            this.throwAttack();
+        }
+
+        if (this.state === "cooldown" && --this.chargeCooldown <= 0) {
+            this.currentAttack = null; // Reset attack type
+            this.state = "attack";
+        }
+    }
+
+    update() {
+        if (this.state === "entering") {
+            this.enter();
+        } else if (this.state === "attack") {
+            this.attack();
+        }
+
+        this.manageProjectiles();
+        this.obama.position.set(this.x, this.y);
+
+        if (this.health <= 0) {
+            print("Boss defeated.");
+            this.state = "leaving";
+        }
+    }
 }
