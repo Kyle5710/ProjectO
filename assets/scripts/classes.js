@@ -777,6 +777,7 @@ class BossObama {
 		bossObama.addAnimation("obamaDown", obamaDownAnim);
 		bossObama.addAnimation("obamaUp", obamaUpAnim);
 		bossObama.addAnimation("obamaIdle", obamaIdleAnim);
+		bossObama.addAnimation("obamaLeave", obamaLeave);
 		bossObama.addAnimation("obamaJetpack", obamaJetpack);
 	}
 
@@ -918,10 +919,12 @@ class BossObama {
 
 		//move x axis
 		if (this.x < leaveX) {
+			bossObama.changeAnimation("obamaJetpack");
 			this.x += 3;
 		}
 
 		else if (this.x > leaveX) {
+			bossObama.changeAnimation("obamaJetpack");
 			this.x -= 3;
 		}
 
@@ -932,6 +935,7 @@ class BossObama {
 
 		//move y axis
 		if (this.x === leaveX) {
+			bossObama.changeAnimation("obamaLeave");
 			this.y -= 3;
 		}
 

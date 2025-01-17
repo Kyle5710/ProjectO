@@ -59,6 +59,7 @@ function preloadAssets() {
 
 	//LOAD BOSS OBAMA ANIMS
 	obamaJetpack = loadAnimation("assets/sprites/obamaJetpack/obamaJetpack1.png", "assets/sprites/obamaJetpack/obamaJetpack2.png");
+	obamaLeave = loadAnimation("assets/sprites/obamaJetpack/obamaLeave1.png", "assets/sprites/obamaJetpack/obamaLeave2.png");
 
 	//PORTRAITS
 	angry = loadImage("assets/sprites/portraits/angry.png");
