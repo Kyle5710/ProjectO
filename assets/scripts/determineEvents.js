@@ -172,6 +172,9 @@ function determineEvents() {
 		carlos.draw();
 		edward.draw();
 		godfrey.draw();
+		heart.draw();
+		crug.draw();
+		sans.draw();
 
 		if (buttonState === "dialogue" || buttonState === "gameshowTalking") {
 			canMove = false;
@@ -200,6 +203,9 @@ function determineEvents() {
 					carlos.remove();
 					edward.remove();
 					godfrey.remove();
+					sans.remove();
+					heart.remove();
+					crug.remove();
 
 					canMove = false; //prevent player movement
 					tran = true; //run fade transition
@@ -245,7 +251,15 @@ function determineEvents() {
 
 	//LONG HALLWAY 2 ROOM
 	if (currentScene === "longHallway2") {
-		currentBackground = hallwayCurveBackground;
+		//change background depending on if dummy was killed
+		if (!dummyKilled) {
+			currentBackground = cHallwayBack;
+		}
+
+		else {
+			currentBackground = cdHallwayBack;
+		}
+
 
 		if (longHallway2Event) {
 			canMove = false;
@@ -283,15 +297,24 @@ function determineEvents() {
 		}
 	}
 
-	//BOSS 2 ROOM
+	//BOSS2 ROOM
 	if (currentScene === "Boss2") {
-		currentBackground = weaponBackground;
+		currentBackground = bossBackground;
 
-		if (bossObama2Event) {
+		if (peakObamaEvent) {
 			if (!canMove) {
 				playerClass.display(dummyClass);
 			}
+
+			peakObamaClass.update();
 		}
+	}
+
+	//END SCREEN
+	if (currentScene === "End") {
+		currentBackground = weaponBackground;
+		playerClass.mic.mic.position.set(-1000, -1000);
+		
 	}
 
 	//LOSE SCREEN

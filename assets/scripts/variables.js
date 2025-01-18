@@ -4,7 +4,8 @@ let lastDir = "Up"; //stores last direction player moved in
 let canMove = false; //if player can move
 let stepSound = false; //player step sfx
 let playerBuff = false;
-let playerDebuff = true;
+let playerDebuff = false;
+let playerDamage = 1;
 
 //DUMMY
 let dummy;
@@ -15,6 +16,7 @@ let mic;
 //OBAMA
 let weaponObama; //obama room
 let bossObama; //boss room
+let peakObama; //boss2 room
 
 //PORTRAIT
 let showPortrait = false;
@@ -40,7 +42,7 @@ let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",
 	"was assigned an important mission.", "To find out Obama's last name,",
 	"once and for all."];
 let currentLine = 0;
-let delay = 2000; //delay between dialogue lines  originally 2000 btw
+let delay = 1; //delay between dialogue lines  originally 2000 btw
 let lastChangeTime = 0;
 let back = 0;
 
@@ -77,6 +79,9 @@ let tv; //tv in gameshow
 let carlos;
 let edward;
 let godfrey;
+let crug;
+let sans;
+let health;
 
 let canLeaveButton = false; //if player has hit the button to leave the room yet
 
@@ -91,9 +96,14 @@ let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAV
 let longHallwayEvent = true;
 let longHallway2Event = true;
 let longHallway3Event = true;
+let dummyKilled = false;
 
-//BOSS 2 ROOM
-let bossObama2Event = true;
+//BOSS2 ROOM
+let peakObamaEvent = true;
+
+let iceCream;
+let iceCream2;
+let iceCream3;
 
 //YOUSUCK ROOM
 let timerStart = 0;

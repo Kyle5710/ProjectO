@@ -328,6 +328,27 @@ class Player {
 			this.mic.display();
 		}
 
+		//BOSS2 DRAWING
+		else if (currentScene === "Boss2") {
+			if (peakObamaClass.state === "attack") {
+				this.drawHealthBar();
+			}
+
+			if (player.y < peakObama.y) {
+				//player behind obama
+				this.mic.display();
+				this.player.draw();
+				peakObama.draw();
+			}
+
+			else {
+				//player in front of obama
+				peakObama.draw();
+				this.player.draw();
+				this.mic.display();
+			}
+		}
+
 		//ALL OTHER SCENES
 		else {
 			this.player.draw();
@@ -569,7 +590,19 @@ class MicHitbox {
 			bossObama.width, bossObama.height) && !this.hitBoss) {
 
 			enemyHit.play(); //sfx
-			bossObamaClass.health -= 1;
+			bossObamaClass.health -= playerDamage;
+			this.hitBoss = true;
+		}
+
+		//collision with peakObama
+		if (collideRectRect(
+			this.hitbox.position.x - this.hitbox.width / 2, this.hitbox.position.y - this.hitbox.height / 2,
+			this.hitbox.width, this.hitbox.height,
+			peakObama.position.x - peakObama.width / 2, peakObama.position.y - peakObama.height / 2,
+			peakObama.width, peakObama.height) && !this.hitBoss) {
+
+			enemyHit.play(); //sfx
+			peakObamaClass.health -= playerDamage;
 			this.hitBoss = true;
 		}
 
@@ -845,6 +878,7 @@ class BossObama {
 				if (onLeftWall || onRightWall) {
 					this.chargeAngle = this.player.y > this.y ? Math.PI / 2 : -Math.PI / 2;
 				}
+
 				if (onTopWall || onBottomWall) {
 					this.chargeAngle = this.player.x > this.x ? 0 : Math.PI;
 				}
@@ -877,7 +911,9 @@ class BossObama {
 			if (this.chargeCooldown > 0) {
 				this.chargeCooldown--;
 				return;
-			} else if (this.chargeCooldown === 0) {
+			}
+
+			else if (this.chargeCooldown === 0) {
 				this.currentAttackState = "charge";
 			}
 		}
@@ -997,6 +1033,251 @@ class BossObama {
 			this.player.changeAnimation("playerIdleUp");
 			lastDir = "Up";
 			this.leaving();
+		}
+
+		//set position
+		this.obama.position.set(this.x, this.y);
+	}
+}
+
+class PeakObama {
+	constructor(xPos, yPos, obama, player) {
+		this.x = xPos;
+		this.y = yPos;
+		this.obama = obama;
+		this.player = player;
+		this.state = "entering";
+		this.currentAttackState = "idle";
+		this.chargeCooldown = 0;
+		this.chargeAngle = null;
+		this.isCharging = false;
+		this.attackCooldown = 0;
+		this.health = 5;
+
+		peakObama.addAnimation("obamaDown", obamaDownAnim);
+		peakObama.addAnimation("obamaUp", obamaUpAnim);
+		peakObama.addAnimation("obamaIdle", obamaIdleAnim);
+		peakObama.addAnimation("obamaLeave", obamaLeave);
+		peakObama.addAnimation("obamaJetpack", obamaJetpack);
+	}
+
+	enter() {
+		canMove = false;//player cant move
+
+		//set anims
+		this.obama.animation.frameDelay = 15;
+		this.obama.changeAnimation("obamaDown");
+
+		//move obama
+		if (this.y < 100 && tranAlpha <= 0) {
+			this.y += 2;
+		}
+
+		//play dialogue
+		else if (this.y === 100) {
+			this.obama.changeAnimation("obamaIdle");
+			this.state = "attack";
+		}
+	}
+
+	chargeAttack() {
+		//random gives a value between 0-1 so 50% chance to get t or f
+		let shouldBounce = random() > 0.5;
+
+		//randomize speed and duration
+		let moveSpeed = random(5, 6);
+		let attackDuration = int(random(60, 120));
+
+		if (this.currentAttackState === "charge") {
+			if (!this.isCharging) {
+				//start charge + set vars
+				this.obama.changeAnimation("obamaJetpack");
+				let angleToPlayer = Math.atan2(this.player.y - this.y, this.player.x - this.x);
+				let randomize = random(-Math.PI / 12, Math.PI / 12);
+				this.chargeAngle = angleToPlayer + randomize;
+				this.chargeTimer = 0;
+				this.isCharging = true;
+				this.attackDuration = attackDuration;
+			}
+
+			//find next pos to move to
+			let nextX = this.x + Math.cos(this.chargeAngle) * moveSpeed;
+			let nextY = this.y + Math.sin(this.chargeAngle) * moveSpeed;
+
+			//these are checks for the wall/boundaries
+			let onLeftWall = this.x <= 30;
+			let onRightWall = this.x >= 610;
+			let onTopWall = this.y <= 50;
+			let onBottomWall = this.y >= 275;
+
+			if (shouldBounce) {
+				//attack will bounce off of walls
+				if (nextX <= 30 || nextX >= 610) this.chargeAngle = Math.PI - this.chargeAngle;
+				if (nextY <= 50 || nextY >= 275) this.chargeAngle = -this.chargeAngle;
+			}
+
+			else {
+				//attack wont bounce and will slide off of walls or stop
+				if (onLeftWall || onRightWall) {
+					this.chargeAngle = this.player.y > this.y ? Math.PI / 2 : -Math.PI / 2;
+				}
+
+				if (onTopWall || onBottomWall) {
+					this.chargeAngle = this.player.x > this.x ? 0 : Math.PI;
+				}
+			}
+
+			this.x = constrain(nextX, 31, 609);
+			this.y = constrain(nextY, 51, 274);
+
+			//stop charging
+			if (this.attackDuration <= this.chargeTimer++) {
+				this.currentAttackState = "idle";
+				this.chargeCooldown = 10; //time between attacks
+				this.isCharging = false;
+			}
+
+			//same thing but if sliding into walls
+			if (!shouldBounce && (onLeftWall || onRightWall || onTopWall || onBottomWall)) {
+				this.currentAttackState = "idle";
+				this.chargeCooldown = 10;
+				this.isCharging = false;
+			}
+
+			return;
+		}
+
+		//idle state
+		if (this.currentAttackState === "idle") {
+			this.obama.changeAnimation("obamaIdle");
+
+			if (this.chargeCooldown > 0) {
+				this.chargeCooldown--;
+				return;
+			}
+
+			else if (this.chargeCooldown === 0) {
+				this.currentAttackState = "charge";
+			}
+		}
+	}
+
+	drawHealthBar() {
+		const barWidth = 420;
+		const barHeight = 20;
+
+		//map values for healthbar + scale to current health
+		const currentHealthWidth = map(this.health, 0, 20, 0, barWidth);
+
+		rectMode(CENTER);
+		//grey bg
+		fill(200);
+		rect(width / 2, 27, barWidth, barHeight);
+
+		//red healthbar
+		fill(255, 0, 0);
+		rect(width / 2, 27, currentHealthWidth, barHeight);
+		rectMode(NORMAL);
+
+		stroke("black");
+		strokeWeight(2);
+		fill("white");
+		textAlign(CENTER);
+		textSize(20);
+		text("Obama, the guy", width / 2, 31);
+
+	}
+
+
+	leaving() {
+		//target exit position
+		let leaveX = width / 2;
+		let leaveY = -100;
+
+		playerClass.mic.mic.position.set(-1000, -1000); //move mic offscreen so it doesnt float
+
+		//move x axis
+		if (this.x < leaveX) {
+			peakObama.changeAnimation("obamaJetpack");
+			this.x += 3;
+		}
+
+		else if (this.x > leaveX) {
+			peakObama.changeAnimation("obamaJetpack");
+			this.x -= 3;
+		}
+
+		//make sure we dont skip over leaveX by taking abs
+		if (Math.abs(this.x - leaveX) <= 3) {
+			this.x = leaveX;
+		}
+
+		//move y axis
+		if (this.x === leaveX) {
+			peakObama.changeAnimation("obamaLeave");
+			this.y -= 3;
+		}
+
+		if (this.y <= leaveY) {
+			this.y = leaveY;
+			canMove = true;
+			peakObamaEvent = false;
+		}
+	}
+
+	checkCollision() {
+		if (collideRectRect(
+			this.player.x - this.player.width / 2, this.player.y - this.player.height / 2,
+			this.player.width, this.player.height,
+			this.obama.x - this.obama.width / 2, this.obama.y - this.obama.height / 2,
+			this.obama.width, this.obama.height)) {
+
+			//player hasnt been hit already
+			if (!playerClass.playerHit) {
+				playerClass.playerHit = true;
+
+				if (canMove) { //player can move → not a cutscene
+					playerHurt.play(); //sfx
+					playerClass.health -= 1;
+				}
+			}
+		}
+
+		else { //reset
+			playerClass.playerHit = false;
+		}
+	}
+
+	update() {
+		//events via state
+		if (this.state === "entering") {
+			this.player.changeAnimation("playerIdleUp");
+			this.enter();
+		}
+
+		if (this.state === "dialogue") {
+			this.dialogue();
+		}
+
+		if (this.state === "attack") {
+			canMove = true;
+			this.drawHealthBar(); //draw health
+			this.chargeAttack();
+			this.checkCollision();
+
+			if (this.health <= 0) {
+				canMove = false;
+				this.state = "leaving";
+			}
+		}
+
+		if (this.state === "leaving") {
+			textSize(30);
+			newRoom.play(); //sfx
+			playerClass.mic.mic.position.set(-1000, -1000);
+			canMove = false; //prevent player movement
+			tran = true; //run fade transition
+			nextScene = "End";
 		}
 
 		//set position

@@ -148,10 +148,11 @@ function preloadAssets() {
 	sansSad = loadAnimation("assets/sprites/projectiles/sansSad.png");
 
 	crugIdle = loadAnimation("assets/sprites/projectiles/crugIdle1.png", "assets/sprites/projectiles/crugIdle2.png")
-	crugSad = loadAnimation("assets/sprites/projectiles/crugSad.png")
+	crugSad = loadAnimation("assets/sprites/projectiles/crugSad.png");
 
 	heartIdle = loadAnimation("assets/sprites/projectiles/heartIdle1.png", "assets/sprites/projectiles/heartIdle2.png",
 		"assets/sprites/projectiles/heartIdle3.png", "assets/sprites/projectiles/heartIdle4.png");
+	heartSad = loadAnimation("assets/sprites/projectiles/heartSad.png");
 
 	gameshowMusic = loadSound("assets/audio/gameshow.mp3");
 	gameshowChoice = loadSound("assets/audio/choice.mp3");
@@ -159,7 +160,8 @@ function preloadAssets() {
 	//LOAD HALLWAYS ASSETS
 	hallwayBackground = loadImage("assets/sprites/hallway/hallway.png");
 	longHallwayBackground = loadImage("assets/sprites/hallway/longHallway.png");
-	hallwayCurveBackground = loadImage("assets/sprites/hallway/hallwayCurve.png");
+	cdHallwayBack = loadImage("assets/sprites/hallway/hallwayCurve.png");
+	cHallwayBack = loadImage("assets/sprites/hallway/hallwayCurve1.png");
 	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
 	//LOAD BOSS2 ROOM ASSETS
@@ -168,13 +170,9 @@ function preloadAssets() {
 		"assets/sprites/obamaThrow/throw8.png", "assets/sprites/obamaThrow/throw9.png", "assets/sprites/obamaThrow/throw10.png", "assets/sprites/obamaThrow/throw11.png",
 		"assets/sprites/obamaThrow/throw12.png");
 
-	crug = loadAnimation("assets/sprites/projectiles/crug.png", "assets/sprites/projectiles/crugSmear.png");
 	iceCream = loadAnimation("assets/sprites/projectiles/icecream1.png", "assets/sprites/projectiles/icecreamSmear1.png");
 	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png", "assets/sprites/projectiles/icecreamSmear2.png");
 	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png", "assets/sprites/projectiles/icecreamSmear3.png");
-	sans = loadAnimation("assets/sprites/projectiles/sans.png");
-	health = loadAnimation("assets/sprites/projectiles/playerHealth.png", "assets/sprites/projectiles/playerHealthSmear.png");
-
 
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");

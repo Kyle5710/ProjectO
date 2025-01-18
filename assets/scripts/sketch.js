@@ -34,6 +34,8 @@ function draw() {
 	showPortraits(); //show character portraits
 	classEvents(); //scenes where player canMove + dummyClass
 
+	print(playerDamage);
+
 	//debug
 	//drawDebug();
 }
@@ -112,7 +114,7 @@ function randomizeButtons() {
 
 	let badButton = {
 		dialogue: ["", "Wow.", "How unfortunate for you.", "On the other hand, I'm quite entertained.", "You'll get a damage debuff"],
-		events: ["badButton", "obamaFacepalm", "obamaHappy", "obamaNeutral"]
+		events: ["badButton", "obamaFacepalm", "obamaHappy", "damageDebuff"]
 	};
 
 	let doorButton = {
@@ -165,7 +167,12 @@ function gameshowEvents(event) {
 
 		case "damageBuff":
 			currentPortrait = happy;
-			print("PUT THE DAMAGE BUFF HERE ONCE YOU FINISH THE SECOND PHASE");
+			playerDamage *= 2;
+			break;
+
+		case "damageDebuff":
+			currentPortrait = neutral;
+			playerDamage /= 2;
 			break;
 
 		case "dummyExplosion":
@@ -180,7 +187,11 @@ function gameshowEvents(event) {
 			carlos.changeAnimation("carlosSad");
 			godfrey.changeAnimation("godfreySad");
 			edward.changeAnimation("edwardSad");
+			crug.changeAnimation("crugSad");
+			sans.changeAnimation("sansSad");
+			heart.changeAnimation("heartSad");
 			tv.changeAnimation("tvDummy");
+			dummyKilled = true;
 			break;
 
 		case "obamaAppalled":
@@ -196,6 +207,9 @@ function gameshowEvents(event) {
 			carlos.changeAnimation("carlosIdle");
 			godfrey.changeAnimation("godfreyIdle");
 			edward.changeAnimation("edwardIdle");
+			heart.changeAnimation("heartIdle");
+			crug.changeAnimation("crugIdle");
+			sans.changeAnimation("sansIdle");
 			dummy.changeAnimation("dummyIdle");
 			break;
 
@@ -367,13 +381,16 @@ function buttonDialogueFunc() {
 				darkStage = false; //turn off the darkStage background
 				click.play(); //sfx
 				//set dummies positions
-				dummyKids.position.set(560, 50);
-				dummyWife.position.set(600, 40);
+				dummyKids.position.set(555, 70);
+				dummyWife.position.set(600, 65);
 				tv.position.set(width / 2, 40);
 				carlos.position.set(70, 60);
-				edward.position.set(200, 50);
-				godfrey.position.set(435, 50);
-				dummyClass.dummy.position.set(520, 40);
+				edward.position.set(170, 50);
+				godfrey.position.set(450, 50);
+				heart.position.set(410, 30);
+				sans.position.set(228, 50);
+				crug.position.set(395, 70);
+				dummyClass.dummy.position.set(510, 60);
 			}
 
 			else if (currentLine === 19) {
@@ -467,7 +484,7 @@ function classEvents() {
 				buttonEvent = false;
 			}
 
-			else if (currentScene !== "Button" || currentScene === "Boss2") {
+			else if (currentScene !== "Button" && nextScene !== "End" && currentScene !== "End") {
 				playerClass.spawnPos();
 			}
 		}
@@ -485,6 +502,7 @@ function drawDebug() {
 		player.debug = true;
 		dummy.debug = true;
 		bossObama.debug = true;
+		peakObama.debug = true;
 	}
 }
 
@@ -531,7 +549,7 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Yapping";
+			nextScene = "Boss2";
 			canMove = false;
 			tran = true;
 			buttonSound.play();
@@ -581,3 +599,4 @@ function wrapText(str, maxWidth) { //use this to wrap text when needed W youtube
 	lines.push(currentLine);
 	return lines;
 }
+

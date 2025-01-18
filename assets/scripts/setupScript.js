@@ -32,6 +32,7 @@ function setupFunction() {
     dummy = createSprite(1000, 1000, 40, 60, "s");
     weaponObama = createSprite(1000, 1000, 84, 160, "s");
     bossObama = createSprite(1000, 1000, 36, 70, "s");
+    peakObama = createSprite(1000, 1000, 36, 70, "s");
 
     //same thing for dummies + gameshow crowd but here cause too small for a whole class
     dummyKids = createSprite(1000, 1000, 108, 84, "s");
@@ -56,9 +57,21 @@ function setupFunction() {
     godfrey.addAnimation("godfreySad", godfreySad);
     godfrey.addAnimation("godfreyIdle", godfreyIdle);
 
-    carlosIdle.frameDelay = 20;
-    edwardIdle.frameDelay = 20;
-    godfreyIdle.frameDelay = 20;
+    crug = createSprite(1000, 1000, 80, 120, "s");
+    crug.addAnimation("crugSad", crugSad);
+    crug.addAnimation("crugIdle", crugIdle);
+
+    carlosIdle.frameDelay = edwardIdle.frameDelay = godfreyIdle.frameDelay = crugIdle.frameDelay = 30;
+
+    sans = createSprite(1000, 1000, 80, 120, "s");
+    sans.addAnimation("sansSad", sansSad);
+    sans.addAnimation("sansIdle", sansIdle);
+
+    heart = createSprite(1000, 1000, 80, 120, "s");
+    heart.addAnimation("heartSad", heartSad);
+    heart.addAnimation("heartIdle", heartIdle);
+
+    heartIdle.frameDelay = 15;
 
     tv = createSprite(1000, 1000, 208, 110, "s");
     tv.addAnimation("tvGood", tvGood);
@@ -74,6 +87,7 @@ function setupFunction() {
     dummyClass = new Dummy(width / 2, height / 2, dummy, player);
     weaponObamaClass = new WeaponObama(width / 2, 10, weaponObama, player);
     bossObamaClass = new BossObama(width / 2, -50, bossObama, player);
+    peakObamaClass = new PeakObama(width / 2, -50, peakObama, player);
     barrierManager = new BarrierManager();
 
     //hallway barriers
