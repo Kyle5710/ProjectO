@@ -313,8 +313,10 @@ function determineEvents() {
 	//END SCREEN
 	if (currentScene === "End") {
 		currentBackground = weaponBackground;
-		playerClass.mic.mic.position.set(-1000, -1000);
-		
+		canMove = false;
+		player.x = -1000;
+		player.y = -1000;
+		peakObama.remove();
 	}
 
 	//LOSE SCREEN
