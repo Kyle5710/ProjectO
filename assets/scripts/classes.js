@@ -1076,8 +1076,12 @@ class PeakObama {
 		//play dialogue
 		else if (this.y === 100) {
 			this.obama.changeAnimation("obamaIdle");
-			this.state = "attack";
+			this.state = "dialogue";
 		}
+	}
+
+	dialogue() {
+		boss2DialogueFunc();
 	}
 
 	chargeAttack() {

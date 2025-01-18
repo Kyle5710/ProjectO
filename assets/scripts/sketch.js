@@ -344,6 +344,50 @@ function bossDialogueFunc() {
 	}
 }
 
+function boss2DialogueFunc() {
+	if (peakObamaClass.state === "dialogue") {
+		//show portrait sprites
+		showPortrait = true;
+
+		let dialogue = boss2Dialogue[currentLine];
+		let wrappedText = wrapText(dialogue, 310); //max width
+		let yPos = 292;
+
+		//draw textbox + set textAlign
+		imageMode(CENTER);
+		image(textBox, width / 2, 300, 460, 120);
+		imageMode(NORMAL);
+		textAlign(LEFT);
+
+		for (let i = 0; i < wrappedText.length; i++) {
+			//display lines
+			fill("white");
+			text(wrappedText[i], width / 2 - 120, yPos);
+			yPos += textLeading();
+		}
+
+		if (millis() - lastChangeTime > delay) {
+			//events based on line #
+			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
+			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
+			else if (currentLine === 4) currentPortrait = angry;
+			else if (currentLine === 6) currentPortrait = happy;
+			else if (currentLine === 12) currentPortrait = shock;
+			else if (currentLine === 14) currentPortrait = sansundertale;
+
+			if (currentLine === 15) {
+				peakObamaClass.state = "attack";
+				showPortrait = false;
+			}
+
+			buttonSound.play();
+			currentLine = (currentLine + 1) % boss2Dialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+	}
+}
+
 function buttonDialogueFunc() {
 	if (currentScene === "Button" && buttonState === "dialogue") {
 		//show portrait sprites

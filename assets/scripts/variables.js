@@ -64,6 +64,10 @@ let bossDialogue = ["", "You're persistent aren't you?", "What do you want anywa
 	"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
 	"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
 
+let boss2Dialogue = ["", "You're persistent aren't you?", "What do you want anyway?", "My last name!!!", "Nah gang that's been kept under wraps for years",
+		"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
+		"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
+
 //BUTTON ROOM
 let buttonEvent = true;
 let darkStage = true;
