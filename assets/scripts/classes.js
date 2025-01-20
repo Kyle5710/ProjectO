@@ -60,8 +60,14 @@ class Player {
 		fill("white");
 		textSize(20);
 		textAlign(CENTER);
-		text("Armando, the reporter", width / 2, 338);
 
+		if(!dummyKilled){
+			text("Armando, the reporter", width / 2, 338);
+		}
+
+		else{
+			text("Armando, dummy killer", width / 2, 338);
+		}
 	}
 
 	stepSound() {
@@ -1171,7 +1177,7 @@ class PeakObama {
 		const barHeight = 20;
 
 		//map values for healthbar + scale to current health
-		const currentHealthWidth = map(this.health, 0, 20, 0, barWidth);
+		const currentHealthWidth = map(this.health, 0, 5, 0, barWidth);
 
 		rectMode(CENTER);
 		//grey bg
@@ -1188,7 +1194,7 @@ class PeakObama {
 		fill("white");
 		textAlign(CENTER);
 		textSize(20);
-		text("Obama, the guy", width / 2, 31);
+		text("Obama, the guy, again...", width / 2, 31);
 
 	}
 
@@ -1277,7 +1283,6 @@ class PeakObama {
 
 		if (this.state === "leaving") {
 			textSize(30);
-			newRoom.play(); //sfx
 			playerClass.mic.mic.position.set(-1000, -1000);
 			canMove = false; //prevent player movement
 			tran = true; //run fade transition

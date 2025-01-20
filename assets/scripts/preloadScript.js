@@ -174,6 +174,8 @@ function preloadAssets() {
 	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png", "assets/sprites/projectiles/icecreamSmear2.png");
 	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png", "assets/sprites/projectiles/icecreamSmear3.png");
 
+	boss2Music = loadSound("assets/audio/boss2.mp3");
+
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
 }

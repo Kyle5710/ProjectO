@@ -2,14 +2,10 @@
 //Kyle and Alexandre
 
 //TODO:
-//GAMESHOW AUDIENCE
-//2ND BOSS PHASE (HE ATTACKS LIKE PHASE ONE BUT INSTEAD OF AN IDLE MAKE HIM THROW
-//PROJECTILES TOWARDS THE PLAYER || PLAYER BUFF AND PLAYER DEBUFF TO TRACK DAMAGE DEALT
-//WHICH CAN BE HIT IN THE BUTTON ROOM)
-//END SCENE (OBAMA DIES OR SOMETHING)
-//END SCREEN (ACTUAL STATS AND STUFF)
+//END SCENE (OBAMA DIES OR SOMETHING) + MUSIC
 //WIN SCREEN (SPEEDRUN TIME ON IT)
 //SPEEDRUN TIMER
+//REFACTOR CODE BECAUSE OML ITS SO MESSY
 
 //Written Response Here:
 
@@ -52,6 +48,7 @@ function showPortraits() {
 
 function playMusic() {
 	if (currentScene === "Title" && currentMusic !== titleMusic) {
+		print("title");
 		currentMusic.pause();
 		currentMusic = titleMusic;
 	}
@@ -83,7 +80,15 @@ function playMusic() {
 		currentMusic = hallwaysMusic;
 	}
 
-	currentMusic.play();
+	else if (currentScene === "Boss2" && peakObamaClass.state === "attack" && currentMusic !== boss2Music) {
+		currentMusic.pause();
+		currentMusic = boss2Music;
+	}
+
+	if(!currentMusic.isPlaying()){
+		currentMusic.play();
+	}
+	
 }
 
 function randomizeButtons() {
@@ -593,10 +598,12 @@ function titleHover() {
 
 		if (mouseIsPressed) {
 			//transition to yapping room here
-			nextScene = "Boss2";
+			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
-			buttonSound.play();
+			if(!buttonSound.isPlaying()){
+				buttonSound.play();
+			}
 			lastChangeTime = millis();
 		}
 	}
