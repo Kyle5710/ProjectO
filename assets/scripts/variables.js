@@ -13,6 +13,10 @@ let dummy;
 //MICROPHONE
 let mic;
 
+//SPEEDRUN TIMER
+let speedrunStart;
+let speedrunEnd;
+
 //OBAMA
 let weaponObama; //obama room
 let bossObama; //boss room
@@ -60,13 +64,14 @@ let obamaDialogue = ["", "WOAHH!!!", "Who are you supposed to be?", "A reporter?
 
 //BOSS ROOM
 let bossObamaEvent = true;
-let bossDialogue = ["", "You're persistent aren't you?", "What do you want anyway?", "My last name!!!", "Nah gang that's been kept under wraps for years",
-	"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
-	"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
+let bossDialogue = ["", "You're quite persistent.", "What's your problem anyway?", "Oh, you want to know my last name?", "Unfortunately, I can't assist you with that.",
+	"HEY GUARDS!!!", "...", "They appear to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why are you looking at me like that?",
+	"I've watched Karate Kid before...", "I'm pretty dangerous, you know.", "...", "Alright, square up then!"];
 
-let boss2Dialogue = ["", "You're persistent aren't you?", "What do you want anyway?", "My last name!!!", "Nah gang that's been kept under wraps for years",
-		"YO GUARDS BEAT HIS ASS!", "...", "They seem to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why you looking at me like that?",
-		"I've watched Karate Kid before...", "I'm pretty dangerous you know.", "...", "Alright, wassup then!"];
+let boss2Dialogue = ["", "What a brave and confident soul.", "Wandering further and further into the depths of the White House.",
+	"However, your journey ends here.", "Nobody will ever learn my last name.", "Not you,", "or my guards,", "especially Carson...", "(I should've never hired that absolutely useless-)",
+	"ANYWAYS,", "PREPARE FOR MY ULTIMATE ATTACK!", "THE EXACT SAME THING BUT FASTER!", "Wait.", "WHAT.", "We really didn't have the budget for a new attack?",
+	"Really?", "IN SOME INDIRECT WAY THIS YOUR FAULT!"];
 
 //BUTTON ROOM
 let buttonEvent = true;
@@ -90,11 +95,11 @@ let health;
 let canLeaveButton = false; //if player has hit the button to leave the room yet
 
 //dialogue upon entering room
-let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW", "TODAY WE HAVE AN UNEXPECTED",
-	"and rather intrusive...", "CONTESTANT!!!", "CARSON HIT THE LIGHTS!!!", "...", "HIT THE LIGHTS!", "...", 
-	"CARSON YOU NEED TO PLUG IT IN", "THERE'S A CORD RIGHT IN FRONT OF YOU", "*sigh* let me just do it...", "*click*",
-	"ANYWAYS","THERE ARE 5 BUTTONS BEFORE YOU", "AND DEPENDING ON WHICH ONE YOU PICK",
-	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON"];
+let buttonDialogue = ["", "*Ahem*", "WELCOME TO OBAMA'S GAMESHOW!", "TODAY WE HAVE AN UNEXPECTED,",
+	"and rather intrusive...", "CONTESTANT!!!", "CARSON HIT THE LIGHTS!!!", "...", "HIT THE LIGHTS!", "...",
+	"CARSON YOU NEED TO PLUG IT IN,", "THERE'S A CORD RIGHT IN FRONT OF YOU!", "*sigh* let me just do it...", "*click*",
+	"ANYWAYS,", "THERE ARE 5 BUTTONS BEFORE YOU,", "AND DEPENDING ON WHICH ONE YOU PICK,",
+	"SOMETHING WILL HAPPEN!!!", "WITHOUT FURTHER ADO...", "GET UP THERE AND HIT A BUTTON!"];
 
 //LONGHALLWAY ROOMS
 let longHallwayEvent = true;

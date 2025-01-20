@@ -5,6 +5,8 @@
 //END SCENE (OBAMA DIES OR SOMETHING) + MUSIC
 //WIN SCREEN (SPEEDRUN TIME ON IT)
 //SPEEDRUN TIMER
+//DIALOGUE SPRITES
+//SFX/MUSIC MASTER
 //REFACTOR CODE BECAUSE OML ITS SO MESSY
 
 //Written Response Here:
@@ -30,8 +32,6 @@ function draw() {
 	showPortraits(); //show character portraits
 	classEvents(); //scenes where player canMove + dummyClass
 
-	print(playerDamage);
-
 	//debug
 	//drawDebug();
 }
@@ -48,7 +48,6 @@ function showPortraits() {
 
 function playMusic() {
 	if (currentScene === "Title" && currentMusic !== titleMusic) {
-		print("title");
 		currentMusic.pause();
 		currentMusic = titleMusic;
 	}
@@ -85,10 +84,10 @@ function playMusic() {
 		currentMusic = boss2Music;
 	}
 
-	if(!currentMusic.isPlaying()){
+	if (!currentMusic.isPlaying()) {
 		currentMusic.play();
 	}
-	
+
 }
 
 function randomizeButtons() {
@@ -103,28 +102,30 @@ function randomizeButtons() {
 
 	//button dialogue + events (later)
 	let goodButton = {
-		dialogue: ["", "Wow.", "You weren't supposed to click that one.", "Did you cheat or something?", "Anyways, I guess you get a damage buff"],
-		events: ["goodButton", null, null, "damageBuff"]
+		dialogue: ["", "Wow.", "I thought SOMEBODY was supposed to take out the good ones.",
+			"RIGHT, CARSON?", "...", "Anyways, I guess you get a damage buff."],
+		events: ["goodButton", "obamaAngry", "obamaConfused", "obamaNeutral", "damageBuff"]
 	};
 
 	let jokeButton = {
-		dialogue: ["", "*explosion*", "...", "...", "Maybe YOU should be the president"],
+		dialogue: ["", "*explosion*", "...", "...", "Maybe YOU should be the president."],
 		events: ["dummyExplosion", "obamaAppalled", "dummyAppalled", "obamaNeutral"]
 	};
 
 	let jokeButton2 = {
-		dialogue: ["", "...", "Does that one just not work?", "huh", "definitely not because of lazy devs or anything", "surely not"],
+		dialogue: ["", "...", "Does that one just not work?", "Huh.", "Definitely not because of lazy devs or anything.", "Surely not."],
 		events: ["jokeButton2", "obamaConfused", "obamaNeutral", "obamaThinking", "obamaNeutral"]
 	};
 
 	let badButton = {
-		dialogue: ["", "Wow.", "How unfortunate for you.", "On the other hand, I'm quite entertained.", "You'll get a damage debuff"],
-		events: ["badButton", "obamaFacepalm", "obamaHappy", "damageDebuff"]
+		dialogue: ["", "Wow.", "You just hit the damage debuff button.", "…", "That's definitely going to hurt your speedrun."],
+		events: ["badButton", "obamaFacepalm", "obamaFacepalm2", "damageDebuff"]
 	};
 
 	let doorButton = {
-		dialogue: ["", "...", "Carson.", "Remember when I told you to deactivate", "A CERTAIN BUTTON", "We were going to trap them here remember?", "...", "this guy is useless..."],
-		events: ["doorButton", "obamaNeutral", "obamaNeutral", "obamaAngry", "obamaHappy", "obamaNeutral", "unlockDoor"]
+		dialogue: ["", "What.", "Didn't I-", "Carson, did you activate the door button?", "I told you to do that, remember?",
+			"He was going to be trapped in here, remember?", "...", "This guy is useless..."],
+		events: ["doorButton", "obamaAppalled", "obamaConfused", "obamaHappy", "obamaFacepalm", "obamaFacepalm2", "unlockDoor"]
 	};
 
 	//randomize the dialogue (shoutout the indian guy on yt who taught fisher yates shuffle algo)
@@ -176,7 +177,7 @@ function gameshowEvents(event) {
 			break;
 
 		case "damageDebuff":
-			currentPortrait = neutral;
+			currentPortrait = confused;
 			playerDamage /= 2;
 			break;
 
@@ -228,6 +229,10 @@ function gameshowEvents(event) {
 
 		case "obamaFacepalm":
 			currentPortrait = facepalm;
+			break;
+
+		case "obamaFacepalm2":
+			currentPortrait = facepalm2;
 			break;
 
 		case "obamaHappy":
@@ -381,7 +386,7 @@ function boss2DialogueFunc() {
 			else if (currentLine === 12) currentPortrait = shock;
 			else if (currentLine === 14) currentPortrait = sansundertale;
 
-			if (currentLine === 15) {
+			if (currentLine === 16) {
 				peakObamaClass.state = "attack";
 				showPortrait = false;
 			}
@@ -448,7 +453,7 @@ function buttonDialogueFunc() {
 				buttonState = "gameshow";
 			}
 
-			else if (currentLine !== 13) {
+			else if (currentLine !== 12) {
 				buttonSound.play();
 			}
 
@@ -601,9 +606,12 @@ function titleHover() {
 			nextScene = "Yapping";
 			canMove = false;
 			tran = true;
-			if(!buttonSound.isPlaying()){
+
+			if (!buttonSound.isPlaying()) {
 				buttonSound.play();
 			}
+
+			speedrunStart = millis(); //start speedrun timer
 			lastChangeTime = millis();
 		}
 	}

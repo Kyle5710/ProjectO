@@ -317,6 +317,13 @@ function determineEvents() {
 		player.x = -1000;
 		player.y = -1000;
 		peakObama.remove();
+
+		//speedrun timer
+		textAlign(CENTER, CENTER);
+		let finalTime = speedrunEnd - speedrunStart; //convert this to mins and seconds later
+		fill("white");
+		noStroke();
+		text("Time: " + finalTime, width/2, height/2);
 	}
 
 	//LOSE SCREEN

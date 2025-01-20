@@ -1278,6 +1278,7 @@ class PeakObama {
 			if (this.health <= 0) {
 				canMove = false;
 				this.state = "leaving";
+				speedrunEnd = millis(); //end speedrun timer
 			}
 		}
 
