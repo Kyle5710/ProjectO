@@ -2,10 +2,8 @@
 //Kyle and Alexandre
 
 //TODO:
-//END SCENE (OBAMA DIES OR SOMETHING) + MUSIC
-//WIN SCREEN (SPEEDRUN TIME ON IT)
-//SPEEDRUN TIMER
-//DIALOGUE SPRITES
+//ROUND SPEEDRUN TIMER
+//DIALOGUE SPRITES (THINKING PORTRAIT)
 //SFX/MUSIC MASTER
 //REFACTOR CODE BECAUSE OML ITS SO MESSY
 
@@ -380,7 +378,7 @@ function boss2DialogueFunc() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 1 || currentLine === 3 || currentLine === 13) currentPortrait = neutral;
+			if (currentLine === 0 || currentLine === 3 || currentLine === 13) currentPortrait = neutral;
 			else if (currentLine === 4 || currentLine === 6 || currentLine === 7 || currentLine === 10 || currentLine === 11 || currentLine === 12) currentPortrait = happy;
 			else if (currentLine === 5 || currentLine === 15 || currentLine === 16) currentPortrait = angry;
 			else if (currentLine === 8 || currentLine === 9 || currentLine === 13) currentPortrait = appalled;
