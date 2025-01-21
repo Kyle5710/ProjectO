@@ -319,11 +319,10 @@ function determineEvents() {
 		peakObama.remove();
 
 		//speedrun timer
-		textAlign(CENTER, CENTER);
 		let finalTime = speedrunEnd - speedrunStart; //convert this to mins and seconds later
-		fill("white");
+		fill("black");
 		noStroke();
-		text("Time: " + finalTime, width/2, height/2);
+		text("Time: " + finalTime, width/2, 350);
 	}
 
 	//LOSE SCREEN
