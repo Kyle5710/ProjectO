@@ -312,7 +312,7 @@ function determineEvents() {
 
 	//END SCREEN
 	if (currentScene === "End") {
-		currentBackground = weaponBackground;
+		currentBackground = endBackground;
 		canMove = false;
 		player.x = -1000;
 		player.y = -1000;

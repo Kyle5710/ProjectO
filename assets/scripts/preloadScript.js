@@ -176,6 +176,9 @@ function preloadAssets() {
 
 	boss2Music = loadSound("assets/audio/boss2.mp3");
 
+	//END SCREEN
+	endBackground = loadImage("assets/sprites/endScreen/endBack.png");
+
 	//LOAD YOU SUCK ROOM ASSETS
 	youSuckBackground = loadImage("assets/sprites/youSuckScreen/youSuckBackground.png");
 }

@@ -335,10 +335,12 @@ function bossDialogueFunc() {
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
 			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
-			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
-			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
+			else if (currentLine === 2) currentPortrait = appalled;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 13) currentPortrait = neutral;
 			else if (currentLine === 4) currentPortrait = angry;
 			else if (currentLine === 6) currentPortrait = happy;
+			else if (currentLine === 8) currentPortrait = facepalm;
+			else if (currentLine === 9) currentPortrait = facepalm2;
 			else if (currentLine === 12) currentPortrait = shock;
 			else if (currentLine === 14) currentPortrait = sansundertale;
 
@@ -378,13 +380,11 @@ function boss2DialogueFunc() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
-			else if (currentLine === 2 || currentLine === 8) currentPortrait = appalled;
-			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 9 || currentLine === 13) currentPortrait = neutral;
-			else if (currentLine === 4) currentPortrait = angry;
-			else if (currentLine === 6) currentPortrait = happy;
-			else if (currentLine === 12) currentPortrait = shock;
-			else if (currentLine === 14) currentPortrait = sansundertale;
+			if (currentLine === 0 || currentLine === 2 || currentLine === 12) currentPortrait = neutral;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 6 || currentLine === 9 || currentLine === 10 || currentLine === 11) currentPortrait = happy;
+			else if (currentLine === 4 || currentLine === 14 || currentLine === 15) currentPortrait = angry;
+			else if (currentLine === 7 || currentLine === 8 || currentLine === 12) currentPortrait = appalled;
+			else if (currentLine === 13) currentPortrait = shock;
 
 			if (currentLine === 16) {
 				peakObamaClass.state = "attack";

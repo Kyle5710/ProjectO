@@ -64,14 +64,14 @@ let obamaDialogue = ["", "WOAHH!!!", "Who are you supposed to be?", "A reporter?
 
 //BOSS ROOM
 let bossObamaEvent = true;
-let bossDialogue = ["", "You're quite persistent.", "What's your problem anyway?", "Oh, you want to know my last name?", "Unfortunately, I can't assist you with that.",
-	"HEY GUARDS!!!", "...", "They appear to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why are you looking at me like that?",
+let bossDialogue = ["", "You're quite persistent.", "What's your problem anyway?", "Oh, you want to know my last name?", "Unfortunately, I can't tell you with that.",
+	"GUARDS, ARREST THIS MAN!!!", "...", "They appear to be unresponsive.", "...", "I knew hiring Carson was a mistake.", "...", "Hey, why are you looking at me like that?",
 	"I've watched Karate Kid before...", "I'm pretty dangerous, you know.", "...", "Alright, square up then!"];
 
 let boss2Dialogue = ["", "What a brave and confident soul.", "Wandering further and further into the depths of the White House.",
 	"However, your journey ends here.", "Nobody will ever learn my last name.", "Not you,", "or my guards,", "especially Carson...", "(I should've never hired that absolutely useless-)",
 	"ANYWAYS,", "PREPARE FOR MY ULTIMATE ATTACK!", "THE EXACT SAME THING BUT FASTER!", "Wait.", "WHAT.", "We really didn't have the budget for a new attack?",
-	"Really?", "IN SOME INDIRECT WAY THIS YOUR FAULT!"];
+	"Really?", "IN SOME INDIRECT WAY THIS IS YOUR FAULT!"];
 
 //BUTTON ROOM
 let buttonEvent = true;
