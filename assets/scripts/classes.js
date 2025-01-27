@@ -59,18 +59,18 @@ class Player {
 		strokeWeight(2);
 		fill("white");
 		textSize(20);
-		textAlign(CENTER);
 
 		if(!dummyKilled){
-			text("Armando, the reporter", width / 2, 338);
+			text("Armando, the reporter", 237, 338);
 		}
 
 		else{
-			text("Armando, dummy killer", width / 2, 338);
+			text("Armando, dummy killer", 235, 338);
 		}
 	}
 
 	stepSound() {
+		//play footstep sound effect every other frame of players anim
 		let anim = this.player.animation;
 		let currentFrame = anim.frame;
 
@@ -171,7 +171,6 @@ class Player {
 
 				else if (currentScene === "Obama") {
 					nextScene = "Weapon";
-
 				}
 
 				else if (currentScene === "Weapon") {
@@ -265,12 +264,14 @@ class Player {
 	}
 
 	spawnPos() {
+		//player spawn pos
 		this.y = 269;
 		this.x = width / 2;
 		lastDir = "Up";
 	}
 
 	hallSpawn() {
+		//player hall spawn pos
 		this.y = height / 2;
 		this.x = 21;
 		lastDir = "Right";
@@ -397,6 +398,7 @@ class Player {
 			//and do not want to ever live through that experience ever again i think i broke my mouse oml
 			if (!timerStarted) {
 				currentScene = "YOUSUCK";
+				speedrunTimerVisible = false;
 				timerStart = millis();
 				timerStarted = true;
 			}
@@ -440,6 +442,7 @@ class Dummy {
 
 	spawnPos() {
 		if (nextScene !== "Boss") {
+			//dummy spawn pos
 			this.x = 150;
 			this.y = height / 2;
 			this.dummy.position.set(this.x, this.y);
@@ -890,6 +893,7 @@ class BossObama {
 				}
 			}
 
+			//keep him on screen
 			this.x = constrain(nextX, 31, 609);
 			this.y = constrain(nextY, 51, 274);
 
@@ -942,12 +946,12 @@ class BossObama {
 		rect(width / 2, 27, currentHealthWidth, barHeight);
 		rectMode(NORMAL);
 
+		//display
 		stroke("black");
 		strokeWeight(2);
 		fill("white");
-		textAlign(CENTER);
 		textSize(20);
-		text("Obama, the guy", width / 2, 31);
+		text("Obama, the guy", 266, 31);
 
 	}
 
@@ -1190,13 +1194,12 @@ class PeakObama {
 		rect(width / 2, 27, currentHealthWidth, barHeight);
 		rectMode(NORMAL);
 
+		//display
 		stroke("black");
 		strokeWeight(2);
 		fill("white");
-		textAlign(CENTER);
 		textSize(20);
-		text("Obama, the guy, again...", width / 2, 31);
-
+		text("Obama, the guy, again...", 234.5, 31);
 	}
 
 
@@ -1231,8 +1234,8 @@ class PeakObama {
 
 		if (this.y <= leaveY) {
 			this.y = leaveY;
-			canMove = true;
 			peakObamaEvent = false;
+			canMove = true; //player can move again → event over
 		}
 	}
 
@@ -1279,6 +1282,7 @@ class PeakObama {
 			if (this.health <= 0) {
 				canMove = false;
 				this.state = "leaving";
+				speedrunTimerVisible = false;
 				speedrunEnd = millis(); //end speedrun timer
 			}
 		}

@@ -4,8 +4,9 @@ function determineEvents() {
 		background(currentBackground);
 	}
 
-	//set font
+	//set font + text color
 	textFont(font);
+	fill("white");
 
 	//music
 	playMusic();
@@ -53,27 +54,11 @@ function determineEvents() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 0) {
-				currentBackground = yappingBack1;
-			}
-
-			if (currentLine === 1) {
-				currentBackground = yappingBack2;
-			}
-
-			if (currentLine === 2) {
-				currentBackground = yappingBack3;
-			}
-
-			if (currentLine === 3) {
-				currentBackground = yappingBack4;
-			}
-
-			if (currentLine === 4) {
-				textSize(40);
-				fill("red");
-				currentBackground = yappingBack5;
-			}
+			if (currentLine === 0) currentBackground = yappingBack1;
+			else if (currentLine === 1) currentBackground = yappingBack2;
+			else if (currentLine === 2) currentBackground = yappingBack3;
+			else if (currentLine === 3) currentBackground = yappingBack4;
+			else if (currentLine === 4) currentBackground = yappingBack5;
 
 			else if (currentLine === 5) {
 				//transition to tutorial room here
@@ -102,7 +87,7 @@ function determineEvents() {
 	if (currentScene === "Tutorial") {
 		currentBackground = tutorialBackground;
 
-		if (tutorialEvent) {
+		if (tutorialEvent) { //player cant move, idle anim set to face up
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
 			playerClass.display(dummyClass);
@@ -127,7 +112,7 @@ function determineEvents() {
 	if (currentScene === "Weapon") {
 		currentBackground = weaponBackground;
 
-		if (weaponEvent) {
+		if (weaponEvent) { //player cant move, idle anim set to face up
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
 			playerClass.display(dummyClass);
@@ -154,8 +139,8 @@ function determineEvents() {
 	//BUTTON ROOM
 	if (currentScene === "Button") {
 
-		if (darkStage) {
-			image(stageDarkBackground, 0, 0, width, height)
+		if (darkStage) { //different background image → start of cutscene
+		image(stageDarkBackground, 0, 0, width, height)
 		}
 
 		currentBackground = stageBackground;
@@ -224,7 +209,7 @@ function determineEvents() {
 	if (currentScene === "longHallway") {
 		currentBackground = longHallwayBackground;
 
-		if (longHallwayEvent) {
+		if (longHallwayEvent) { //player cant move, idle anim set to face right
 			canMove = false;
 			player.changeAnimation("playerIdleRight");
 			playerClass.hallSpawn();
@@ -260,8 +245,7 @@ function determineEvents() {
 			currentBackground = cdHallwayBack;
 		}
 
-
-		if (longHallway2Event) {
+		if (longHallway2Event) { //player cant move, idle anim set to face right
 			canMove = false;
 			player.changeAnimation("playerIdleRight");
 			playerClass.hallSpawn();
@@ -281,7 +265,7 @@ function determineEvents() {
 	if (currentScene === "longHallway3") {
 		currentBackground = scaryHallway;
 
-		if (longHallway3Event) {
+		if (longHallway3Event) {  //player cant move, idle anim set to face up
 			canMove = false;
 			player.changeAnimation("playerIdleUp");
 			playerClass.spawnPos();
@@ -318,15 +302,16 @@ function determineEvents() {
 		player.y = -1000;
 		peakObama.remove();
 
-		//speedrun timer
+		//speedrun timer vars
 		let finalTime = speedrunEnd - speedrunStart; //convert this to mins and seconds later
-
 		let minutes = Math.floor(finalTime / 60000); //find mins
 		let seconds = Math.floor((finalTime % 60000) / 1000); //find seconds
 		let milliseconds = Math.floor(finalTime % 1000); //find milliseconds
 
+		//display timer
 		fill("black");
 		noStroke();
+		textAlign(CENTER);
 		text("Time: " + minutes + ":" + seconds.toString().padStart(2, '0') + ":" + milliseconds.toString().padStart(3, '0'), width / 2, 350); //make sure milliseconds has max 3 digits
 	}
 
@@ -340,11 +325,10 @@ function determineEvents() {
 		let elapsedTime = millis() - timerStart;
 		let remainingTime = timerDuration - elapsedTime;
 
+		//set stuff to fit for endscreen
 		allSprites.remove();
-
 		canMove = false;
 		player.changeAnimation("playerDeath");
-
 		currentBackground = youSuckBackground;
 		rect(0, 0, width, height);
 

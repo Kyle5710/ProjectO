@@ -40,6 +40,7 @@ let logoPos = 100; //initial y pos of logo
 let logoDir = true; //direction of logo
 let buttonHover = false; //mouse over button
 let tutorialEvent = true;
+let speedrunTimerVisible = false;
 
 //YAPPING ROOM
 let yapDialogue = ["", "Once upon a time,", "a journalist named Armando",

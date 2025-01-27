@@ -1,11 +1,34 @@
 //ProjectO
 //Kyle and Alexandre
 
-//TODO
-//SFX/MUSIC MASTER
-//REFACTOR CODE BECAUSE OML ITS SO MESSY
+//Written Response Here: 
+//Question 1: Don't bite off more than you can chew. Scope creep played a huge role here as we assumed we could get more done then we really had the time (or experience) for.
+//For example, going for an entirely new phase was quite ambitious.
 
-//Written Response Here:
+//Question 2: Yes, everything in our list of “required features” was completed.
+
+//Question 3: The most challenging part of the project was trying to make phase 2.
+//There wasn’t enough time to make new AI, so we reused his AI in phase 1. 
+//That still proved to be a pain because it was easy to forget about renaming variables and such. 
+//Making the “base” sprites for the Player and Obama also proved challenging because we wanted designs that could fit in our limited sprite margins.
+
+//Question 4: Phase 2 was originally going to have a new attack where Obama would throw ice cream projectiles at you, but it was scrapped because it was extremely unstable and kept breaking easily. 
+//There are leftovers of this because some of the NPCs during the game show were meant to be used as projectiles, thus they were left in the “projectiles” folder.
+
+//Controls:
+//If you press Tab while on the titleScreen, a speedrun timer while appear in the top left.
+//Mouse to press play on the titleScreen.
+//WASD or arrow keys → movement
+//E → attack
+
+//If you want to teleport to a certain scene, currentScene = "sceneYouWantToGoTo"; in the console will teleport you there.
+//List of scenes: Title, Yapping, Tutorial, Obama, Weapon, Boss, Button, longHallway, longHallway2, longHallway3, Boss2, End, YOUSUCK 
+//(End and YOUSUCK scenes may have some bugs upon teleporting to them specifically)
+//Additionally, if you want to make dialogue run faster, delay = 1; in the console will speed it up quite a lot (2000 is the default).
+
+//Bugs:
+//There is one bug where Armando (main character) will teleport to the top left of the screen upon moving between rooms. 
+//However, this bug only happened when I tried the game on the school computers and I couldn't recreate the issue at home.
 
 function preload() {
 	//variables in variables.js
@@ -23,15 +46,51 @@ function setup() {
 function draw() {
 	//update barriers based on currentScene
 	barrierManager.updateBarState(currentScene, playerClass.player);
-
+	
 	determineEvents(); //check determineEvents.js
 	showPortraits(); //show character portraits
 	classEvents(); //scenes where player canMove + dummyClass
+	speedrunTimer(); //speedrun timer if tab pressed in titlescreen
 
 	//debug
 	//drawDebug();
 }
 
+//debug func
+function drawDebug() {
+	//display current scene
+	fill("white");
+	textAlign(LEFT);
+	text("Scene: " + currentScene, 5, 25);
+
+	//hitboxes
+	if (currentScene) {
+		player.debug = true;
+		dummy.debug = true;
+		bossObama.debug = true;
+		peakObama.debug = true;
+	}
+}
+
+function speedrunTimer() {
+	if (keyIsPressed && keyCode === 9 && currentScene === "Title") { //press tab on titlescreen
+		speedrunTimerVisible = true;
+	}
+
+	if (speedrunTimerVisible) { //if speedrun timer is visible
+		let finalTime = millis() - speedrunStart; //convert this to mins and seconds later
+
+		let minutes = Math.floor(finalTime / 60000); //find mins
+		let seconds = Math.floor((finalTime % 60000) / 1000); //find seconds
+		let milliseconds = Math.floor(finalTime % 1000); //find milliseconds
+
+		fill("white");
+		textSize(30);
+		text("Time: " + minutes + ":" + seconds.toString().padStart(2, '0') + ":" + milliseconds.toString().padStart(3, '0'), 5, 20); //make sure milliseconds has max 3 digits
+	}
+}
+
+//change portrait position for that one gameshow scene
 function showPortraits() {
 	if (showPortrait && buttonState !== "dialogue") {
 		image(currentPortrait, 107, 260);
@@ -42,6 +101,7 @@ function showPortraits() {
 	}
 }
 
+//plays music depending on scene
 function playMusic() {
 	if (currentScene === "Title" && currentMusic !== titleMusic) {
 		currentMusic.pause();
@@ -86,6 +146,7 @@ function playMusic() {
 
 }
 
+//randomizes placement of buttons for gameshow
 function randomizeButtons() {
 	//set pos and anims of all the buttons
 	let buttonInfo = [
@@ -98,28 +159,28 @@ function randomizeButtons() {
 
 	//button dialogue + events (later)
 	let goodButton = {
-		dialogue: ["", "Wow.", "SOMEBODY was supposed to take out the good ones.",
+		dialogue: ["...", "Wow.", "SOMEBODY was supposed to take out the good ones.",
 			"RIGHT, CARSON?", "...", "Anyways, I guess you get a damage buff."],
 		events: ["goodButton", "obamaAngry", "obamaConfused", "obamaNeutral", "damageBuff"]
 	};
 
 	let jokeButton = {
-		dialogue: ["", "*explosion*", "...", "...", "Maybe YOU should be the president."],
+		dialogue: ["...", "*explosion*", "...", "...", "Maybe YOU should be the president."],
 		events: ["dummyExplosion", "obamaAppalled", "dummyAppalled", "obamaNeutral"]
 	};
 
 	let jokeButton2 = {
-		dialogue: ["", "...", "Does that one just not work?", "Huh.", "Definitely not because of lazy devs or anything.", "Surely not."],
+		dialogue: ["...", "...", "Does that one just not work?", "Huh.", "Definitely not because of lazy devs or anything.", "Surely not."],
 		events: ["jokeButton2", "obamaConfused", "obamaNeutral", "obamaThinking", "obamaNeutral"]
 	};
 
 	let badButton = {
-		dialogue: ["", "Wow.", "You just hit the damage debuff button.", "…", "That's definitely going to hurt your speedrun."],
+		dialogue: ["...", "Wow.", "You just hit the damage debuff button.", "…", "That's definitely going to hurt your speedrun."],
 		events: ["badButton", "obamaFacepalm", "obamaFacepalm2", "damageDebuff"]
 	};
 
 	let doorButton = {
-		dialogue: ["", "What.", "Didn't I-", "Carson, did you activate the door button?", "I told you to do that, remember?",
+		dialogue: ["...", "What.", "Didn't I-", "Carson, did you activate the door button?", "I told you to do that, remember?",
 			"He was going to be trapped in here, remember?", "...", "This guy is useless..."],
 		events: ["doorButton", "obamaAppalled", "obamaConfused", "obamaHappy", "obamaFacepalm", "obamaFacepalm2", "unlockDoor"]
 	};
@@ -245,7 +306,6 @@ function gameshowEvents(event) {
 			break;
 	}
 }
-
 
 //ALL DIALOGUE FUNCTIONS (COULD BE DONE SMOOTHER BUT I DONT WANT TO TOUCH IT LMAO)
 function obamaDialogueFunc() {
@@ -400,10 +460,6 @@ function buttonDialogueFunc() {
 				dummyClass.dummy.position.set(510, 60);
 			}
 
-			else if (currentLine === 6) {
-				print("yues");
-			}
-
 			else if (currentLine === 19) {
 				canMove = true;
 				showPortrait = false;
@@ -495,15 +551,15 @@ function boss2DialogueFunc() {
 
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
-			if (currentLine === 0 || currentLine === 3 || currentLine === 5|| currentLine === 9) currentPortrait = neutral;
+			if (currentLine === 0 || currentLine === 3 || currentLine === 5 || currentLine === 9) currentPortrait = neutral;
 			else if (currentLine === 1 || currentLine === 10) currentPortrait = happy;
-			else if (currentLine === 12) currentPortrait = angry;
+			else if (currentLine === 15) currentPortrait = angry;
 			else if (currentLine === 6 || currentLine === 11) currentPortrait = appalled;
 			else if (currentLine === 2 || currentLine === 14) currentPortrait = thinking;
-			else if(currentLine === 7) currentPortrait = facepalm;
+			else if (currentLine === 7) currentPortrait = facepalm;
 			else if (currentLine === 8) currentPortrait = facepalm2;
-			else if (currentLine === 15) currentPortrait = shock;
-			else if(currentLine === 4 || currentLine === 13) currentPortrait = confused;
+			else if (currentLine === 12) currentPortrait = shock;
+			else if (currentLine === 4 || currentLine === 13) currentPortrait = confused;
 
 			if (currentLine === 16) {
 				peakObamaClass.state = "attack";
@@ -524,7 +580,7 @@ function classEvents() {
 		dummyClass.update();
 	}
 
-	else if (currentScene === "Weapon" && tranAlpha < 255) {
+	else if (currentScene === "Weapon" && tranAlpha < 255) { //set dummy pos
 		dummyClass.spawnPos();
 	}
 
@@ -533,29 +589,16 @@ function classEvents() {
 			if (buttonState === "gameshowTalking" && currentScene === "Button") {
 				playerClass.mic.mic.position.set(-1000, -1000);
 			}
+
 			else if (buttonEvent) {
 				playerClass.spawnPos();
 				buttonEvent = false;
 			}
+
 			else if (currentScene !== "Button" && nextScene !== "End" && currentScene !== "End") {
 				playerClass.spawnPos();
 			}
 		}
-	}
-}
-
-function drawDebug() {
-	//display current scene
-	fill("white");
-	textAlign(LEFT);
-	text("Scene: " + currentScene, 5, 25);
-
-	//hitboxes
-	if (currentScene) {
-		player.debug = true;
-		dummy.debug = true;
-		bossObama.debug = true;
-		peakObama.debug = true;
 	}
 }
 

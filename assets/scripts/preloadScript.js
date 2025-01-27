@@ -10,7 +10,7 @@ function preloadAssets() {
 	cameraFlash = loadSound("assets/audio/cameraFlash.wav");
 	obamaLeft = loadSound("assets/audio/obamaLeft.mp3");
 	playerHurt = loadSound("assets/audio/playerHurt.wav");
-	explosion = loadSound("assets/audio/explosion.mp3");
+	explosion = loadSound("assets/audio/explosion.wav");
 	click = loadSound("assets/audio/click.mp3");
 
 	//LOAD PLAYER ANIMATIONS
@@ -84,7 +84,7 @@ function preloadAssets() {
 	titleLogo = loadImage("assets/sprites/titleScreen/titleLogo.png");
 	buttonSound = loadSound("assets/audio/startButton.wav");
 	titleMusic = loadSound("assets/audio/titleMusic.wav");
-
+	
 	//LOAD YAPPING ASSETS
 	yappingBack1 = loadImage("assets/sprites/yappingScreen/yap1.png");
 	yappingBack2 = loadImage("assets/sprites/yappingScreen/yap2.png");
@@ -103,7 +103,7 @@ function preloadAssets() {
 
 	//BOSS ROOM ASSETS
 	bossBackground = loadImage("assets/sprites/bossScreen/bossBack.png");
-	bossMusic = loadSound("assets/audio/bossMusic.mp3");
+	bossMusic = loadSound("assets/audio/boss2.mp3");
 
 	//STAGE ROOM ASSETS
 	stageBackground = loadImage("assets/sprites/stageScreen/stageBack.png");
@@ -167,7 +167,7 @@ function preloadAssets() {
 	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
 	//LOAD BOSS2 ROOM ASSETS
-	boss2Music = loadSound("assets/audio/boss2.mp3");
+	boss2Music = loadSound("assets/audio/bossMusic.mp3");
 	boss2Background = loadImage("assets/sprites/bossScreen/bossBack2.png");
 
 	//END SCREEN

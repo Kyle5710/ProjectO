@@ -13,8 +13,9 @@ function setupFunction() {
     //audio volumes
     titleMusic.setVolume(0.7); titleMusic.setLoop(true);
     lobbyMusic.setVolume(0.7); lobbyMusic.setLoop(true);
-    bossMusic.setVolume(0.4); bossMusic.setLoop(true);
-    gameshowMusic.setVolume(0.5); gameshowMusic.setLoop(true);
+    bossMusic.setVolume(0.6); bossMusic.setLoop(true);
+    boss2Music.setVolume(0.7); boss2Music.setLoop(true);
+    gameshowMusic.setVolume(0.4); gameshowMusic.setLoop(true);
     gameshowChoice.setVolume(0.6); gameshowChoice.setLoop(true);
     hallwaysMusic.setVolume(1); hallwaysMusic.setLoop(true);
 
