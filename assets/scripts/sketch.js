@@ -2,8 +2,6 @@
 //Kyle and Alexandre
 
 //TODO
-//
-//DIALOGUE IN GAMESHOW ROOM
 //SFX/MUSIC MASTER
 //REFACTOR CODE BECAUSE OML ITS SO MESSY
 
@@ -100,7 +98,7 @@ function randomizeButtons() {
 
 	//button dialogue + events (later)
 	let goodButton = {
-		dialogue: ["", "Wow.", "I thought SOMEBODY was supposed to take out the good ones.",
+		dialogue: ["", "Wow.", "SOMEBODY was supposed to take out the good ones.",
 			"RIGHT, CARSON?", "...", "Anyways, I guess you get a damage buff."],
 		events: ["goodButton", "obamaAngry", "obamaConfused", "obamaNeutral", "damageBuff"]
 	};
@@ -278,22 +276,18 @@ function obamaDialogueFunc() {
 			if (millis() - lastChangeTime > delay) {
 				//events based on line #
 
-				if (currentLine === 0) {
-					currentPortrait = shock;
-				}
+				if (currentLine === 0) currentPortrait = shock;
 
 				else if (currentLine === 1) {
 					weaponObamaClass.idle = true;
 					currentPortrait = confused;
 				}
 
-				else if (currentLine === 3) {
-					currentPortrait = appalled;
-				}
+				else if (currentLine === 2) currentPortrait = thinking;
+				else if (currentLine === 3) currentPortrait = appalled;
+				else if (currentLine === 4 || currentLine === 6) currentPortrait = neutral;
+				else if (currentLine === 5) currentPortrait = happy;
 
-				else if (currentLine === 4) {
-					currentPortrait = neutral;
-				}
 
 				else if (currentLine === 7) {
 					weaponObamaClass.triggerLeave();
@@ -335,8 +329,9 @@ function bossDialogueFunc() {
 		if (millis() - lastChangeTime > delay) {
 			//events based on line #
 			if (currentLine === 0 || currentLine === 10) currentPortrait = confused;
+			else if (currentLine === 1) currentPortrait = thinking;
 			else if (currentLine === 2) currentPortrait = appalled;
-			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 13) currentPortrait = neutral;
+			else if (currentLine === 3 || currentLine === 5 || currentLine === 7 || currentLine === 11 || currentLine === 13) currentPortrait = neutral;
 			else if (currentLine === 4) currentPortrait = angry;
 			else if (currentLine === 6) currentPortrait = happy;
 			else if (currentLine === 8) currentPortrait = facepalm;
@@ -351,48 +346,6 @@ function bossDialogueFunc() {
 
 			buttonSound.play();
 			currentLine = (currentLine + 1) % bossDialogue.length; //loops through array infinitely
-			lastChangeTime = millis();
-		}
-	}
-}
-
-function boss2DialogueFunc() {
-	if (peakObamaClass.state === "dialogue") {
-		//show portrait sprites
-		showPortrait = true;
-
-		let dialogue = boss2Dialogue[currentLine];
-		let wrappedText = wrapText(dialogue, 310); //max width
-		let yPos = 292;
-
-		//draw textbox + set textAlign
-		imageMode(CENTER);
-		image(textBox, width / 2, 300, 460, 120);
-		imageMode(NORMAL);
-		textAlign(LEFT);
-
-		for (let i = 0; i < wrappedText.length; i++) {
-			//display lines
-			fill("white");
-			text(wrappedText[i], width / 2 - 120, yPos);
-			yPos += textLeading();
-		}
-
-		if (millis() - lastChangeTime > delay) {
-			//events based on line #
-			if (currentLine === 0 || currentLine === 3 || currentLine === 13) currentPortrait = neutral;
-			else if (currentLine === 4 || currentLine === 6 || currentLine === 7 || currentLine === 10 || currentLine === 11 || currentLine === 12) currentPortrait = happy;
-			else if (currentLine === 5 || currentLine === 15 || currentLine === 16) currentPortrait = angry;
-			else if (currentLine === 8 || currentLine === 9 || currentLine === 13) currentPortrait = appalled;
-			else if (currentLine === 14) currentPortrait = shock;
-
-			if (currentLine === 16) {
-				peakObamaClass.state = "attack";
-				showPortrait = false;
-			}
-
-			buttonSound.play();
-			currentLine = (currentLine + 1) % boss2Dialogue.length; //loops through array infinitely
 			lastChangeTime = millis();
 		}
 	}
@@ -445,6 +398,10 @@ function buttonDialogueFunc() {
 				sans.position.set(228, 50);
 				crug.position.set(395, 70);
 				dummyClass.dummy.position.set(510, 60);
+			}
+
+			else if (currentLine === 6) {
+				print("yues");
 			}
 
 			else if (currentLine === 19) {
@@ -514,6 +471,52 @@ function gameshowDialogueFunc() {
 	}
 }
 
+function boss2DialogueFunc() {
+	if (peakObamaClass.state === "dialogue") {
+		//show portrait sprites
+		showPortrait = true;
+
+		let dialogue = boss2Dialogue[currentLine];
+		let wrappedText = wrapText(dialogue, 310); //max width
+		let yPos = 292;
+
+		//draw textbox + set textAlign
+		imageMode(CENTER);
+		image(textBox, width / 2, 300, 460, 120);
+		imageMode(NORMAL);
+		textAlign(LEFT);
+
+		for (let i = 0; i < wrappedText.length; i++) {
+			//display lines
+			fill("white");
+			text(wrappedText[i], width / 2 - 120, yPos);
+			yPos += textLeading();
+		}
+
+		if (millis() - lastChangeTime > delay) {
+			//events based on line #
+			if (currentLine === 0 || currentLine === 3 || currentLine === 5|| currentLine === 9) currentPortrait = neutral;
+			else if (currentLine === 1 || currentLine === 10) currentPortrait = happy;
+			else if (currentLine === 12) currentPortrait = angry;
+			else if (currentLine === 6 || currentLine === 11) currentPortrait = appalled;
+			else if (currentLine === 2 || currentLine === 14) currentPortrait = thinking;
+			else if(currentLine === 7) currentPortrait = facepalm;
+			else if (currentLine === 8) currentPortrait = facepalm2;
+			else if (currentLine === 15) currentPortrait = shock;
+			else if(currentLine === 4 || currentLine === 13) currentPortrait = confused;
+
+			if (currentLine === 16) {
+				peakObamaClass.state = "attack";
+				showPortrait = false;
+			}
+
+			buttonSound.play();
+			currentLine = (currentLine + 1) % boss2Dialogue.length; //loops through array infinitely
+			lastChangeTime = millis();
+		}
+	}
+}
+
 function classEvents() {
 	if (canMove && tranAlpha <= 0) {
 		//scenes where player can move
@@ -529,11 +532,11 @@ function classEvents() {
 		if (!excludedRooms.includes(currentScene)) { //make sure currentScene isnt in the const excludedScenes
 			if (buttonState === "gameshowTalking" && currentScene === "Button") {
 				playerClass.mic.mic.position.set(-1000, -1000);
-			} 
+			}
 			else if (buttonEvent) {
 				playerClass.spawnPos();
 				buttonEvent = false;
-			} 
+			}
 			else if (currentScene !== "Button" && nextScene !== "End" && currentScene !== "End") {
 				playerClass.spawnPos();
 			}
