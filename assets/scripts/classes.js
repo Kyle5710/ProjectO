@@ -1137,6 +1137,7 @@ class PeakObama {
 				}
 			}
 
+			//keep on screen
 			this.x = constrain(nextX, 31, 609);
 			this.y = constrain(nextY, 51, 274);
 

@@ -1,9 +1,9 @@
 //ProjectO
 //Kyle and Alexandre
 
-//TODO:
-//ROUND SPEEDRUN TIMER
-//DIALOGUE SPRITES (THINKING PORTRAIT)
+//TODO
+//
+//DIALOGUE IN GAMESHOW ROOM
 //SFX/MUSIC MASTER
 //REFACTOR CODE BECAUSE OML ITS SO MESSY
 
@@ -222,7 +222,7 @@ function gameshowEvents(event) {
 			break;
 
 		case "obamaThinking":
-			print("obamaThinking portrait");
+			currentPortrait = thinking;
 			break;
 
 		case "obamaFacepalm":
@@ -248,6 +248,8 @@ function gameshowEvents(event) {
 	}
 }
 
+
+//ALL DIALOGUE FUNCTIONS (COULD BE DONE SMOOTHER BUT I DONT WANT TO TOUCH IT LMAO)
 function obamaDialogueFunc() {
 	if (player.x !== 1000 && currentScene === "Obama") {
 		weaponObamaClass.update();
@@ -524,18 +526,14 @@ function classEvents() {
 	}
 
 	else {
-		if (currentScene !== "Yapping" && currentScene !== "Title" && currentScene !== "Obama" && currentScene !== "YOUSUCK" && currentScene !== "longHallway" && currentScene !== "longHallway2" && currentScene !== "longHallway3") {
+		if (!excludedRooms.includes(currentScene)) { //make sure currentScene isnt in the const excludedScenes
 			if (buttonState === "gameshowTalking" && currentScene === "Button") {
-				playerClass.x = playerClass.x;
-				playerClass.y = playerClass.y;
 				playerClass.mic.mic.position.set(-1000, -1000);
-			}
-
+			} 
 			else if (buttonEvent) {
 				playerClass.spawnPos();
 				buttonEvent = false;
-			}
-
+			} 
 			else if (currentScene !== "Button" && nextScene !== "End" && currentScene !== "End") {
 				playerClass.spawnPos();
 			}

@@ -72,6 +72,7 @@ function preloadAssets() {
 	facepalm = loadImage("assets/sprites/portraits/facepalm.png");
 	facepalm2 = loadImage("assets/sprites/portraits/facepalm2.png");
 	empty = loadImage("assets/sprites/portraits/empty.png");
+	thinking = loadImage("assets/sprites/portraits/thinking.png");
 	
 	dummyAppalled = loadImage("assets/sprites/portraits/dummy.png");
 
@@ -162,19 +163,12 @@ function preloadAssets() {
 	longHallwayBackground = loadImage("assets/sprites/hallway/longHallway.png");
 	cdHallwayBack = loadImage("assets/sprites/hallway/hallwayCurve.png");
 	cHallwayBack = loadImage("assets/sprites/hallway/hallwayCurve1.png");
+	scaryHallway = loadImage("assets/sprites/hallway/hallway2.png");
 	hallwaysMusic = loadSound("assets/audio/hallwaysMusic.mp3");
 
 	//LOAD BOSS2 ROOM ASSETS
-	peakObamaThrow = loadAnimation("assets/sprites/obamaThrow/throw1.png", "assets/sprites/obamaThrow/throw2.png", "assets/sprites/obamaThrow/throw3.png",
-		"assets/sprites/obamaThrow/throw4.png", "assets/sprites/obamaThrow/throw5.png", "assets/sprites/obamaThrow/throw6.png", "assets/sprites/obamaThrow/throw7.png",
-		"assets/sprites/obamaThrow/throw8.png", "assets/sprites/obamaThrow/throw9.png", "assets/sprites/obamaThrow/throw10.png", "assets/sprites/obamaThrow/throw11.png",
-		"assets/sprites/obamaThrow/throw12.png");
-
-	iceCream = loadAnimation("assets/sprites/projectiles/icecream1.png", "assets/sprites/projectiles/icecreamSmear1.png");
-	iceCream2 = loadAnimation("assets/sprites/projectiles/icecream2.png", "assets/sprites/projectiles/icecreamSmear2.png");
-	iceCream3 = loadAnimation("assets/sprites/projectiles/icecream3.png", "assets/sprites/projectiles/icecreamSmear3.png");
-
 	boss2Music = loadSound("assets/audio/boss2.mp3");
+	boss2Background = loadImage("assets/sprites/bossScreen/bossBack2.png");
 
 	//END SCREEN
 	endBackground = loadImage("assets/sprites/endScreen/endBack.png");

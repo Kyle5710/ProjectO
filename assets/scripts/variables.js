@@ -85,7 +85,7 @@ let buttons = []; //where the randomized buttons end up
 let dummyKids; //vars for the dummies in the crowd
 let dummyWife;
 let tv; //tv in gameshow
-let carlos;
+let carlos; //npcs
 let edward;
 let godfrey;
 let crug;
@@ -110,14 +110,13 @@ let dummyKilled = false;
 //BOSS2 ROOM
 let peakObamaEvent = true;
 
-let iceCream;
-let iceCream2;
-let iceCream3;
-
 //YOUSUCK ROOM
 let timerStart = 0;
-let timerDuration = 5000;
+let timerDuration = 3000;
 let timerStarted = false;
 
 //STATE VARS
 let currentBackground, currentScene, currentMusic, currentPortrait;
+
+//helps manage classEvents()
+const excludedRooms = ["Yapping", "Title", "Obama", "YOUSUCK", "longHallway", "longHallway2", "longHallway3"];

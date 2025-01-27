@@ -279,7 +279,7 @@ function determineEvents() {
 
 	//LONG HALLWAY 3 ROOM
 	if (currentScene === "longHallway3") {
-		currentBackground = hallwayBackground;
+		currentBackground = scaryHallway;
 
 		if (longHallway3Event) {
 			canMove = false;
@@ -299,7 +299,7 @@ function determineEvents() {
 
 	//BOSS2 ROOM
 	if (currentScene === "Boss2") {
-		currentBackground = bossBackground;
+		currentBackground = boss2Background;
 
 		if (peakObamaEvent) {
 			if (!canMove) {
@@ -320,9 +320,14 @@ function determineEvents() {
 
 		//speedrun timer
 		let finalTime = speedrunEnd - speedrunStart; //convert this to mins and seconds later
+
+		let minutes = Math.floor(finalTime / 60000); //find mins
+		let seconds = Math.floor((finalTime % 60000) / 1000); //find seconds
+		let milliseconds = Math.floor(finalTime % 1000); //find milliseconds
+
 		fill("black");
 		noStroke();
-		text("Time: " + finalTime, width/2, 350);
+		text("Time: " + minutes + ":" + seconds.toString().padStart(2, '0') + ":" + milliseconds.toString().padStart(3, '0'), width / 2, 350); //make sure milliseconds has max 3 digits
 	}
 
 	//LOSE SCREEN
@@ -350,7 +355,7 @@ function determineEvents() {
 		if (remainingTime > 0) {
 			let secondsLeft = Math.ceil(remainingTime / 1000); //convert to secs
 			text("Dang, you suck.", width / 2, height / 2 - 60)
-			text("Travelling back in time in " + secondsLeft + " seconds.", width / 2, height / 2);
+			text("Restarting in " + secondsLeft + " seconds.", width / 2, height / 2);
 		}
 
 		else {
